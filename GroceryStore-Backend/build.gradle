@@ -6,7 +6,7 @@ plugins {
 
 group = 'ca.mcgill.ecse321'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17.0'
+sourceCompatibility = '17.0.2'
 
 repositories {
 	mavenCentral()
