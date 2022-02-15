@@ -2,9 +2,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: main
+    branches: elias
   pull_request:
-    branches: main
+    branches: elias
 
 jobs:
   build:
@@ -27,4 +27,3 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       working-directory: GroceryStore-Backend
-
