@@ -4,7 +4,7 @@ on:
   push:
     branches: jayce
   pull_request:
-    branches: main
+    branches: jayce
 
 jobs:gt
   build:
