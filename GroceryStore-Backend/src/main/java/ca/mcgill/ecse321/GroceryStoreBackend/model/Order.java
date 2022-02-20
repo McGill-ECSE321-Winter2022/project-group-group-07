@@ -2,17 +2,17 @@ package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
 import java.sql.Date;
 import java.sql.Time;
-import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import java.util.Set;
 
-public class Order {
+public abstract class Order {
 
     private int orderID;
     private float totalValue;
     private Date date;
     private Time pruchaseTime;
-    private Set<Item> items;
 
     public boolean setOrderID(int aOrderID) {
         boolean wasSet = false;
@@ -20,7 +20,6 @@ public class Order {
         wasSet = true;
         return wasSet;
     }
-
 
     public boolean setTotalValue(float aTotalValue) {
         boolean wasSet = false;
@@ -40,6 +39,18 @@ public class Order {
         pruchaseTime = aTime;
         wasSet = true;
         return wasSet;
+    }
+
+
+    private Set<Item> items;
+
+    @OneToMany(cascade = { CascadeType.ALL })
+    public Set<Item> getItems() {
+        return this.items;
+    }
+
+    public void setItems(Set<Item> itemss) {
+        this.items = itemss;
     }
 
     @Id
