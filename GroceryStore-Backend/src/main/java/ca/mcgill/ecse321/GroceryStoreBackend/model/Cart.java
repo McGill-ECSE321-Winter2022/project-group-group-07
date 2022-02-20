@@ -1,31 +1,24 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.CascadeType;
+
+@Entity
 public class Cart {
 
-    // ------------------------
-    // MEMBER VARIABLES
-    // ------------------------
-
-    // Cart Attributes
     private int cartID;
-    // private OrderType orderType;
+    private OrderType orderType;
     private float totalValue;
     private int numOfItems;
 
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
-
-    public Cart(int aCartID, float aTotalValue, int aNumOfItems) {
-        cartID = aCartID;
-        // orderType = aOrderType;
-        totalValue = aTotalValue;
-        numOfItems = aNumOfItems;
-    }
-
-    // ------------------------
-    // INTERFACE
-    // ------------------------
+    public enum OrderType {
+        Delivery, PickUp
+    };
 
     public boolean setCartID(int aCartID) {
         boolean wasSet = false;
@@ -33,13 +26,6 @@ public class Cart {
         wasSet = true;
         return wasSet;
     }
-
-    // public boolean setOrderType(OrderType aOrderType) {
-    // boolean wasSet = false;
-    // orderType = aOrderType;
-    // wasSet = true;
-    // return wasSet;
-    // }
 
     public boolean setTotalValue(float aTotalValue) {
         boolean wasSet = false;
@@ -55,13 +41,54 @@ public class Cart {
         return wasSet;
     }
 
+    public boolean setOrderType(OrderType aType) {
+        boolean wasSet = false;
+        orderType = aType;
+        wasSet = true;
+        return wasSet;
+    }
+
+    private Set<Item> items;
+
+    @OneToMany(cascade = { CascadeType.ALL })
+    public Set<Item> getItems() {
+        return this.items;
+    }
+
+    public void setItems(Set<Item> itemss) {
+        this.items = itemss;
+    }
+
+    private Set<TimeSlot> timeSlot;
+
+    @OneToOne(optional = false)
+    public Set<TimeSlot> getTimeSlot() {
+        return this.timeSlot;
+    }
+
+    public void setTimeSlot(Set<TimeSlot> timeSlots) {
+        this.timeSlot = timeSlots;
+    }
+
+    private User user;
+
+    @OneToOne(optional = false)
+    public Set<User> getUser() {
+        return this.user;
+    }
+
+    public void setUser(User users) {
+        this.user = users;
+    }
+
+    @Id
     public int getCartID() {
         return cartID;
     }
 
-    // public OrderType getOrderType() {
-    // return orderType;
-    // }
+    public OrderType getOrderType() {
+        return orderType;
+    }
 
     public float getTotalValue() {
         return totalValue;
@@ -71,19 +98,4 @@ public class Cart {
         return numOfItems;
     }
 
-    public void delete() {
-    }
-
-    // public String toString() {
-    // return super.toString() + "[" +
-    // "cartID" + ":" + getCartID() + "," +
-    // "totalValue" + ":" + getTotalValue() + "," +
-    // "numOfItems" + ":" + getNumOfItems() + "]" +
-    // System.getProperties().getProperty("line.separator") +
-    // " " + "orderType" + "="
-    // + (getOrderType() != null
-    // ? !getOrderType().equals(this) ? getOrderType().toString().replaceAll(" ", "
-    // ") : "this"
-    // : "null");
-    // }
 }

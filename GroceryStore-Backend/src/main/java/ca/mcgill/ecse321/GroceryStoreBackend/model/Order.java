@@ -1,35 +1,18 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
 import java.sql.Date;
+import java.sql.Time;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Set;
 
-// line 10 "model.ump"
-// line 32 "model.ump"
 public class Order {
 
-    // ------------------------
-    // MEMBER VARIABLES
-    // ------------------------
-
-    // Order Attributes
     private int orderID;
-    //private OrderType orderType;
     private float totalValue;
     private Date date;
-
-    // ------------------------
-    // CONSTRUCTOR
-    // ------------------------
-
-    public Order(int aOrderID, float aTotalValue, Date aDate) {
-        orderID = aOrderID;
-        //orderType = aOrderType;
-        totalValue = aTotalValue;
-        date = aDate;
-    }
-
-    // ------------------------
-    // INTERFACE
-    // ------------------------
+    private Time pruchaseTime;
+    private Set<Item> items;
 
     public boolean setOrderID(int aOrderID) {
         boolean wasSet = false;
@@ -38,12 +21,6 @@ public class Order {
         return wasSet;
     }
 
-    // public boolean setOrderType(OrderType aOrderType) {
-    //     boolean wasSet = false;
-    //     orderType = aOrderType;
-    //     wasSet = true;
-    //     return wasSet;
-    // }
 
     public boolean setTotalValue(float aTotalValue) {
         boolean wasSet = false;
@@ -58,14 +35,17 @@ public class Order {
         wasSet = true;
         return wasSet;
     }
+    public boolean setPurchaseTime(Time aTime){
+        boolean wasSet = false;
+        pruchaseTime = aTime;
+        wasSet = true;
+        return wasSet;
+    }
 
+    @Id
     public int getOrderID() {
         return orderID;
     }
-
-    // public OrderType getOrderType() {
-    //     return orderType;
-    // }
 
     public float getTotalValue() {
         return totalValue;
@@ -75,20 +55,9 @@ public class Order {
         return date;
     }
 
-    public void delete() {
+    public Time getTime() {
+        return pruchaseTime;
     }
 
-    // public String toString() {
-    //     return super.toString() + "[" +
-    //             "orderID" + ":" + getOrderID() + "," +
-    //             "totalValue" + ":" + getTotalValue() + "]" + System.getProperties().getProperty("line.separator") +
-    //             "  " + "orderType" + "="
-    //             + (getOrderType() != null
-    //                     ? !getOrderType().equals(this) ? getOrderType().toString().replaceAll("  ", "    ") : "this"
-    //                     : "null")
-    //             + System.getProperties().getProperty("line.separator") +
-    //             "  " + "date" + "="
-    //             + (getDate() != null ? !getDate().equals(this) ? getDate().toString().replaceAll("  ", "    ") : "this"
-    //                     : "null");
-    // }
+    
 }
