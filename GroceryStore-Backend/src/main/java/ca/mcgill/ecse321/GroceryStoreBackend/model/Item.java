@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 public abstract class Item {
