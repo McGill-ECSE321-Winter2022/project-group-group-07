@@ -3,14 +3,13 @@ package ca.mcgill.ecse321.GroceryStoreBackend.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 public abstract class Item {
     private int itemID;
 
     public void setItemID(int aItemID){
         this.itemID = aItemID;
     }
-    
+
     @Id
     public int getItemID() {
         return this.itemID;
