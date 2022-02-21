@@ -12,7 +12,7 @@ public class User {
     private String name;
     private int pointBalance;
 
-//    private UserRole userRole;
+    private UserRole userRole;
 
     @Id
     public String getUsername() {
@@ -30,9 +30,13 @@ public class User {
     public int getPointBalance() {
         return pointBalance;
     }
-    //TODO: uncomment when UserRole is available
-    //    @OneToOne (optional=false)
-    //    public UserRole getUserRole() { return this.userRole;}
+    
+    @OneToOne (optional=false)
+    public UserRole getUserRole() { return this.userRole;}
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 
     public void setUsername(String username) {
         this.username = username;
