@@ -17,14 +17,14 @@ public class PickUpOrder extends Order {
         this.user = users;
     }
 
-    private Set<TimeSlot> timeSlot;
+    private TimeSlot timeSlot;
 
     @OneToOne(optional = false)
-    public Set<TimeSlot> getTimeSlot() {
+    public TimeSlot getTimeSlot() {
         return this.timeSlot;
     }
 
-    public void setTimeSlot(Set<TimeSlot> timeSlots) {
+    public void setTimeSlot(TimeSlot timeSlots) {
         this.timeSlot = timeSlots;
     }
 }

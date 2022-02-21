@@ -10,49 +10,53 @@ import javax.persistence.Id;
 @Entity
 public class Report {
 
-    private int reportID;
-    private Date startDate;
-    private Date endDate;
-    private float totalValue;
+	private Integer reportID;
+	private Date startDate;
+	private Date endDate;
+	private Float totalValue;
 
-    public void setReportID(int reportIdReplacement) {
-        this.reportID = reportIdReplacement;
-    }
+	public void setReportID(Integer reportIdReplacement) {
+		this.reportID = reportIdReplacement;
+	}
 
-    public void setStartDate(Date aStartDate) {
-        this.startDate = aStartDate;
-    }
+	public void setStartDate(Date aStartDate) {
+		this.startDate = aStartDate;
+	}
 
-    public void setEndDate(Date aEndDate) {
-        this.endDate = aEndDate;
-    }
+	public void setEndDate(Date aEndDate) {
+		this.endDate = aEndDate;
+	}
 
-    @Id
-    public int getReportID() {
-        return reportID;
-    }
+	public void setTotalValue(Float totalValue) {
+		this.totalValue = totalValue;
+	}
 
-    public Date getStartDate() {
-        return startDate;
-    }
+	@Id
+	public Integer getReportID() {
+		return reportID;
+	}
 
-    public Date getEndDate() {
-        return endDate;
-    }
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    public float getTotalValue() {
-        return totalValue;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    private Set<Order> orders;
+	public Float getTotalValue() {
+		return totalValue;
+	}
 
-    @OneToMany(cascade = { CascadeType.ALL })
-    public Set<Order> getOrders() {
-        return this.orders;
-    }
+	private Set<Order> orders;
 
-    public void setOrders(Set<Order> newOrders) {
-        this.orders = newOrders;
-    }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Order> getOrders() {
+		return this.orders;
+	}
+
+	public void setOrders(Set<Order> newOrders) {
+		this.orders = newOrders;
+	}
 
 }

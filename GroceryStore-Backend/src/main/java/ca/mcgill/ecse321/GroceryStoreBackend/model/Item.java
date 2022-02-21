@@ -1,9 +1,13 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
     private int itemID;
 
@@ -38,7 +42,7 @@ public abstract class Item {
 
     private boolean availableOnline;
 
-    public void availableOnline(boolean isAvailableOnline) {
+    public void setAvailableOnline(boolean isAvailableOnline) {
         this.availableOnline = isAvailableOnline;
     }
 

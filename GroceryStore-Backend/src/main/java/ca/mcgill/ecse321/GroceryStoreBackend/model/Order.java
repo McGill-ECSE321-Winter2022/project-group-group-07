@@ -4,12 +4,16 @@ import java.sql.Date;
 import java.sql.Time;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import java.util.Set;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Order {
 
     private int orderID;
@@ -57,7 +61,7 @@ public abstract class Order {
         return date;
     }
 
-    public Time getTime() {
+    public Time getPurchaseTime() {
         return pruchaseTime;
     }
 
