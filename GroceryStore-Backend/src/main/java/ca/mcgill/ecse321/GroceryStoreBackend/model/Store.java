@@ -91,7 +91,7 @@ public class Store {
     return pointToCashRatio;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<TimeSlot> getHolidays()
   {
     return holidays;

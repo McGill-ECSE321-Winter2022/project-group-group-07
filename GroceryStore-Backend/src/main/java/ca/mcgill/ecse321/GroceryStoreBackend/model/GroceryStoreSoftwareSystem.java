@@ -45,82 +45,82 @@ public class GroceryStoreSoftwareSystem
     return systemID;
   }
 
-  @OneToOne
+  @OneToOne(optional=false)
   public Store getStore()
   {
     return store;
   }
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<BusinessHour> getHours()
   {
     return hours;
   }
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Schedule> getEmployeeSchedules()
   {
     return employeeSchedules;
   }
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Terminal> getTerminals()
   {
     return terminals;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Report> getSalesReports()
   {
     return salesReports;
   }
 
-  @OneToOne
+  @OneToOne(optional=false)
   public Owner getOwner()
   {
     return owner;
   }
   
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Cashier> getCashiers()
   {
     return cashiers;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<DeliveryPerson> getDeliverypersons()
   {
     return deliverypersons;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Clerk> getClerks()
   {
     return clerks;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Customer> getCustomers()
   {
     return customers;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Item> getItems()
   {
     return items;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Order> getOrders()
   {
     return orders;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<TimeSlot> getTimeSlots()
   {
     return timeSlots;
   }
 
-  @OneToMany
+  @OneToMany(cascade={CascadeType.ALL})
   public Set<Cart> getCarts()
   {
     return carts;
