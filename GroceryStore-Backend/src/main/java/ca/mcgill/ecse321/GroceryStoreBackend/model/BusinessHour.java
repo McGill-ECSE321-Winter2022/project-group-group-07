@@ -18,24 +18,6 @@ public class BusinessHour {
     private Store store;
     private GroceryStoreSoftwareSystem system;
 
-    public BusinessHour(int aBusinessHourId, DayOfWeek aDayOfWeek, Time aStartTime, Time aEndTime, Store aStore, GroceryStoreSoftwareSystem aGsss)
-    {
-        businessHourId = aBusinessHourId;
-        dayOfWeek = aDayOfWeek;
-        startTime = aStartTime;
-        endTime = aEndTime;
-        if (!setStore(aStore))
-        {
-            throw new RuntimeException("Unable to create BusinessHour because the given Store is null.");
-        }
-        if (!setGsss(aGsss))
-        {
-        throw new RuntimeException("Unable to create hour because the given System is null.");
-        }
-    }
-    //------------------------
-    // INTERFACE
-    //------------------------
     public void setBusinessHourId(int aBusinessHourId){
         businessHourId = aBusinessHourId;
     }
@@ -72,7 +54,7 @@ public class BusinessHour {
     }
 
     @ManyToOne(optional=false)
-    public GroceryStoreSoftwareSystem getGsss()
+    public GroceryStoreSoftwareSystem getSystem()
     {
         return system;
     }
@@ -86,36 +68,13 @@ public class BusinessHour {
         return false;
     }
 
-    public boolean setGsss(GroceryStoreSoftwareSystem aGsss)
+    public boolean setSystem(GroceryStoreSoftwareSystem system)
     {
-        if (aGsss == null)
+        if (system == null)
         {
             return false;
         }
-        GroceryStoreSoftwareSystem existingGsss = system;
-        system = aGsss;
-        if (existingGsss != null && !existingGsss.equals(aGsss)){
-            existingGsss.removeHour(this);
-        }
-        system.addHour(this);
+        this.system = system;
         return true;
-    }
-    public void delete()
-    {
-        store = null;
-        GroceryStoreSoftwareSystem placeholderGsss = system;
-        this.system = null;
-        if(placeholderGsss != null){
-            placeholderGsss.removeHour(this);
-        }
-    }
-    public String toString() {
-    return super.toString() + "["+
-    "businessHourId" + ":" + getBusinessHourId()+ "]" + System.getProperties().getProperty("line.separator") +
-    "  " + "dayOfWeek" + "=" + (getDayOfWeek() != null ? !getDayOfWeek().equals(this)  ? getDayOfWeek().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-    "  " + "startTime" + "=" + (getStartTime() != null ? !getStartTime().equals(this)  ? getStartTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-    "  " + "endTime" + "=" + (getEndTime() != null ? !getEndTime().equals(this)  ? getEndTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-    "  " + "store = "+(getStore()!=null?Integer.toHexString(System.identityHashCode(getStore())):"null") + System.getProperties().getProperty("line.separator") +
-    "  " + "gsss = "+(getGsss()!=null?Integer.toHexString(System.identityHashCode(getGsss())):"null");
     }
 }
