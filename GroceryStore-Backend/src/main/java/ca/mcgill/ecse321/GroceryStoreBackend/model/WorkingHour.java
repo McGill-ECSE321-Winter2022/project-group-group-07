@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class WorkingHour {
@@ -44,5 +45,16 @@ public class WorkingHour {
 
     public void setEndTime(Time endTime){
         this.endTime = endTime;
+    }
+
+    private Schedule schedule;
+
+    @OneToOne(optional = false)
+    public Schedule getSchedule(){
+        return this.schedule;
+    }
+
+    public void setSchedule(Schedule schedule){
+        this.schedule = schedule;
     }
 }
