@@ -19,7 +19,6 @@ public class Store {
   private float pointToCashRatio;
 
   //Store Associations
-  private GroceryStoreSoftwareSystem system;
   private Set<TimeSlot> holidays;
 
   public void setStoreID(int aStoreID)
@@ -91,21 +90,6 @@ public class Store {
   {
     return pointToCashRatio;
   }
-
-  @OneToOne
-  public GroceryStoreSoftwareSystem getSystem()
-  {
-    return system;
-  }
-  public boolean setSystem(GroceryStoreSoftwareSystem system)
-    {
-        if (system == null)
-        {
-            return false;
-        }
-        this.system = system;
-        return true;
-    }
 
   @OneToMany
   public Set<TimeSlot> getHolidays()

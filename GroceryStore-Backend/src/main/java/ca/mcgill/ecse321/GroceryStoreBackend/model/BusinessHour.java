@@ -16,7 +16,6 @@ public class BusinessHour {
 
     //BusinessHour Associations
     private Store store;
-    private GroceryStoreSoftwareSystem system;
 
     public void setBusinessHourId(int aBusinessHourId){
         businessHourId = aBusinessHourId;
@@ -53,12 +52,6 @@ public class BusinessHour {
         return store;
     }
 
-    @ManyToOne(optional=false)
-    public GroceryStoreSoftwareSystem getSystem()
-    {
-        return system;
-    }
-
     public boolean setStore(Store aNewStore)
     {
         if (aNewStore != null){
@@ -66,15 +59,5 @@ public class BusinessHour {
             return true;
         }
         return false;
-    }
-
-    public boolean setSystem(GroceryStoreSoftwareSystem system)
-    {
-        if (system == null)
-        {
-            return false;
-        }
-        this.system = system;
-        return true;
     }
 }
