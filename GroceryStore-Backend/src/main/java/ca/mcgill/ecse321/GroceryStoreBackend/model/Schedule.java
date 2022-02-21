@@ -33,7 +33,7 @@ public class Schedule {
         this.workingHour = workingHour;
     }
 
-    /*TODO: Uncomment when Class Employee is added
+    //TODO: Uncomment when Class Employee is added
     private Employee employee;
 
     @OneToOne(optional = false)
@@ -43,5 +43,5 @@ public class Schedule {
 
     public void setEmployee(Employee employee){
         this.employee = employee;
-    }*/
+    }
 }

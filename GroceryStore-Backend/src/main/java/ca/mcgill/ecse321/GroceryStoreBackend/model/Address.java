@@ -44,7 +44,7 @@ public class Address {
         this.town = town;
     }
 
-    /*TODO: Uncomment when Class User is added
+    //TODO: Uncomment when Class User is added
     private User user;
 
     @OneToOne(optional = false)
@@ -54,6 +54,6 @@ public class Address {
 
     public void setUser(User user){
         this.user = user;
-    }*/
+    }
 
 }
