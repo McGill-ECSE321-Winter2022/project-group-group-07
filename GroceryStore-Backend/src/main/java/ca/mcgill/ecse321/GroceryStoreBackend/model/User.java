@@ -31,7 +31,7 @@ public class User {
         return pointBalance;
     }
     
-    @OneToOne (optional=false)
+    @OneToOne(optional=false)
     public UserRole getUserRole() { return this.userRole;}
 
     public void setUserRole(UserRole userRole) {
