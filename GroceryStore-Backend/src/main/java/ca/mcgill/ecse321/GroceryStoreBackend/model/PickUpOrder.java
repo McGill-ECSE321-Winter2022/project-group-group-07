@@ -2,13 +2,14 @@ package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.Set;
 
 @Entity
 public class PickUpOrder extends Order {
     private User user;
 
     @OneToOne(optional = false)
-    public Set<User> getUser() {
+    public User getUser() {
         return this.user;
     }
 
