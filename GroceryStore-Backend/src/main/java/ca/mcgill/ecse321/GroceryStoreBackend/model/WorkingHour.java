@@ -1,16 +1,19 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
-import java.sql.Date;
 import java.sql.Time;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
 public class WorkingHour {
+
+    //TODO: sort out this DayOfWeek thing
+    private enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
     
     private int workingHourID;
-    private Date dayOfWeek;
+    private DayOfWeek dayOfWeek;
     private Time startTime;
     private Time endTime;
 
@@ -23,11 +26,11 @@ public class WorkingHour {
         this.workingHourID = workingHourId;
     }
 
-    public Date getDayOfWeek(){
+    public DayOfWeek getDayOfWeek(){
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(Date dayOfWeek){
+    public void setDayOfWeek(DayOfWeek dayOfWeek){
         this.dayOfWeek = dayOfWeek;
     }
 
