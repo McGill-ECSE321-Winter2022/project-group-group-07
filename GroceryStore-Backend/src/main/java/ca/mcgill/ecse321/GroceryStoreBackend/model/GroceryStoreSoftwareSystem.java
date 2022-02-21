@@ -81,7 +81,7 @@ public class GroceryStoreSoftwareSystem
   @OneToMany
   public Set<Cashier> getCashiers()
   {
-    return Cashiers;
+    return cashiers;
   }
 
   @OneToMany
