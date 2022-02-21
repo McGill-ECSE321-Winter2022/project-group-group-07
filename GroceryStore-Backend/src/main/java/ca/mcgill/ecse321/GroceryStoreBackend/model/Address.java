@@ -44,7 +44,6 @@ public class Address {
         this.town = town;
     }
 
-    //TODO: Uncomment when Class User is added
     private User user;
 
     @OneToOne(optional = false)

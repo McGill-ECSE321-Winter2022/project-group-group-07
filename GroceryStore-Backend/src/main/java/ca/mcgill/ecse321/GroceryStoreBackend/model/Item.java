@@ -1,7 +1,9 @@
 package ca.mcgill.ecse321.GroceryStoreBackend.model;
 
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
+@MappedSuperclass
 public abstract class Item {
     private int itemID;
 

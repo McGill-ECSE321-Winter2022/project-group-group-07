@@ -5,8 +5,11 @@ import java.sql.Time;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
 import java.util.Set;
 
+@MappedSuperclass
 public abstract class Order {
 
     private int orderID;
