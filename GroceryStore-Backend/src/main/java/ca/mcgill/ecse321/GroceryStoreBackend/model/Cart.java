@@ -20,32 +20,20 @@ public class Cart {
         Delivery, PickUp
     };
 
-    public boolean setCartID(int aCartID) {
-        boolean wasSet = false;
-        cartID = aCartID;
-        wasSet = true;
-        return wasSet;
+    public void setCartID(int aCartID) {
+        this.cartID = aCartID;
     }
 
-    public boolean setTotalValue(float aTotalValue) {
-        boolean wasSet = false;
-        totalValue = aTotalValue;
-        wasSet = true;
-        return wasSet;
+    public void setTotalValue(float aTotalValue) {
+        this.totalValue = aTotalValue;
     }
 
-    public boolean setNumOfItems(int aNumOfItems) {
-        boolean wasSet = false;
-        numOfItems = aNumOfItems;
-        wasSet = true;
-        return wasSet;
+    public void setNumOfItems(int aNumOfItems) {
+        this.numOfItems = aNumOfItems;
     }
 
-    public boolean setOrderType(OrderType aType) {
-        boolean wasSet = false;
+    public void setOrderType(OrderType aType) {
         orderType = aType;
-        wasSet = true;
-        return wasSet;
     }
 
     private Set<Item> items;

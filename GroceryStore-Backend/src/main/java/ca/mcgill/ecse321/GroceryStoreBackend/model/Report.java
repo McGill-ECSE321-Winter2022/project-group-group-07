@@ -15,25 +15,16 @@ public class Report {
     private Date endDate;
     private float totalValue;
 
-    public boolean setReportID(int reportIdReplacement) {
-        boolean wasSet = false;
-        reportID = reportIdReplacement;
-        wasSet = true;
-        return wasSet;
+    public void setReportID(int reportIdReplacement) {
+        this.reportID = reportIdReplacement;
     }
 
-    public boolean setStartDate(Date aStartDate) {
-        boolean wasSet = false;
-        startDate = aStartDate;
-        wasSet = true;
-        return wasSet;
+    public void setStartDate(Date aStartDate) {
+        this.startDate = aStartDate;
     }
 
-    public boolean setEndDate(Date aEndDate) {
-        boolean wasSet = false;
-        endDate = aEndDate;
-        wasSet = true;
-        return wasSet;
+    public void setEndDate(Date aEndDate) {
+        this.endDate = aEndDate;
     }
 
     @Id

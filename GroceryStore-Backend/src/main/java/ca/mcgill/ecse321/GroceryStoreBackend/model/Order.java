@@ -14,31 +14,19 @@ public abstract class Order {
     private Date date;
     private Time pruchaseTime;
 
-    public boolean setOrderID(int aOrderID) {
-        boolean wasSet = false;
-        orderID = aOrderID;
-        wasSet = true;
-        return wasSet;
+    public void setOrderID(int aOrderID) {
+        this.orderID = aOrderID;
     }
 
-    public boolean setTotalValue(float aTotalValue) {
-        boolean wasSet = false;
-        totalValue = aTotalValue;
-        wasSet = true;
-        return wasSet;
+    public void setTotalValue(float aTotalValue) {
+        this.totalValue = aTotalValue;
     }
 
-    public boolean setDate(Date aDate) {
-        boolean wasSet = false;
+    public void setDate(Date aDate) {
         date = aDate;
-        wasSet = true;
-        return wasSet;
     }
-    public boolean setPurchaseTime(Time aTime){
-        boolean wasSet = false;
-        pruchaseTime = aTime;
-        wasSet = true;
-        return wasSet;
+    public void setPurchaseTime(Time aTime){
+        this.pruchaseTime = aTime;
     }
 
 
