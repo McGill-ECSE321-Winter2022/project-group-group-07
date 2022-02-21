@@ -61,7 +61,7 @@ public class Cart {
     private User user;
 
     @OneToOne(optional = false)
-    public Set<User> getUser() {
+    public User getUser() {
         return this.user;
     }
 
