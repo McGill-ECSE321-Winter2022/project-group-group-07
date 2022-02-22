@@ -9,14 +9,14 @@ import javax.persistence.MappedSuperclass;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
-    private int itemID;
+    private Integer itemID;
 
-    public void setItemID(int aItemID){
+    public void setItemID(Integer aItemID){
         this.itemID = aItemID;
     }
 
     @Id
-    public int getItemID() {
+    public Integer getItemID() {
         return this.itemID;
     }
 

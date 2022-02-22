@@ -6,17 +6,17 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Address {
-	private int addressID;
+	private Integer addressID;
 	private int buildingNo;
 	private String street;
 	private String town;
 
 	@Id
-	public int getAddressID() {
+	public Integer getAddressID() {
 		return addressID;
 	}
 
-	public void setAddressID(int addressID) {
+	public void setAddressID(Integer addressID) {
 		this.addressID = addressID;
 	}
 
@@ -44,14 +44,14 @@ public class Address {
 		this.town = town;
 	}
 
-	private User user;
+	private Account user;
 
 	@OneToOne(optional = false)
-	public User getUser() {
+	public Account getUser() {
 		return this.user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(Account user) {
 		this.user = user;
 	}
 

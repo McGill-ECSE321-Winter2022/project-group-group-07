@@ -11,14 +11,14 @@ import javax.persistence.OneToOne;
 @Entity
 public class Schedule {
     
-    private int scheduleID;
+    private Integer scheduleID;
 
     @Id
-    public int getScheduleID() {
+    public Integer getScheduleID() {
         return scheduleID;
     }
 
-    public void setScheduleID(int scheduleID) {
+    public void setScheduleID(Integer scheduleID) {
         this.scheduleID = scheduleID;
     }
 

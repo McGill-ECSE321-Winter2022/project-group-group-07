@@ -58,14 +58,14 @@ public class Cart {
 		this.timeSlot = timeSlot;
 	}
 
-	private User user;
+	private Account user;
 
 	@OneToOne(optional = false)
-	public User getUser() {
+	public Account getUser() {
 		return this.user;
 	}
 
-	public void setUser(User users) {
+	public void setUser(Account users) {
 		this.user = users;
 	}
 

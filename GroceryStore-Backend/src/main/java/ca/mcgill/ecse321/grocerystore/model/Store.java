@@ -11,7 +11,7 @@ import javax.persistence.CascadeType;
 public class Store {
 
   //Store Attributes
-  private int storeID;
+  private Integer storeID;
   private String name;
   private String address;
   private String phoneNumber;
@@ -22,7 +22,7 @@ public class Store {
   //Store Associations
   private Set<TimeSlot> holidays;
 
-  public void setStoreID(int aStoreID)
+  public void setStoreID(Integer aStoreID)
   {
     storeID = aStoreID;
   }
@@ -57,7 +57,7 @@ public class Store {
     pointToCashRatio = aPointToCashRatio;
   }
   @Id
-  public int getStoreID()
+  public Integer getStoreID()
   {
     return storeID;
   }

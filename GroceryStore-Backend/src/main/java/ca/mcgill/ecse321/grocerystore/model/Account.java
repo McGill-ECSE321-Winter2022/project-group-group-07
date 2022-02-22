@@ -8,12 +8,12 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User {
+public class Account {
 
     private String username;
     private String password;
     private String name;
-    private int pointBalance;
+    private Integer pointBalance;
 
     private UserRole userRole;
 
@@ -30,7 +30,7 @@ public class User {
         return name;
     }
 
-    public int getPointBalance() {
+    public Integer getPointBalance() {
         return pointBalance;
     }
     
@@ -53,7 +53,7 @@ public class User {
         this.name = name;
     }
 
-    public void setPointBalance(int pointBalance) {
+    public void setPointBalance(Integer pointBalance) {
         this.pointBalance = pointBalance;
     }
 }

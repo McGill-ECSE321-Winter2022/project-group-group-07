@@ -16,12 +16,12 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Order {
 
-    private int orderID;
+    private Integer orderID;
     private float totalValue;
     private Date date;
     private Time pruchaseTime;
 
-    public void setOrderID(int aOrderID) {
+    public void setOrderID(Integer aOrderID) {
         this.orderID = aOrderID;
     }
 
@@ -49,7 +49,7 @@ public abstract class Order {
     }
 
     @Id
-    public int getOrderID() {
+    public Integer getOrderID() {
         return orderID;
     }
 

@@ -12,17 +12,17 @@ public class WorkingHour {
     //TODO: sort out this DayOfWeek thing
     private enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
     
-    private int workingHourID;
+    private Integer workingHourID;
     private DayOfWeek dayOfWeek;
     private Time startTime;
     private Time endTime;
 
     @Id
-    public int getWorkingHourID() {
+    public Integer getWorkingHourID() {
         return workingHourID;
     }
 
-    public void setWorkingHourID(int workingHourId) {
+    public void setWorkingHourID(Integer workingHourId) {
         this.workingHourID = workingHourId;
     }
 

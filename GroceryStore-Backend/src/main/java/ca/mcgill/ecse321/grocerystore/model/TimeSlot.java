@@ -7,14 +7,14 @@ import javax.persistence.Id;
 
 @Entity
 public class TimeSlot {
-    private int timeSlotID;
+    private Integer timeSlotID;
     private Date startDate;
     private Date endDate;
     private Time startTime;
     private Time endTime;
 
     @Id
-    public int getTimeSlotID() {
+    public Integer getTimeSlotID() {
         return timeSlotID;
     }
 
@@ -30,7 +30,7 @@ public class TimeSlot {
         return startTime;
     }
 
-    public void setTimeSlotID(int timeSlotID) {
+    public void setTimeSlotID(Integer timeSlotID) {
         this.timeSlotID = timeSlotID;
     }
 

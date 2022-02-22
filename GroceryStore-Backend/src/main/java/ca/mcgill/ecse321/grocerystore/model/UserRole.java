@@ -12,14 +12,14 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class UserRole {
 
-	private Long roleID;
+	private Integer roleID;
 
 	@Id
-	public Long getRoleID() {
+	public Integer getRoleID() {
 		return this.roleID;
 	}
 
-	public void setRoleID(Long roleID) {
+	public void setRoleID(Integer roleID) {
 		this.roleID = roleID;
 	}
 
