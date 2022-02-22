@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.GroceryStoreBackend;
+package ca.mcgill.ecse321.grocerystore;
 
 //import org.junit.jupiter.api.Test;
 //import org.springframework.boot.test.context.SpringBootTest;
