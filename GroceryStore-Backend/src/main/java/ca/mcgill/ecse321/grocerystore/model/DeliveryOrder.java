@@ -1,11 +1,11 @@
-package ca.mcgill.ecse321.GroceryStoreBackend.model;
+package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import java.util.Set;
 
 @Entity
-public class PickUpOrder extends Order {
+public class DeliveryOrder extends Order {
     private User user;
 
     @OneToOne(optional = false)
@@ -27,4 +27,5 @@ public class PickUpOrder extends Order {
     public void setTimeSlot(TimeSlot timeSlots) {
         this.timeSlot = timeSlots;
     }
+
 }

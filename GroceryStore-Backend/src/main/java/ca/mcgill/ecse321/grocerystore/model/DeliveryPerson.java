@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.GroceryStoreBackend.model;
+package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-public class Customer extends UserRole{
-	
-	
+public class DeliveryPerson extends Employee {
+
 }

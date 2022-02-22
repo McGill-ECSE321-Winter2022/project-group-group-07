@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.GroceryStoreBackend.model;
+package ca.mcgill.ecse321.grocerystore.model;
 
 import java.util.Set;
 

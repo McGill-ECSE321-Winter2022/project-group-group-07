@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.GroceryStoreBackend.model;
+package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,17 +10,16 @@ import javax.persistence.InheritanceType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class UserRole {
+public abstract class Employee extends UserRole {
 
-	private Long roleID;
+	private Date employmentDate;
 
-	@Id
-	public Long getRoleID() {
-		return this.roleID;
+	public Date getEmploymentDate() {
+		return this.employmentDate;
 	}
 
-	public void setRoleID(Long roleID) {
-		this.roleID = roleID;
+	public void setEmploymentDate(Date employmentDate) {
+		this.employmentDate = employmentDate;
 	}
 
 }
