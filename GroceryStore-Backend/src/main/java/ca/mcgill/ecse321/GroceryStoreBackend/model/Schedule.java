@@ -33,7 +33,7 @@ public class Schedule {
         this.workingHour = workingHour;
     }
 
-    //TODO: Uncomment when Class Employee is added
+    
     private Employee employee;
 
     @OneToOne(optional = false)

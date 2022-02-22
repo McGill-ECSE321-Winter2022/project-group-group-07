@@ -27,7 +27,7 @@ public class GroceryStoreSoftwareSystem
   private Set<Report> salesReports;
   private Owner owner;
   private Set<Cashier> cashiers;
-  private Set<DeliveryPerson> deliverypersons;
+  private Set<DeliveryPerson> deliveryPersons;
   private Set<Clerk> clerks;
   private Set<Customer> customers;
   private Set<Item> items;
@@ -86,9 +86,9 @@ public class GroceryStoreSoftwareSystem
   }
 
   @OneToMany(cascade={CascadeType.ALL})
-  public Set<DeliveryPerson> getDeliverypersons()
+  public Set<DeliveryPerson> getDeliveryPersons()
   {
-    return deliverypersons;
+    return deliveryPersons;
   }
 
   @OneToMany(cascade={CascadeType.ALL})
@@ -164,7 +164,7 @@ public class GroceryStoreSoftwareSystem
   }
 
   public void setDeliveryPersons(Set<DeliveryPerson> deliveryPersons){
-    this.deliverypersons = deliveryPersons;
+    this.deliveryPersons = deliveryPersons;
   }
 
   public void setClerks(Set<Clerk> clerks){

@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-public class Customer {
+public class Customer extends UserRole{
 	
 	
 }
