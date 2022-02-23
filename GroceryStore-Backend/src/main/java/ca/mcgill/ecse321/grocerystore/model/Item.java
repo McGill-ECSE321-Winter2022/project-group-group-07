@@ -8,18 +8,25 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
-	private Integer itemID;
 
+	//attribute fields
+	private Integer itemID;
+	private String productName;
+	private Float price;
+	private Boolean availableOnline;
+	private Integer numInStock;
+	private Integer pointPerItem;
+
+
+	//getter and setters
 	public void setItemID(Integer aItemID) {
 		this.itemID = aItemID;
 	}
-
 	@Id
 	public Integer getItemID() {
 		return this.itemID;
 	}
 
-	private String productName;
 
 	public void setProductName(String aProductName) {
 		this.productName = aProductName;
@@ -29,7 +36,6 @@ public abstract class Item {
 		return productName;
 	}
 
-	private Float price;
 
 	public void setPrice(Float aPrice) {
 		this.price = aPrice;
@@ -39,7 +45,6 @@ public abstract class Item {
 		return price;
 	}
 
-	private Boolean availableOnline;
 
 	public void setAvailableOnline(Boolean isAvailableOnline) {
 		this.availableOnline = isAvailableOnline;
@@ -49,7 +54,6 @@ public abstract class Item {
 		return availableOnline;
 	}
 
-	private Integer numInStock;
 
 	public void setNumInStock(Integer numInStock) {
 		this.numInStock = numInStock;
@@ -59,7 +63,6 @@ public abstract class Item {
 		return numInStock;
 	}
 
-	private Integer pointPerItem;
 
 	public void setPointPerItem(Integer somePointPerItem) {
 		this.pointPerItem = somePointPerItem;

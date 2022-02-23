@@ -9,7 +9,7 @@ import javax.persistence.CascadeType;
 @Entity
 public class Store {
 
-  //Store Attributes
+  //attribute fields
   private Integer storeID;
   private String name;
   private String address;
@@ -17,43 +17,12 @@ public class Store {
   private String email;
   private Integer employeeDiscountRate;
   private Float pointToCashRatio;
-
-  //Store Associations
+  //association fields
   private Set<TimeSlot> holidays;
-
+  //getters and setters
   public void setStoreID(Integer aStoreID)
   {
     storeID = aStoreID;
-  }
-
-  public void setName(String aName)
-  {
-    name = aName;
-  }
-
-  public void setAddress(String aAddress)
-  {
-    address = aAddress;
-  }
-
-  public void setPhoneNumber(String aPhoneNumber)
-  {
-    phoneNumber = aPhoneNumber;
-  }
-
-  public void setEmail(String aEmail)
-  {
-    email = aEmail;
-  }
-
-  public void setEmployeeDiscountRate(Integer aEmployeeDiscountRate)
-  {
-    employeeDiscountRate = aEmployeeDiscountRate;
-  }
-
-  public void setPointToCashRatio(Float aPointToCashRatio)
-  {
-    pointToCashRatio = aPointToCashRatio;
   }
   @Id
   public Integer getStoreID()
@@ -61,31 +30,55 @@ public class Store {
     return storeID;
   }
 
+  public void setName(String aName)
+  {
+    name = aName;
+  }
   public String getName()
   {
     return name;
   }
 
+  public void setAddress(String aAddress)
+  {
+    address = aAddress;
+  }
   public String getAddress()
   {
     return address;
   }
 
+  public void setPhoneNumber(String aPhoneNumber)
+  {
+    phoneNumber = aPhoneNumber;
+  }
   public String getPhoneNumber()
   {
     return phoneNumber;
   }
 
+  public void setEmail(String aEmail)
+  {
+    email = aEmail;
+  }
   public String getEmail()
   {
     return email;
   }
 
+  public void setEmployeeDiscountRate(Integer aEmployeeDiscountRate)
+  {
+    employeeDiscountRate = aEmployeeDiscountRate;
+  }
   public Integer getEmployeeDiscountRate()
   {
     return employeeDiscountRate;
   }
 
+  public void setPointToCashRatio(Float aPointToCashRatio)
+  {
+    pointToCashRatio = aPointToCashRatio;
+  }
   public Float getPointToCashRatio()
   {
     return pointToCashRatio;
