@@ -7,50 +7,51 @@ import javax.persistence.Id;
 
 @Entity
 public class TimeSlot {
-    private Integer timeSlotID;
-    private Date startDate;
-    private Date endDate;
-    private Time startTime;
-    private Time endTime;
 
-    @Id
-    public Integer getTimeSlotID() {
-        return timeSlotID;
-    }
+	private Integer timeSlotID;
+	private Date startDate;
+	private Date endDate;
+	private Time startTime;
+	private Time endTime;
 
-    public Date getStartDate() {
-        return startDate;
-    }
+	@Id
+	public Integer getTimeSlotID() {
+		return timeSlotID;
+	}
 
-    public Date getEndDate() {
-        return endDate;
-    }
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    public Time getStartTime() {
-        return startTime;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public void setTimeSlotID(Integer timeSlotID) {
-        this.timeSlotID = timeSlotID;
-    }
+	public Time getStartTime() {
+		return startTime;
+	}
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+	public void setTimeSlotID(Integer timeSlotID) {
+		this.timeSlotID = timeSlotID;
+	}
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
 
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
-    }
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
 
-    public Time getEndTime() {
-        return endTime;
-    }
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
 }

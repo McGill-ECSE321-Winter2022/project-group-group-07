@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.grocerystore.model;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;

@@ -1,4 +1,5 @@
 package ca.mcgill.ecse321.grocerystore.model;
+
 import java.util.*;
 
 import javax.persistence.Entity;
@@ -7,188 +8,196 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 
-import java.sql.Time;
-import java.sql.Date;
-
 @Entity
-public class GroceryStoreSoftwareSystem
-{
-  public enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
-  public enum OrderType { InStore, Delivery, PickUp }
+public class GroceryStoreSoftwareSystem {
+	public enum DayOfWeek {
+		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+	}
 
-  //GroceryStoreSoftwareSystem Attributes
-  private int systemID;
+	public enum OrderType {
+		InStore, Delivery, PickUp
+	}
 
-  //GroceryStoreSoftwareSystem Associations
-  private Store store;
-  private Set<BusinessHour> hours;
-  private Set<Schedule> employeeSchedules;
-  private Set<Terminal> terminals;
-  private Set<Report> salesReports;
-  private Owner owner;
-  private Set<Cashier> cashiers;
-  private Set<DeliveryPerson> deliveryPersons;
-  private Set<Clerk> clerks;
-  private Set<Customer> customers;
-  private Set<Item> items;
-  private Set<Order> orders;
-  private Set<TimeSlot> timeSlots;
-  private Set<Cart> carts;
+	// GroceryStoreSoftwareSystem Attributes
+	private int systemID;
 
-  
-  public void setSystemID(int ID)
-  {
-    systemID = ID;
-  }
-  @Id
-  public int getSystemID()
-  {
-    return systemID;
-  }
+	// GroceryStoreSoftwareSystem Associations
+	private Set<Account> accounts;
+	private Store store;
+	private Set<BusinessHour> hours;
+	private Set<Schedule> employeeSchedules;
+	private Set<Terminal> terminals;
+	private Set<Report> salesReports;
+	private Owner owner;
+	private Set<Cashier> cashiers;
+	private Set<DeliveryPerson> deliveryPersons;
+	private Set<Clerk> clerks;
+	private Set<Customer> customers;
+	private Set<Item> items;
+	private Set<Order> orders;
+	private Set<TimeSlot> timeSlots;
+	private Set<Cart> carts;
+	private Set<Address> addresses;
 
-  @OneToOne(optional=false)
-  public Store getStore()
-  {
-    return store;
-  }
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<BusinessHour> getHours()
-  {
-    return hours;
-  }
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Schedule> getEmployeeSchedules()
-  {
-    return employeeSchedules;
-  }
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Terminal> getTerminals()
-  {
-    return terminals;
-  }
+	public void setSystemID(int ID) {
+		systemID = ID;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Report> getSalesReports()
-  {
-    return salesReports;
-  }
+	@Id
+	public int getSystemID() {
+		return systemID;
+	}
 
-  @OneToOne(optional=false)
-  public Owner getOwner()
-  {
-    return owner;
-  }
-  
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Cashier> getCashiers()
-  {
-    return cashiers;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public void setaddresses(Set<Address> addresses) {
+		this.addresses = addresses;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<DeliveryPerson> getDeliveryPersons()
-  {
-    return deliveryPersons;
-  }
+	public Set<Address> getaddresses() {
+		return addresses;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Clerk> getClerks()
-  {
-    return clerks;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public void setAccount(Set<Account> accounts) {
+		this.accounts = accounts;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Customer> getCustomers()
-  {
-    return customers;
-  }
+	public Set<Account> getAccounts() {
+		return accounts;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Item> getItems()
-  {
-    return items;
-  }
+	@OneToOne(optional = false)
+	public Store getStore() {
+		return store;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Order> getOrders()
-  {
-    return orders;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<BusinessHour> getHours() {
+		return hours;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<TimeSlot> getTimeSlots()
-  {
-    return timeSlots;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Schedule> getEmployeeSchedules() {
+		return employeeSchedules;
+	}
 
-  @OneToMany(cascade={CascadeType.ALL})
-  public Set<Cart> getCarts()
-  {
-    return carts;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Terminal> getTerminals() {
+		return terminals;
+	}
 
-  public boolean setStore(Store store){
-    if(store != null){
-      this.store = store;
-      return true;
-    }
-    return false;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Report> getSalesReports() {
+		return salesReports;
+	}
 
-  public void setHours(Set<BusinessHour> hours){
-    this.hours = hours;
-  }
-  
-  public void setEmployeeSchedules(Set<Schedule> employeeSchedules){
-    this.employeeSchedules = employeeSchedules;
-  }
-  
-  public void setTerminals(Set<Terminal> terminals){
-    this.terminals = terminals;
-  }
+	@OneToOne(optional = false)
+	public Owner getOwner() {
+		return owner;
+	}
 
-  public void setSalesReports(Set<Report> salesReports){
-    this.salesReports = salesReports;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Cashier> getCashiers() {
+		return cashiers;
+	}
 
-  public boolean setOwner(Owner owner){
-    if(owner != null){
-      this.owner = owner;
-      return true;
-    }
-    return false;
-  }
-  
-  public void setCashiers(Set<Cashier> cashiers){
-    this.cashiers = cashiers;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<DeliveryPerson> getDeliveryPersons() {
+		return deliveryPersons;
+	}
 
-  public void setDeliveryPersons(Set<DeliveryPerson> deliveryPersons){
-    this.deliveryPersons = deliveryPersons;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Clerk> getClerks() {
+		return clerks;
+	}
 
-  public void setClerks(Set<Clerk> clerks){
-    this.clerks = clerks;
-  }
-  
-  public void setCustomers(Set<Customer> customers){
-    this.customers = customers;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Customer> getCustomers() {
+		return customers;
+	}
 
-  public void setItems(Set<Item> items){
-    this.items = items;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Item> getItems() {
+		return items;
+	}
 
-  public void setOrders(Set<Order> orders){
-    this.orders = orders;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Order> getOrders() {
+		return orders;
+	}
 
-  public void setTimeSlots(Set<TimeSlot> timeSlots){
-    this.timeSlots = timeSlots;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<TimeSlot> getTimeSlots() {
+		return timeSlots;
+	}
 
-  public void setCarts(Set<Cart> carts){
-    this.carts = carts;
-  }
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<Cart> getCarts() {
+		return carts;
+	}
+
+	public boolean setStore(Store store) {
+		if (store != null) {
+			this.store = store;
+			return true;
+		}
+		return false;
+	}
+
+	public void setHours(Set<BusinessHour> hours) {
+		this.hours = hours;
+	}
+
+	public void setEmployeeSchedules(Set<Schedule> employeeSchedules) {
+		this.employeeSchedules = employeeSchedules;
+	}
+
+	public void setTerminals(Set<Terminal> terminals) {
+		this.terminals = terminals;
+	}
+
+	public void setSalesReports(Set<Report> salesReports) {
+		this.salesReports = salesReports;
+	}
+
+	public boolean setOwner(Owner owner) {
+		if (owner != null) {
+			this.owner = owner;
+			return true;
+		}
+		return false;
+	}
+
+	public void setCashiers(Set<Cashier> cashiers) {
+		this.cashiers = cashiers;
+	}
+
+	public void setDeliveryPersons(Set<DeliveryPerson> deliveryPersons) {
+		this.deliveryPersons = deliveryPersons;
+	}
+
+	public void setClerks(Set<Clerk> clerks) {
+		this.clerks = clerks;
+	}
+
+	public void setCustomers(Set<Customer> customers) {
+		this.customers = customers;
+	}
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
+	}
+
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+
+	public void setTimeSlots(Set<TimeSlot> timeSlots) {
+		this.timeSlots = timeSlots;
+	}
+
+	public void setCarts(Set<Cart> carts) {
+		this.carts = carts;
+	}
 
 }

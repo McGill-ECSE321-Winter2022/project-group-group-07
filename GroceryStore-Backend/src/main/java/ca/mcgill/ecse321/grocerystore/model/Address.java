@@ -10,6 +10,7 @@ public class Address {
 	private int buildingNo;
 	private String street;
 	private String town;
+	private Account account;
 
 	@Id
 	public Integer getAddressID() {
@@ -44,15 +45,13 @@ public class Address {
 		this.town = town;
 	}
 
-	private Account user;
-
 	@OneToOne(optional = false)
-	public Account getUser() {
-		return this.user;
+	public Account getAccount() {
+		return this.account;
 	}
 
-	public void setUser(Account user) {
-		this.user = user;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 }
