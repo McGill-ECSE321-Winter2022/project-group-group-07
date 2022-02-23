@@ -10,9 +10,9 @@ We are a team of six Software Engineering Students in U2 at McGill. We are group
 ## Overview Table
 | Name | Role | Sprint 1 | Sprint 2 | Sprint 3 | Sprint 4 |
 |------|--------------|------|------|-------|-------|
-| Karim Moussa | Project Manager | 24 | Sprint 2 | Sprint 3 | Sprint 4 |
+| Karim Moussa | Project Manager | 20 | Sprint 2 | Sprint 3 | Sprint 4 |
 | Elias Abou Farah | Backend Lead | 24.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Adam Kazma | Testing Lead | Sprint 1 | 20.5 | Sprint 3 | Sprint 4 |
+| Adam Kazma | Testing Lead | 20.5 | Sprint 2 | Sprint 3 | Sprint 4 |
 | Tran Tuan Khai Phan | Software Developer | 17.5 | Sprint 2 | Sprint 3 | Sprint 4 |
 | Jasmine Cheung | Software Developer | 16.5 | Sprint 2 | Sprint 3 | Sprint 4 |
 | Ojetta Ye | Documentation Lead | 17 | Sprint 2 | Sprint 3 | Sprint 4 |
