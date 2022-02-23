@@ -10,12 +10,15 @@ import javax.persistence.OneToOne;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Account {
 
+	// attribute fields
 	private String username;
 	private String password;
 	private String name;
 	private Integer pointBalance;
+	// association fields
 	private AccountRole accountRole;
 
+	// getters and setters
 	@Id
 	public String getUsername() {
 		return username;

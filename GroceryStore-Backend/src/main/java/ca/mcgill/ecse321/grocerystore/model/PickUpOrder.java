@@ -5,7 +5,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class PickUpOrder extends Order {
-
+    //association fields
     private TimeSlot timeSlot;
 
     @OneToOne(optional = false)

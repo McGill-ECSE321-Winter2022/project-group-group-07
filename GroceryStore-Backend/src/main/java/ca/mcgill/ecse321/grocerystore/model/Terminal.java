@@ -5,13 +5,13 @@ import javax.persistence.Id;
 
 @Entity
 public class Terminal {
+	//attribute fields
 	private Integer terminalID;
-
+	//getters and setters
 	@Id
 	public Integer getTerminalID() {
 		return terminalID;
 	}
-
 	public void setTerminalID(Integer terminalID) {
 		this.terminalID = terminalID;
 	}
