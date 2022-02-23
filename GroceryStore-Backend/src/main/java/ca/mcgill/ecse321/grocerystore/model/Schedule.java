@@ -10,38 +10,37 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Schedule {
-    
-    private Integer scheduleID;
 
-    @Id
-    public Integer getScheduleID() {
-        return scheduleID;
-    }
+	private Integer scheduleID;
 
-    public void setScheduleID(Integer scheduleID) {
-        this.scheduleID = scheduleID;
-    }
+	@Id
+	public Integer getScheduleID() {
+		return scheduleID;
+	}
 
-    private Set<WorkingHour> workingHour;
+	public void setScheduleID(Integer scheduleID) {
+		this.scheduleID = scheduleID;
+	}
 
-    @OneToMany(cascade={CascadeType.ALL})
-    public Set<WorkingHour> getWorkingHour() {
-        return this.workingHour;
-    }
-    
-    public void setWorkingHour(Set<WorkingHour> workingHour) {
-        this.workingHour = workingHour;
-    }
+	private Set<WorkingHour> workingHour;
 
-    
-    private Employee employee;
+	@OneToMany(cascade = { CascadeType.ALL })
+	public Set<WorkingHour> getWorkingHour() {
+		return this.workingHour;
+	}
 
-    @OneToOne(optional = false)
-    public Employee getEmployee(){
-        return this.employee;
-    }
+	public void setWorkingHour(Set<WorkingHour> workingHour) {
+		this.workingHour = workingHour;
+	}
 
-    public void setEmployee(Employee employee){
-        this.employee = employee;
-    }
+	private Employee employee;
+
+	@OneToOne(optional = false)
+	public Employee getEmployee() {
+		return this.employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
 }

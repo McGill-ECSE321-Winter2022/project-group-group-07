@@ -9,55 +9,56 @@ import javax.persistence.OneToOne;
 @Entity
 public class WorkingHour {
 
-    //TODO: sort out this DayOfWeek thing
-    private enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
-    
-    private Integer workingHourID;
-    private DayOfWeek dayOfWeek;
-    private Time startTime;
-    private Time endTime;
+	private enum DayOfWeek {
+		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+	}
 
-    @Id
-    public Integer getWorkingHourID() {
-        return workingHourID;
-    }
+	private Integer workingHourID;
+	private DayOfWeek dayOfWeek;
+	private Time startTime;
+	private Time endTime;
 
-    public void setWorkingHourID(Integer workingHourId) {
-        this.workingHourID = workingHourId;
-    }
+	@Id
+	public Integer getWorkingHourID() {
+		return workingHourID;
+	}
 
-    public DayOfWeek getDayOfWeek(){
-        return dayOfWeek;
-    }
+	public void setWorkingHourID(Integer workingHourId) {
+		this.workingHourID = workingHourId;
+	}
 
-    public void setDayOfWeek(DayOfWeek dayOfWeek){
-        this.dayOfWeek = dayOfWeek;
-    }
+	public DayOfWeek getDayOfWeek() {
+		return dayOfWeek;
+	}
 
-    public Time getStartTime(){
-        return startTime;
-    }
+	public void setDayOfWeek(DayOfWeek dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
 
-    public void setStartTime(Time startTime){
-        this.startTime = startTime;
-    }
+	public Time getStartTime() {
+		return startTime;
+	}
 
-    public Time getEndTime(){
-        return endTime;
-    }
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
 
-    public void setEndTime(Time endTime){
-        this.endTime = endTime;
-    }
+	public Time getEndTime() {
+		return endTime;
+	}
 
-    private Schedule schedule;
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
 
-    @OneToOne(optional = false)
-    public Schedule getSchedule(){
-        return this.schedule;
-    }
+	private Schedule schedule;
 
-    public void setSchedule(Schedule schedule){
-        this.schedule = schedule;
-    }
+	@OneToOne(optional = false)
+	public Schedule getSchedule() {
+		return this.schedule;
+	}
+
+	public void setSchedule(Schedule schedule) {
+		this.schedule = schedule;
+	}
 }

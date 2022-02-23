@@ -11,32 +11,34 @@ import javax.persistence.CascadeType;
 @Entity
 public class Cart {
 
-	private int cartID;
+	private Integer cartID;
 	private OrderType orderType;
-	private float totalValue;
-	private int numOfItems;
+	private Float totalValue;
+	private Integer numOfItems;
+	
+	private Set<Item> items;
+	private TimeSlot timeSlot;
+	private Account account;
 
 	public enum OrderType {
 		Delivery, PickUp
 	};
 
-	public void setCartID(int aCartID) {
+	public void setCartID(Integer aCartID) {
 		this.cartID = aCartID;
 	}
 
-	public void setTotalValue(float aTotalValue) {
+	public void setTotalValue(Float aTotalValue) {
 		this.totalValue = aTotalValue;
 	}
 
-	public void setNumOfItems(int aNumOfItems) {
+	public void setNumOfItems(Integer aNumOfItems) {
 		this.numOfItems = aNumOfItems;
 	}
 
 	public void setOrderType(OrderType aType) {
 		orderType = aType;
 	}
-
-	private Set<Item> items;
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Item> getItems() {
@@ -47,8 +49,6 @@ public class Cart {
 		this.items = itemss;
 	}
 
-	private TimeSlot timeSlot;
-
 	@OneToOne(optional = false)
 	public TimeSlot getTimeSlot() {
 		return this.timeSlot;
@@ -58,19 +58,17 @@ public class Cart {
 		this.timeSlot = timeSlot;
 	}
 
-	private Account user;
-
 	@OneToOne(optional = false)
-	public Account getUser() {
-		return this.user;
+	public Account getaccount() {
+		return this.account;
 	}
 
-	public void setUser(Account users) {
-		this.user = users;
+	public void setaccount(Account accounts) {
+		this.account = accounts;
 	}
 
 	@Id
-	public int getCartID() {
+	public Integer getCartID() {
 		return cartID;
 	}
 
@@ -78,11 +76,11 @@ public class Cart {
 		return orderType;
 	}
 
-	public float getTotalValue() {
+	public Float getTotalValue() {
 		return totalValue;
 	}
 
-	public int getNumOfItems() {
+	public Integer getNumOfItems() {
 		return numOfItems;
 	}
 

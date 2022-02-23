@@ -7,9 +7,10 @@ import javax.persistence.OneToOne;
 @Entity
 public class Address {
 	private Integer addressID;
-	private int buildingNo;
+	private Integer buildingNo;
 	private String street;
 	private String town;
+	private Account account;
 
 	@Id
 	public Integer getAddressID() {
@@ -24,7 +25,7 @@ public class Address {
 		return buildingNo;
 	}
 
-	public void setBuildingNo(int buildingNo) {
+	public void setBuildingNo(Integer buildingNo) {
 		this.buildingNo = buildingNo;
 	}
 
@@ -44,15 +45,13 @@ public class Address {
 		this.town = town;
 	}
 
-	private Account user;
-
 	@OneToOne(optional = false)
-	public Account getUser() {
-		return this.user;
+	public Account getAccount() {
+		return this.account;
 	}
 
-	public void setUser(Account user) {
-		this.user = user;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 }

@@ -4,68 +4,68 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Item {
-    private Integer itemID;
+	private Integer itemID;
 
-    public void setItemID(Integer aItemID){
-        this.itemID = aItemID;
-    }
+	public void setItemID(Integer aItemID) {
+		this.itemID = aItemID;
+	}
 
-    @Id
-    public Integer getItemID() {
-        return this.itemID;
-    }
+	@Id
+	public Integer getItemID() {
+		return this.itemID;
+	}
 
-    private String productName;
+	private String productName;
 
-    public void setProductName(String aProductName) {
-        this.productName = aProductName;
-    }
+	public void setProductName(String aProductName) {
+		this.productName = aProductName;
+	}
 
-    public String getProductName() {
-        return productName;
-    }
+	public String getProductName() {
+		return productName;
+	}
 
-    private float price;
+	private Float price;
 
-    public void setPrice(float aPrice) {
-        this.price = aPrice;
-    }
+	public void setPrice(Float aPrice) {
+		this.price = aPrice;
+	}
 
-    public float getPrice() {
-        return price;
-    }
+	public Float getPrice() {
+		return price;
+	}
 
-    private boolean availableOnline;
+	private Boolean availableOnline;
 
-    public void setAvailableOnline(boolean isAvailableOnline) {
-        this.availableOnline = isAvailableOnline;
-    }
+	public void setAvailableOnline(Boolean isAvailableOnline) {
+		this.availableOnline = isAvailableOnline;
+	}
 
-    public boolean getAvailableOnline() {
-        return availableOnline;
-    }
+	public Boolean getAvailableOnline() {
+		return availableOnline;
+	}
 
-    private int numInStock;
+	private Integer numInStock;
 
-    public void setNumInStock(int numInStock) {
-        this.numInStock = numInStock;
-    }
+	public void setNumInStock(Integer numInStock) {
+		this.numInStock = numInStock;
+	}
 
-    public int getNumInStock() {
-        return numInStock;
-    }
-    
-    private int pointPerItem;
+	public Integer getNumInStock() {
+		return numInStock;
+	}
 
-    public void setPointPerItem(int somePointPerItem) {
-        this.pointPerItem = somePointPerItem;
-    }
-    public int getPointPerItem() {
-        return pointPerItem;
-    }
+	private Integer pointPerItem;
+
+	public void setPointPerItem(Integer somePointPerItem) {
+		this.pointPerItem = somePointPerItem;
+	}
+
+	public Integer getPointPerItem() {
+		return pointPerItem;
+	}
 }

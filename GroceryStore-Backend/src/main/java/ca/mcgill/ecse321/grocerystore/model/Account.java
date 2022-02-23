@@ -10,50 +10,52 @@ import javax.persistence.OneToOne;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Account {
 
-    private String username;
-    private String password;
-    private String name;
-    private Integer pointBalance;
+	private String username;
+	private String password;
+	private String name;
+	private Integer pointBalance;
+	private AccountRole accountRole;
 
-    private UserRole userRole;
+	@Id
+	public String getUsername() {
+		return username;
+	}
 
-    @Id
-    public String getUsername() {
-        return username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public Integer getPointBalance() {
-        return pointBalance;
-    }
-    
-    @OneToOne(optional=false)
-    public UserRole getUserRole() { return this.userRole;}
+	public String getName() {
+		return name;
+	}
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public Integer getPointBalance() {
+		return pointBalance;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPointBalance(Integer pointBalance) {
+		this.pointBalance = pointBalance;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@OneToOne(optional = false)
+	public AccountRole getaccountRole() {
+		return this.accountRole;
+	}
 
-    public void setPointBalance(Integer pointBalance) {
-        this.pointBalance = pointBalance;
-    }
+	public void setaccountRole(AccountRole accountRole) {
+		this.accountRole = accountRole;
+	}
+
 }

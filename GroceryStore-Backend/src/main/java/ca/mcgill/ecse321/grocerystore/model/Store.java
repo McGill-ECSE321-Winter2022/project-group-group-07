@@ -4,7 +4,6 @@ import java.util.*;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 
 @Entity
@@ -16,8 +15,8 @@ public class Store {
   private String address;
   private String phoneNumber;
   private String email;
-  private int employeeDiscountRate;
-  private float pointToCashRatio;
+  private Integer employeeDiscountRate;
+  private Float pointToCashRatio;
 
   //Store Associations
   private Set<TimeSlot> holidays;
@@ -47,12 +46,12 @@ public class Store {
     email = aEmail;
   }
 
-  public void setEmployeeDiscountRate(int aEmployeeDiscountRate)
+  public void setEmployeeDiscountRate(Integer aEmployeeDiscountRate)
   {
     employeeDiscountRate = aEmployeeDiscountRate;
   }
 
-  public void setPointToCashRatio(float aPointToCashRatio)
+  public void setPointToCashRatio(Float aPointToCashRatio)
   {
     pointToCashRatio = aPointToCashRatio;
   }
@@ -82,12 +81,12 @@ public class Store {
     return email;
   }
 
-  public int getEmployeeDiscountRate()
+  public Integer getEmployeeDiscountRate()
   {
     return employeeDiscountRate;
   }
 
-  public float getPointToCashRatio()
+  public Float getPointToCashRatio()
   {
     return pointToCashRatio;
   }

@@ -5,5 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.grocerystore.model.Employee;
 
 public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
-
+	
+	Employee findEmployeeByName(String name);
+	
 }

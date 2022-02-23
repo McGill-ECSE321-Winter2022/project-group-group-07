@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.grocerystore.model.Customer;
 
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
-
+	Customer findCustomerByName(String name);
 }
