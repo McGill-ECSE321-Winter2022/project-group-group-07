@@ -6,4 +6,5 @@ import ca.mcgill.ecse321.grocerystore.model.Cart;
 
 public interface CartRepository extends CrudRepository<Cart, Integer> {
 
+	Cart findByCartID(Integer cartID);
 }
