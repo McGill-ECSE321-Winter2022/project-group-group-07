@@ -48,20 +48,22 @@ public class GroceryStoreSoftwareSystem {
 		return systemID;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	
 	public void setaddresses(Set<Address> addresses) {
 		this.addresses = addresses;
 	}
 
+	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Address> getaddresses() {
 		return addresses;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
-	public void setAccount(Set<Account> accounts) {
+	
+	public void setAccounts(Set<Account> accounts) {
 		this.accounts = accounts;
 	}
 
+	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Account> getAccounts() {
 		return accounts;
 	}
