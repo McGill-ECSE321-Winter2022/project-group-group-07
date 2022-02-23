@@ -24,6 +24,6 @@ Sprint Report can be found [here](https://github.com/McGill-ECSE321-Winter2022/p
 | Elias Abou Farah | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Action build system automation, Model code writing, Testing and debugging | 25.5 |
 | Jasmine Cheung | Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint documentation | 16.5 |
 | Adam Kazma | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 20.5 |
-| Karim Moussa | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 17.5 |
+| Karim Moussa | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 24 |
 | Tran Tuan Khai Phan | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 17.5 |
 | Ojetta Ye | Requirements, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint Documentation | 17 |
