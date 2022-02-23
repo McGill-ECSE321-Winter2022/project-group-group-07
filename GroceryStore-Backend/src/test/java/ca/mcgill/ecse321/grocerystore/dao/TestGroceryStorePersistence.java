@@ -188,7 +188,7 @@ public class TestGroceryStorePersistence {
         String phoneNumber = "555-555-5555";
         String email = "john@yahoo.com";
         Integer employeeDiscount = 20;
-        Float pointToCash = new Float(1000.0);
+        Float pointToCash = (float) 1000.0;
         Store store = new Store();
         store.setStoreID(storeID);
         store.setAddress(address);
