@@ -50,11 +50,11 @@ public class Account {
 	}
 
 	@OneToOne(optional = false)
-	public AccountRole getaccountRole() {
+	public AccountRole getAccountRole() {
 		return this.accountRole;
 	}
 
-	public void setaccountRole(AccountRole accountRole) {
+	public void setAccountRole(AccountRole accountRole) {
 		this.accountRole = accountRole;
 	}
 
