@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class Address {
 	private Integer addressID;
-	private int buildingNo;
+	private Integer buildingNo;
 	private String street;
 	private String town;
 	private Account account;
@@ -25,7 +25,7 @@ public class Address {
 		return buildingNo;
 	}
 
-	public void setBuildingNo(int buildingNo) {
+	public void setBuildingNo(Integer buildingNo) {
 		this.buildingNo = buildingNo;
 	}
 

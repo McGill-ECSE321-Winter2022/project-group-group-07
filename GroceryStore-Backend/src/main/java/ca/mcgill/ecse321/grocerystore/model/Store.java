@@ -81,7 +81,7 @@ public class Store {
     return email;
   }
 
-  public int getEmployeeDiscountRate()
+  public Integer getEmployeeDiscountRate()
   {
     return employeeDiscountRate;
   }

@@ -10,7 +10,7 @@ public class BusinessHour {
     public enum DayOfWeek { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
 
     //BusinessHour Attributes
-    private int businessHourId;
+    private Integer businessHourId;
     private DayOfWeek dayOfWeek;
     private Time startTime;
     private Time endTime;
@@ -18,7 +18,7 @@ public class BusinessHour {
     //BusinessHour Associations
     private Store store;
 
-    public void setBusinessHourId(int aBusinessHourId){
+    public void setBusinessHourId(Integer aBusinessHourId){
         businessHourId = aBusinessHourId;
     }
     public void setDayOfWeek(DayOfWeek aDayOfWeek){
