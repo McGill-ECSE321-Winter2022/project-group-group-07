@@ -49,7 +49,7 @@ public class Cart {
 		this.items = itemss;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(optional = true)
 	public TimeSlot getTimeSlot() {
 		return this.timeSlot;
 	}
