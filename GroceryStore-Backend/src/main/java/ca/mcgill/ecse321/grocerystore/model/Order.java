@@ -16,11 +16,15 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Order {
 
+	//attribute fields
 	private Account account;
 	private Integer orderID;
 	private Float totalValue;
 	private Date date;
-	private Time pruchaseTime;
+	private Time purchaseTime;
+
+	//association fields
+	private Set<Item> items;
 
 	@OneToOne(optional = true)
 	public Account getAccount() {
@@ -44,10 +48,10 @@ public abstract class Order {
 	}
 
 	public void setPurchaseTime(Time aTime) {
-		this.pruchaseTime = aTime;
+		this.purchaseTime = aTime;
 	}
 
-	private Set<Item> items;
+
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Item> getItems() {
@@ -72,7 +76,7 @@ public abstract class Order {
 	}
 
 	public Time getPurchaseTime() {
-		return pruchaseTime;
+		return purchaseTime;
 	}
 
 }
