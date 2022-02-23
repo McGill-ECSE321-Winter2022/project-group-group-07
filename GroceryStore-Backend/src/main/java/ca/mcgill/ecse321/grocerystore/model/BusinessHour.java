@@ -11,46 +11,47 @@ public class BusinessHour {
 		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 	}
 
-	// BusinessHour Attributes
+	// attribute fields
 	private Integer businessHourId;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
 
-	// BusinessHour Associations
+	// association fields
 	private Store store;
 
-	public void setBusinessHourId(Integer aBusinessHourId) {
-		businessHourId = aBusinessHourId;
-	}
-
-	public void setDayOfWeek(DayOfWeek aDayOfWeek) {
-		dayOfWeek = aDayOfWeek;
-	}
-
-	public void setStartTime(Time aStartTime) {
-		startTime = aStartTime;
-	}
-
-	public void setEndTime(Time aEndTime) {
-		endTime = aEndTime;
-	}
-
+	// getters and setters
 	@Id
 	public int getBusinessHourId() {
 		return businessHourId;
+	}
+
+	public void setBusinessHourId(Integer aBusinessHourId) {
+		businessHourId = aBusinessHourId;
 	}
 
 	public DayOfWeek getDayOfWeek() {
 		return dayOfWeek;
 	}
 
+	public void setDayOfWeek(DayOfWeek aDayOfWeek) {
+		dayOfWeek = aDayOfWeek;
+	}
+
 	public Time getStartTime() {
 		return startTime;
 	}
 
+	public void setStartTime(Time aStartTime) {
+		startTime = aStartTime;
+	}
+
 	public Time getEndTime() {
 		return endTime;
+	}
+
+	public void setEndTime(Time aEndTime) {
+		endTime = aEndTime;
 	}
 
 	@ManyToOne(optional = false)

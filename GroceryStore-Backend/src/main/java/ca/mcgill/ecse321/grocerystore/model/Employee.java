@@ -9,8 +9,10 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Employee extends AccountRole {
 
+	// attribute fields
 	private Date employmentDate;
 
+	// getters and setters
 	public Date getEmploymentDate() {
 		return this.employmentDate;
 	}
