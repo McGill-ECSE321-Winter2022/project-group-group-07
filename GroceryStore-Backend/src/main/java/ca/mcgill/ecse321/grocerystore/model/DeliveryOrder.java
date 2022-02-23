@@ -6,8 +6,10 @@ import javax.persistence.OneToOne;
 @Entity
 public class DeliveryOrder extends Order {
 
+	// association attributes
 	private TimeSlot timeSlot;
 
+	// getters and setters
 	@OneToOne(optional = false)
 	public TimeSlot getTimeSlot() {
 		return this.timeSlot;

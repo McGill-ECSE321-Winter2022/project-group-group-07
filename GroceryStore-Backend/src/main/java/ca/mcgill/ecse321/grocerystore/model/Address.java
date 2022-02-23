@@ -6,12 +6,15 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Address {
+	// attribute fields
 	private Integer addressID;
 	private Integer buildingNo;
 	private String street;
 	private String town;
+	// association fields
 	private Account account;
 
+	// getters and setters
 	@Id
 	public Integer getAddressID() {
 		return addressID;
@@ -53,5 +56,4 @@ public class Address {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-
 }

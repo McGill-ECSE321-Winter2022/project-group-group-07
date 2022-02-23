@@ -1,4 +1,4 @@
- package ca.mcgill.ecse321.grocerystore.dao;
+package ca.mcgill.ecse321.grocerystore.dao;
 
  import static org.junit.jupiter.api.Assertions.assertEquals;
  import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,10 +19,12 @@
  import org.junit.jupiter.api.extension.ExtendWith;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.boot.test.context.SpringBootTest;
- import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
  import ca.mcgill.ecse321.grocerystore.model.Account;
- import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
+import ca.mcgill.ecse321.grocerystore.model.Address;
+import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
  import ca.mcgill.ecse321.grocerystore.model.Cart;
  import ca.mcgill.ecse321.grocerystore.model.Cashier;
  import ca.mcgill.ecse321.grocerystore.model.Clerk;
