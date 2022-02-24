@@ -368,6 +368,5 @@ public class TestGroceryStorePersistence {
 		assertEquals("cocho",account.getUsername());
 	}
 
-    
-
+ 
 }

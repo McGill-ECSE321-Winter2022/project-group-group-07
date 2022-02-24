@@ -79,8 +79,9 @@ public class Cart {
 		this.timeSlot = timeSlot;
 	}
 
-	@OneToOne(optional = false)
-	public Account getAccount() {
+	@OneToOne(optional = true)
+	public Account getaccount() {
+
 		return this.account;
 	}
 
