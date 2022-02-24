@@ -319,6 +319,7 @@ public class TestGroceryStorePersistence {
         assertEquals((float)50.0,nonPerishable.getPrice());
         assertEquals("Desk",nonPerishable.getProductName());
     }
+
     @Test
     public void testPersistAndLoadTimeSlot() {
     	Integer timeSlotID=25;
@@ -368,5 +369,5 @@ public class TestGroceryStorePersistence {
 		assertEquals("cocho",account.getUsername());
 	}
 
- 
+
 }
