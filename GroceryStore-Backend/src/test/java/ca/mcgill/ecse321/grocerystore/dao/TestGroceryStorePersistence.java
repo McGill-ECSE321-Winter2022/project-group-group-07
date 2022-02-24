@@ -19,16 +19,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ca.mcgill.ecse321.grocerystore.model.Account;
+import ca.mcgill.ecse321.grocerystore.model.Address;
 import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
 import ca.mcgill.ecse321.grocerystore.model.Cart;
 import ca.mcgill.ecse321.grocerystore.model.Cashier;
 import ca.mcgill.ecse321.grocerystore.model.Clerk;
 import ca.mcgill.ecse321.grocerystore.model.Customer;
 import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
+import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.Owner;
+import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.Report;
 import ca.mcgill.ecse321.grocerystore.model.Store;
 import ca.mcgill.ecse321.grocerystore.model.Terminal;
@@ -185,6 +189,7 @@ public class TestGroceryStorePersistence {
 		Store store = new Store();
 		store.setStoreID(storeID);
 		store.setAddress(address);
+		store.setPhoneNumber(phoneNumber);
 		store.setEmail(email);
 		store.setEmployeeDiscountRate(employeeDiscount);
 		store.setName(name);
@@ -233,5 +238,83 @@ public class TestGroceryStorePersistence {
 		assertNotNull(report);
 		assertEquals(reportID, report.getReportID());
 	}
+	@Test
+	public void testPersistAndLoadStore() {
 
+		Integer storeID = 1;
+		String name = "BreadnBake";
+		String address = "1 ave";
+		String phoneNumber = "555-555-5555";
+		String email = "john@yahoo.com";
+		Integer employeeDiscount = 20;
+		Float pointToCash = (float) 1000.0;
+		Store store = new Store();
+		store.setStoreID(storeID);
+		store.setAddress(address);
+		store.setPhoneNumber(phoneNumber);
+		store.setEmail(email);
+		store.setEmployeeDiscountRate(employeeDiscount);
+		store.setName(name);
+		store.setPointToCashRatio(pointToCash);
+		Set<TimeSlot> holidays = new HashSet();
+		store.setHolidays(holidays);
+		storeRepository.save(store);
+		store=null;
+		store=storeRepository.findByStoreID(storeID);
+		assertNotNull(store);
+		assertEquals(storeID,store.getStoreID());
+		assertEquals(name,store.getName());
+		assertEquals(address,store.getAddress());
+		assertEquals(phoneNumber,store.getPhoneNumber());
+		assertEquals(email,store.getEmail());
+		assertEquals(employeeDiscount,store.getEmployeeDiscountRate());
+		assertEquals(pointToCash,store.getPointToCashRatio());
+	}
+	@Test
+    public void testPersistAndLoadPerishableItem() {
+        Integer perishableID = 1;
+        PerishableItem perishable = new PerishableItem();
+        perishable.setItemID(perishableID);
+        perishable.setAvailableOnline(true);
+        perishable.setNumInStock(1);
+        perishable.setPointPerItem(5);
+        perishable.setPrice((float) 2.0);
+        perishable.setProductName("Apple");
+        perishableItemRepository.save(perishable);
+
+        perishable = null;
+
+        perishable  = perishableItemRepository.findByItemID(perishableID);
+        assertNotNull(perishable);
+        assertEquals(perishableID,perishable.getItemID());
+        assertEquals(true,perishable.getAvailableOnline());
+        assertEquals(1,perishable.getNumInStock());
+        assertEquals(5,perishable.getPointPerItem());
+        assertEquals((float)2.0,perishable.getPrice());
+        assertEquals("Apple",perishable.getProductName());
+    }
+
+    @Test
+    public void testPersistAndLoadNonPerishableItem() {
+        Integer nonPerishableID = 1;
+        NonPerishableItem nonPerishable = new NonPerishableItem();
+        nonPerishable.setItemID(nonPerishableID);
+        nonPerishable.setAvailableOnline(true);
+        nonPerishable.setNumInStock(1);
+        nonPerishable.setPointPerItem(10);
+        nonPerishable.setPrice((float) 50.0);
+        nonPerishable.setProductName("Desk");
+        nonPerishableItemRepository.save(nonPerishable);
+
+        nonPerishable = null;
+
+        nonPerishable  = nonPerishableItemRepository.findByItemID(nonPerishableID);
+        assertNotNull(nonPerishable);
+        assertEquals(nonPerishableID,nonPerishable.getItemID());
+        assertEquals(true,nonPerishable.getAvailableOnline());
+        assertEquals(1,nonPerishable.getNumInStock());
+        assertEquals(10,nonPerishable.getPointPerItem());
+        assertEquals((float)50.0,nonPerishable.getPrice());
+        assertEquals("Desk",nonPerishable.getProductName());
+    }
 }
