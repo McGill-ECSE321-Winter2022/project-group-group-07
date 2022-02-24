@@ -19,8 +19,8 @@ public abstract class Item {
 
 
 	//getter and setters
-	public void setItemID(Integer aItemID) {
-		this.itemID = aItemID;
+	public void setItemID(Integer itemID) {
+		this.itemID = itemID;
 	}
 	@Id
 	public Integer getItemID() {
@@ -35,7 +35,6 @@ public abstract class Item {
 	public String getProductName() {
 		return productName;
 	}
-
 
 	public void setPrice(Float aPrice) {
 		this.price = aPrice;
