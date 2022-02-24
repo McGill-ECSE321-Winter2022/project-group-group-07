@@ -18,7 +18,7 @@ We are a team of six Software Engineering Students in U2 at McGill. We are group
 | Ojetta Ye | Documentation Lead | 17 | Sprint 2 | Sprint 3 | Sprint 4 |
 
 ## Deliverable 1
-Sprint Report can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-1)
+Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-1)
 | Name | Contribution | Hours |
 |------|--------------|-------|
 | Elias Abou Farah | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Action build system automation, Model code writing, Testing and debugging | 25.5 |
