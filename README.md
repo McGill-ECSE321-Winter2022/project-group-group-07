@@ -21,9 +21,9 @@ We are a team of six Software Engineering Students in U2 at McGill. We are group
 Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-1)
 | Name | Contribution | Hours |
 |------|--------------|-------|
-| Elias Abou Farah | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Action build system automation, Model code writing, Testing and debugging | 25.5 |
-| Jasmine Cheung | Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint documentation | 16.5 |
-| Adam Kazma | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 20.5 |
-| Karim Moussa | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 24 |
+| Elias Abou Farah | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Action build system automation, Model code writing, Persistence Test writing, Testing and debugging | 25.5 |
+| Karim Moussa | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Persistence Test writing | 24.5 |
+| Adam Kazma | GitHub setup, Heroku and Spring setup, Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Persistence Test writing | 21.5 |
+| Jasmine Cheung | Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Persistence Test writing, Sprint documentation | 19.5 |
+| Ojetta Ye | Requirements, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint Documentation, Persistence Test writing | 19.5 |
 | Tran Tuan Khai Phan | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 17.5 |
-| Ojetta Ye | Requirements, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint Documentation | 17 |
