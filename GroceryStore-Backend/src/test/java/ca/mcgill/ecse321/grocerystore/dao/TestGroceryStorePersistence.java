@@ -317,6 +317,4 @@ public class TestGroceryStorePersistence {
         assertEquals((float)50.0,nonPerishable.getPrice());
         assertEquals("Desk",nonPerishable.getProductName());
     }
-    
-
 }
