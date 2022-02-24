@@ -24,7 +24,7 @@ public class Address {
 		this.addressID = addressID;
 	}
 
-	public int getBuildingNo() {
+	public Integer getBuildingNo() {
 		return buildingNo;
 	}
 
