@@ -199,7 +199,7 @@ public class TestGroceryStorePersistence {
 
 	@Test
 	public void testPersistAndLoadBusinessHour() {
-
+		//create business hour and store
 		Integer storeID = 1;
 		String name = "BreadnBake";
 		String address = "1 ave";
@@ -226,10 +226,11 @@ public class TestGroceryStorePersistence {
 		businessHourRepository.save(businessHour);
 
 		businessHour = null;
-
+		//checking persistence
 		businessHour = businessHourRepository.findByBusinessHourId(businessHourId);
 		assertNotNull(businessHour);
 		assertEquals(businessHourId, businessHour.getBusinessHourId());
+		assertEquals(storeID,businessHour.getStore().getStoreID());
 	}
 
 	@Test
@@ -261,7 +262,7 @@ public class TestGroceryStorePersistence {
 	}
 	@Test
 	public void testPersistAndLoadStore() {
-
+		//create store and its attributes
 		Integer storeID = 1;
 		String name = "BreadnBake";
 		String address = "1 ave";
@@ -282,6 +283,7 @@ public class TestGroceryStorePersistence {
 		storeRepository.save(store);
 		store=null;
 		store=storeRepository.findByStoreID(storeID);
+		//checkinh the attributes
 		assertNotNull(store);
 		assertEquals(storeID,store.getStoreID());
 		assertEquals(name,store.getName());
@@ -340,6 +342,7 @@ public class TestGroceryStorePersistence {
     }
     @Test
     public void testPersistAndLoadTimeSlot() {
+    	//create timeslot
     	Integer timeSlotID=25;
     	Date startDate=Date.valueOf("2022-01-02");
     	Date endDate=Date.valueOf("2022-01-02");
@@ -356,6 +359,7 @@ public class TestGroceryStorePersistence {
     	
     	timeSlot=null;
     	timeSlot=timeSlotRepository.findByTimeSlotID(timeSlotID);
+    	//create assert
     	assertNotNull(timeSlot);
     	assertEquals(timeSlotID,timeSlot.getTimeSlotID());
     	assertEquals(startDate,timeSlot.getStartDate());
@@ -366,13 +370,14 @@ public class TestGroceryStorePersistence {
     }
     @Test
 	public void testPersistAndLoadAccount() {
+    	//Creating customer role
 		Integer roleID = 5;
 		Customer customer = new Customer();
 		customer.setRoleID(roleID);
 		customerRepository.save(customer);
 		Account account= new Account();
 		customer=customerRepository.findCustomerByRoleID(roleID);
-		
+		//creating customer account
 		account.setAccountRole(customer);
 		account.setName("Coco");
 		account.setPassword("Pass");
@@ -382,9 +387,12 @@ public class TestGroceryStorePersistence {
 		
 		account = null;
 		account = accountRepository.findByUsername("cocho");
-		
+		//Checking persistence
 		assertNotNull(account);
 		assertEquals("cocho",account.getUsername());
+		assertEquals("Pass",account.getPassword());
+		assertEquals("Coco",account.getName());
+		assertEquals(50,account.getPointBalance());
 	}
     //Adam
     @Test
