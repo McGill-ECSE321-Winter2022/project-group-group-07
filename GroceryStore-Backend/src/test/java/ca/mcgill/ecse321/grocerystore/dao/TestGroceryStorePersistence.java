@@ -102,13 +102,24 @@ public class TestGroceryStorePersistence {
 		storeRepository.deleteAll();
 		terminalRepository.deleteAll();
 		orderRepository.deleteAll();
+		inStoreOrderRepository.deleteAll();
+		deliveryOrderRepository.deleteAll();
+		pickUpOrderRepository.deleteAll();
 		timeSlotRepository.deleteAll();
 		itemRepository.deleteAll();
+		perishableItemRepository.deleteAll();
+		nonPerishableItemRepository.deleteAll();
 		addressRepository.deleteAll();
 		accountRepository.deleteAll();
 		workingHourRepository.deleteAll();
 		scheduleRepository.deleteAll();
 		accountRoleRepository.deleteAll();
+		customerRepository.deleteAll();
+		employeeRepository.deleteAll();
+		deliveryPersonRepository.deleteAll();
+		ownerRepository.deleteAll();
+		cashierRepository.deleteAll();
+		clerkRepository.deleteAll();
 	}
 
 	@Test
