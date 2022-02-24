@@ -1,16 +1,15 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Account {
 
 	// attribute fields
+	
 	private String username;
 	private String password;
 	private String name;

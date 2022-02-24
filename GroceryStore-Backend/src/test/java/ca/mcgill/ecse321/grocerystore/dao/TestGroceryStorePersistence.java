@@ -23,6 +23,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ca.mcgill.ecse321.grocerystore.model.Account;
+import ca.mcgill.ecse321.grocerystore.model.AccountRole;
 import ca.mcgill.ecse321.grocerystore.model.Address;
 import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
 import ca.mcgill.ecse321.grocerystore.model.Cart;
@@ -30,6 +31,7 @@ import ca.mcgill.ecse321.grocerystore.model.Cashier;
 import ca.mcgill.ecse321.grocerystore.model.Clerk;
 import ca.mcgill.ecse321.grocerystore.model.Customer;
 import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.Owner;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
@@ -100,13 +102,24 @@ public class TestGroceryStorePersistence {
 		storeRepository.deleteAll();
 		terminalRepository.deleteAll();
 		orderRepository.deleteAll();
+		inStoreOrderRepository.deleteAll();
+		deliveryOrderRepository.deleteAll();
+		pickUpOrderRepository.deleteAll();
 		timeSlotRepository.deleteAll();
 		itemRepository.deleteAll();
+		perishableItemRepository.deleteAll();
+		nonPerishableItemRepository.deleteAll();
 		addressRepository.deleteAll();
 		accountRepository.deleteAll();
 		workingHourRepository.deleteAll();
 		scheduleRepository.deleteAll();
 		accountRoleRepository.deleteAll();
+		customerRepository.deleteAll();
+		employeeRepository.deleteAll();
+		deliveryPersonRepository.deleteAll();
+		ownerRepository.deleteAll();
+		cashierRepository.deleteAll();
+		clerkRepository.deleteAll();
 	}
 
 	@Test
@@ -317,31 +330,54 @@ public class TestGroceryStorePersistence {
         assertEquals((float)50.0,nonPerishable.getPrice());
         assertEquals("Desk",nonPerishable.getProductName());
     }
-    
     @Test
     public void testPersistAndLoadTimeSlot() {
-        Integer timeSlotID=25;
-        Date startDate=Date.valueOf("2022-01-02");
-        Date endDate=Date.valueOf("2022-01-02");
-        Time startTime=Time.valueOf("14:02:03");
-        Time endTime=Time.valueOf("15:00:00");
-
-        TimeSlot timeSlot=new TimeSlot();
-        timeSlot.setTimeSlotID(timeSlotID);
-        timeSlot.setStartDate(startDate);
-        timeSlot.setEndDate(endDate);
-        timeSlot.setStartTime(startTime);
-        timeSlot.setEndTime(endTime);
-        timeSlotRepository.save(timeSlot);
-
-        timeSlot=null;
-        timeSlot=timeSlotRepository.findByTimeSlotID(timeSlotID);
-        assertNotNull(timeSlot);
-        assertEquals(timeSlotID,timeSlot.getTimeSlotID());
-        assertEquals(startDate,timeSlot.getStartDate());
-        assertEquals(endDate,timeSlot.getEndDate());
-        assertEquals(startTime,timeSlot.getStartTime());
-        assertEquals(endTime,timeSlot.getEndTime());
-
+    	Integer timeSlotID=25;
+    	Date startDate=Date.valueOf("2022-01-02");
+    	Date endDate=Date.valueOf("2022-01-02");
+    	Time startTime=Time.valueOf("14:02:03");
+    	Time endTime=Time.valueOf("15:00:00");
+    	
+    	TimeSlot timeSlot=new TimeSlot();
+    	timeSlot.setTimeSlotID(timeSlotID);
+    	timeSlot.setStartDate(startDate);
+    	timeSlot.setEndDate(endDate);
+    	timeSlot.setStartTime(startTime);
+    	timeSlot.setEndTime(endTime);
+    	timeSlotRepository.save(timeSlot);
+    	
+    	timeSlot=null;
+    	timeSlot=timeSlotRepository.findByTimeSlotID(timeSlotID);
+    	assertNotNull(timeSlot);
+    	assertEquals(timeSlotID,timeSlot.getTimeSlotID());
+    	assertEquals(startDate,timeSlot.getStartDate());
+    	assertEquals(endDate,timeSlot.getEndDate());
+    	assertEquals(startTime,timeSlot.getStartTime());
+    	assertEquals(endTime,timeSlot.getEndTime());
+    	
     }
+    @Test
+	public void testPersistAndLoadAccount() {
+		Integer roleID = 5;
+		Customer customer = new Customer();
+		customer.setRoleID(roleID);
+		customerRepository.save(customer);
+		Account account= new Account();
+		customer=customerRepository.findCustomerByRoleID(roleID);
+		
+		account.setAccountRole(customer);
+		account.setName("Coco");
+		account.setPassword("Pass");
+		account.setUsername("cocho");
+		account.setPointBalance(50);
+		accountRepository.save(account);
+		
+		account = null;
+		account = accountRepository.findByUsername("cocho");
+		
+		assertNotNull(account);
+		assertEquals("cocho",account.getUsername());
+	}
+
+ 
 }
