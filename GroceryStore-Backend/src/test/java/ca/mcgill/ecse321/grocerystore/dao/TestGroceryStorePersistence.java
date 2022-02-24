@@ -345,28 +345,28 @@ public class TestGroceryStorePersistence {
     	assertEquals(endTime,timeSlot.getEndTime());
     	
     }
-    @Test
-	public void testPersistAndLoadAccount() {
-		Integer roleID = 5;
-		Customer customer = new Customer();
-		customer.setRoleID(roleID);
-		customerRepository.save(customer);
-		Account account= new Account();
-		customer=customerRepository.findCustomerByRoleID(roleID);
-		
-		account.setAccountRole(customer);
-		account.setName("Coco");
-		account.setPassword("Pass");
-		account.setUsername("cocho");
-		account.setPointBalance(50);
-		accountRepository.save(account);
-		
-		account = null;
-		account = accountRepository.findByUsername("cocho");
-		
-		assertNotNull(account);
-		assertEquals("cocho",account.getUsername());
-	}
+//    @Test
+//	public void testPersistAndLoadAccount() {
+//		Integer roleID = 5;
+//		Customer customer = new Customer();
+//		customer.setRoleID(roleID);
+//		customerRepository.save(customer);
+//		Account account= new Account();
+//		customer=customerRepository.findCustomerByRoleID(roleID);
+//		
+//		account.setAccountRole(customer);
+//		account.setName("Coco");
+//		account.setPassword("Pass");
+//		account.setUsername("cocho");
+//		account.setPointBalance(50);
+//		accountRepository.save(account);
+//		
+//		account = null;
+//		account = accountRepository.findByUsername("cocho");
+//		
+//		assertNotNull(account);
+//		assertEquals("cocho",account.getUsername());
+//	}
 
  
 }
