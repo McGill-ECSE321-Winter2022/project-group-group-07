@@ -317,4 +317,31 @@ public class TestGroceryStorePersistence {
         assertEquals((float)50.0,nonPerishable.getPrice());
         assertEquals("Desk",nonPerishable.getProductName());
     }
+    
+    @Test
+    public void testPersistAndLoadTimeSlot() {
+        Integer timeSlotID=25;
+        Date startDate=Date.valueOf("2022-01-02");
+        Date endDate=Date.valueOf("2022-01-02");
+        Time startTime=Time.valueOf("14:02:03");
+        Time endTime=Time.valueOf("15:00:00");
+
+        TimeSlot timeSlot=new TimeSlot();
+        timeSlot.setTimeSlotID(timeSlotID);
+        timeSlot.setStartDate(startDate);
+        timeSlot.setEndDate(endDate);
+        timeSlot.setStartTime(startTime);
+        timeSlot.setEndTime(endTime);
+        timeSlotRepository.save(timeSlot);
+
+        timeSlot=null;
+        timeSlot=timeSlotRepository.findByTimeSlotID(timeSlotID);
+        assertNotNull(timeSlot);
+        assertEquals(timeSlotID,timeSlot.getTimeSlotID());
+        assertEquals(startDate,timeSlot.getStartDate());
+        assertEquals(endDate,timeSlot.getEndDate());
+        assertEquals(startTime,timeSlot.getStartTime());
+        assertEquals(endTime,timeSlot.getEndTime());
+
+    }
 }
