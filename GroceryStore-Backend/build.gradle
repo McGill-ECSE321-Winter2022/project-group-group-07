@@ -26,7 +26,6 @@ dependencies {
 	testImplementation 'org.mockito:mockito-junit-jupiter:2.18.3'
 	testImplementation 'org.junit.platform:junit-platform-launcher:1.4.1'
 	
-
 }
 
 tasks.named('test') {
