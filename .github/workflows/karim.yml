@@ -1,4 +1,4 @@
-name: Jave CI with Gradle
+name: Karim's Workflow
 
 on:
   push:
