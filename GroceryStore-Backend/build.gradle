@@ -17,8 +17,16 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	testImplementation 'org.mockito:mockito-core:2.+'
+	testImplementation 'org.mockito:mockito-junit-jupiter:2.18.3'
+	testImplementation 'org.junit.platform:junit-platform-launcher:1.4.1'
+	
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 tasks.named('test') {
