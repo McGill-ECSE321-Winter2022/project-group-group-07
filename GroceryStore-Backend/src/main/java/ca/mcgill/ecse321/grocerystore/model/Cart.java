@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 
 @Entity
 public class Cart {
@@ -22,11 +23,7 @@ public class Cart {
 	private TimeSlot timeSlot;
 	private Account account;
 
-	// enum class
-	public enum OrderType {
-		Delivery, PickUp
-	};
-
+	
 	// getters and setters
 	@Id
 	public Integer getCartID() {

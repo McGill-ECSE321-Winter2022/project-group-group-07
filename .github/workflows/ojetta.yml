@@ -1,4 +1,4 @@
-name: Jave CI with Gradle
+name: Ojetta's Workflow
 
 on:
   push:

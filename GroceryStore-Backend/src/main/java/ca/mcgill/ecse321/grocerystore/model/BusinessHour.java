@@ -4,12 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.sql.Time;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 
 @Entity
 public class BusinessHour {
-	public enum DayOfWeek {
-		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-	}
+	
 
 	// attribute fields
 	private Integer businessHourId;

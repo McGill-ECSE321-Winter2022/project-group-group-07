@@ -30,15 +30,23 @@ import ca.mcgill.ecse321.grocerystore.model.Cart;
 import ca.mcgill.ecse321.grocerystore.model.Cashier;
 import ca.mcgill.ecse321.grocerystore.model.Clerk;
 import ca.mcgill.ecse321.grocerystore.model.Customer;
+import ca.mcgill.ecse321.grocerystore.model.DeliveryOrder;
 import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
+import ca.mcgill.ecse321.grocerystore.model.InStoreOrder;
+import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.Owner;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.PickUpOrder;
 import ca.mcgill.ecse321.grocerystore.model.Report;
+import ca.mcgill.ecse321.grocerystore.model.Schedule;
 import ca.mcgill.ecse321.grocerystore.model.Store;
 import ca.mcgill.ecse321.grocerystore.model.Terminal;
 import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
+import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -191,7 +199,7 @@ public class TestGroceryStorePersistence {
 
 	@Test
 	public void testPersistAndLoadBusinessHour() {
-
+		//create business hour and store
 		Integer storeID = 1;
 		String name = "BreadnBake";
 		String address = "1 ave";
@@ -218,10 +226,11 @@ public class TestGroceryStorePersistence {
 		businessHourRepository.save(businessHour);
 
 		businessHour = null;
-
+		//checking persistence
 		businessHour = businessHourRepository.findByBusinessHourId(businessHourId);
 		assertNotNull(businessHour);
 		assertEquals(businessHourId, businessHour.getBusinessHourId());
+		assertEquals(storeID,businessHour.getStore().getStoreID());
 	}
 
 	@Test
@@ -253,7 +262,7 @@ public class TestGroceryStorePersistence {
 	}
 	@Test
 	public void testPersistAndLoadStore() {
-
+		//create store and its attributes
 		Integer storeID = 1;
 		String name = "BreadnBake";
 		String address = "1 ave";
@@ -274,6 +283,7 @@ public class TestGroceryStorePersistence {
 		storeRepository.save(store);
 		store=null;
 		store=storeRepository.findByStoreID(storeID);
+		//checkinh the attributes
 		assertNotNull(store);
 		assertEquals(storeID,store.getStoreID());
 		assertEquals(name,store.getName());
@@ -332,6 +342,7 @@ public class TestGroceryStorePersistence {
     }
     @Test
     public void testPersistAndLoadTimeSlot() {
+    	//create timeslot
     	Integer timeSlotID=25;
     	Date startDate=Date.valueOf("2022-01-02");
     	Date endDate=Date.valueOf("2022-01-02");
@@ -348,6 +359,7 @@ public class TestGroceryStorePersistence {
     	
     	timeSlot=null;
     	timeSlot=timeSlotRepository.findByTimeSlotID(timeSlotID);
+    	//create assert
     	assertNotNull(timeSlot);
     	assertEquals(timeSlotID,timeSlot.getTimeSlotID());
     	assertEquals(startDate,timeSlot.getStartDate());
@@ -358,13 +370,14 @@ public class TestGroceryStorePersistence {
     }
     @Test
 	public void testPersistAndLoadAccount() {
+    	//Creating customer role
 		Integer roleID = 5;
 		Customer customer = new Customer();
 		customer.setRoleID(roleID);
 		customerRepository.save(customer);
 		Account account= new Account();
 		customer=customerRepository.findCustomerByRoleID(roleID);
-		
+		//creating customer account
 		account.setAccountRole(customer);
 		account.setName("Coco");
 		account.setPassword("Pass");
@@ -374,10 +387,405 @@ public class TestGroceryStorePersistence {
 		
 		account = null;
 		account = accountRepository.findByUsername("cocho");
-		
+		//Checking persistence
 		assertNotNull(account);
 		assertEquals("cocho",account.getUsername());
+		assertEquals("Pass",account.getPassword());
+		assertEquals("Coco",account.getName());
+		assertEquals(50,account.getPointBalance());
 	}
+    //Adam
+    @Test
+    public void testPersistAndLoadCart() {
+        Integer cartID=30;
+        OrderType orderType = OrderType.Delivery;
+        Float totalValue = 100f;
+        Integer numberOfItems = 2;
 
+        Cart cart = new Cart();
+        cart.setCartID(cartID);
+        cart.setOrderType(orderType);
+        cart.setTotalValue(totalValue);
+        cart.setNumOfItems(numberOfItems);
+        //Create and add items
+        Set<Item> items = new HashSet<Item>();
+        Item item = new PerishableItem();
+        Integer itemID = 31;
+        String productName = "Bread";
+        Float price = 40f;
+        Boolean availableOnline = false;
+        Integer numInStock = 10;
+        Integer pointPerItem = 1;
+        
+        item.setItemID(itemID);
+        item.setProductName(productName);
+        item.setPrice(price);
+        item.setAvailableOnline(availableOnline);
+        item.setNumInStock(numInStock);
+        item.setPointPerItem(pointPerItem);
+        
+        Item item2 = new NonPerishableItem();
+        Integer itemID2 = 32;
+        String productName2 = "Table";
+        Float price2 = 200f;
+        Boolean availableOnline2 = true;
+        Integer numInStock2 = 3;
+        Integer pointPerItem2 = 10;
+        
+        item2.setItemID(itemID2);
+        item2.setProductName(productName2);
+        item2.setPrice(price2);
+        item2.setAvailableOnline(availableOnline2);
+        item2.setNumInStock(numInStock2);
+        item2.setPointPerItem(pointPerItem2);
+        
+        items.add(item);
+        items.add(item2);
+        itemRepository.save(item);
+        itemRepository.save(item2);
+        //Set items
+        cart.setItems(items);
+        //Create TimeSlot
+        Integer timeSlotID=35;
+        Date startDate=Date.valueOf("2022-02-02");
+        Date endDate=Date.valueOf("2022-02-02");
+        Time startTime=Time.valueOf("13:02:03");
+        Time endTime=Time.valueOf("14:00:00");
+
+        TimeSlot timeSlot=new TimeSlot();
+        timeSlot.setTimeSlotID(timeSlotID);
+        timeSlot.setStartDate(startDate);
+        timeSlot.setEndDate(endDate);
+        timeSlot.setStartTime(startTime);
+        timeSlot.setEndTime(endTime);
+        //Set TimeSlot
+        timeSlotRepository.save(timeSlot);
+        cart.setTimeSlot(timeSlot);
+        
+        //Create Account
+        Account account = new Account();
+
+        String username = "whatever";
+        String password = "1234";
+        String name = "John";
+        Integer pointBalance = 10;
+        AccountRole accountRole = new Customer();
+        accountRole.setRoleID(33);
+        
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setName(name);
+        account.setPointBalance(pointBalance);
+        account.setAccountRole(accountRole);
+        accountRoleRepository.save(accountRole);
+        //Set Account
+        accountRepository.save(account);
+        cart.setAccount(account);
+        
+        cartRepository.save(cart);
+
+        cart=null;
+        cart=cartRepository.findByCartID(cartID);
+        
+        assertNotNull(cart);
+        assertEquals(cartID,cart.getCartID());
+        assertEquals(orderType,cart.getOrderType());
+        assertEquals(totalValue,cart.getTotalValue());
+        assertEquals(numberOfItems,cart.getNumOfItems());
+        assertEquals(timeSlot.getTimeSlotID(), cart.getTimeSlot().getTimeSlotID());
+        assertEquals(account.getUsername(),cart.getaccount().getUsername());
+
+    }
+    @Test
+    public void testPersistAndLoadAddress() {
+    	
+    	Integer roleID = 5;
+        Customer customer = new Customer();
+        customer.setRoleID(roleID);
+        customerRepository.save(customer);
+        
+        Account account= new Account();
+        account.setAccountRole(customer);
+        account.setName("Coco");
+        account.setPassword("Pass");
+        account.setUsername("cocho");
+        account.setPointBalance(50);
+        accountRepository.save(account);
+    	
+    	Integer addressID = 1000;
+    	Integer buildingNO = 5;
+    	String street = "Ave River";
+    	String town = "Ocean";
+    	Address address = new Address();
+    	address.setAccount(account);
+    	address.setAddressID(addressID);
+    	address.setBuildingNo(buildingNO);
+    	address.setStreet(street);
+    	address.setTown(town);
+    	addressRepository.save(address);
+    	
+    	address = null;
+    	address = addressRepository.findByAddressID(addressID);
+    	assertNotNull(address);
+    	assertEquals(addressID, address.getAddressID());
+    	assertEquals(buildingNO, address.getBuildingNo());
+    	assertEquals(street, address.getStreet());
+    	assertEquals(town, address.getTown());
+    	assertEquals(account.getUsername(), address.getAccount().getUsername());
+    }
+    
+    @Test
+    public void testPersistAndLoadInStoreOrder() {
+
+    	Integer roleID = 5;
+        Customer customer = new Customer();
+        customer.setRoleID(roleID);
+        customerRepository.save(customer);
+        
+    	Account account= new Account();
+        account.setAccountRole(customer);
+        account.setName("Coco");
+        account.setPassword("Pass");
+        account.setUsername("cocho");
+        account.setPointBalance(50);
+        accountRepository.save(account);
+        
+        InStoreOrder inStoreOrder = new InStoreOrder();
+        inStoreOrder.setAccount(account);
+        
+        Date date=Date.valueOf("2022-01-02");
+        inStoreOrder.setDate(date);
+        
+        Set<Item> set = new HashSet<Item> (); 
+        NonPerishableItem nonPerishable = new NonPerishableItem();
+        Integer nonPerishableID = 1;
+        nonPerishable.setItemID(nonPerishableID);
+        nonPerishable.setAvailableOnline(true);
+        nonPerishable.setNumInStock(1);
+        nonPerishable.setPointPerItem(10);
+        nonPerishable.setPrice((float) 50.0);
+        nonPerishable.setProductName("Desk");
+        nonPerishableItemRepository.save(nonPerishable);
+        set.add(nonPerishable);
+        inStoreOrder.setItems(set);
+        
+        inStoreOrder.setOrderID(90);
+        
+        Time time=Time.valueOf("14:02:03");
+        inStoreOrder.setPurchaseTime(time);
+        
+        inStoreOrder.setTotalValue((float) 50.0);
+        
+        inStoreOrderRepository.save(inStoreOrder);
+        
+        inStoreOrder = null;
+        inStoreOrder = inStoreOrderRepository.findByOrderID(90);
+        assertNotNull(inStoreOrder);
+        assertEquals(90,inStoreOrder.getOrderID());
+        assertEquals((float) 50.0,inStoreOrder.getTotalValue());
+        assertEquals(account.getUsername(), inStoreOrder.getAccount().getUsername());
+        assertEquals(time,inStoreOrder.getPurchaseTime());
+        assertEquals(date,inStoreOrder.getDate());
+         
+    }
+    
+    @Test
+    public void testPersistAndLoadPickupOrder() {
+
+    	Integer roleID = 5;
+        Customer customer = new Customer();
+        customer.setRoleID(roleID);
+        customerRepository.save(customer);
+        
+    	Account account= new Account();
+        account.setAccountRole(customer);
+        account.setName("Coco");
+        account.setPassword("Pass");
+        account.setUsername("cocho");
+        account.setPointBalance(50);
+        accountRepository.save(account);
+        
+        PickUpOrder pickUpOrder = new PickUpOrder();
+        pickUpOrder.setAccount(account);
+        
+        Date date=Date.valueOf("2022-01-02");
+        pickUpOrder.setDate(date);
+        
+        Set<Item> set = new HashSet<Item> (); 
+        NonPerishableItem nonPerishable = new NonPerishableItem();
+        Integer nonPerishableID = 1;
+        nonPerishable.setItemID(nonPerishableID);
+        nonPerishable.setAvailableOnline(true);
+        nonPerishable.setNumInStock(1);
+        nonPerishable.setPointPerItem(10);
+        nonPerishable.setPrice((float) 50.0);
+        nonPerishable.setProductName("Desk");
+        nonPerishableItemRepository.save(nonPerishable);
+        set.add(nonPerishable);
+        pickUpOrder.setItems(set);
+        
+        pickUpOrder.setOrderID(90);
+        
+        Time time=Time.valueOf("14:02:03");
+        pickUpOrder.setPurchaseTime(time);
+        
+        pickUpOrder.setTotalValue((float) 50.0);
+        
+        Integer timeSlotID=25;
+        Date startDate=Date.valueOf("2022-01-02");
+        Date endDate=Date.valueOf("2022-01-02");
+        Time startTime=Time.valueOf("14:02:03");
+        Time endTime=Time.valueOf("15:00:00");
+
+        TimeSlot timeSlot=new TimeSlot();
+        timeSlot.setTimeSlotID(timeSlotID);
+        timeSlot.setStartDate(startDate);
+        timeSlot.setEndDate(endDate);
+        timeSlot.setStartTime(startTime);
+        timeSlot.setEndTime(endTime);
+        timeSlotRepository.save(timeSlot);
+        
+        pickUpOrder.setTimeSlot(timeSlot);
+        
+        pickUpOrderRepository.save(pickUpOrder);
+        
+        pickUpOrder = null;
+        pickUpOrder = pickUpOrderRepository.findByOrderID(90);
+        assertNotNull(pickUpOrder);
+        assertEquals(90,pickUpOrder.getOrderID());
+        assertEquals((float) 50.0,pickUpOrder.getTotalValue());
+        assertEquals(date,pickUpOrder.getDate());
+        assertEquals(time,pickUpOrder.getPurchaseTime());
+        assertEquals(timeSlot.getTimeSlotID(),pickUpOrder.getTimeSlot().getTimeSlotID());  
+        assertEquals(account.getUsername(), pickUpOrder.getAccount().getUsername());
+    }
+    @Test
+    public void testPersistAndLoadSchedule() {
+        // Create cashier
+        Integer roleID = 1;
+        Cashier cashier = new Cashier();
+        cashier.setRoleID(roleID);
+        cashierRepository.save(cashier);
+
+        // Create schedule
+        Integer scheduleID = 1;
+        Schedule schedule = new Schedule();
+        schedule.setScheduleID(scheduleID);
+        Set<WorkingHour> scheduleHours = new HashSet<WorkingHour>();
+        schedule.setWorkingHour(scheduleHours);
+        schedule.setEmployee(cashier);
+        scheduleRepository.save(schedule);
+
+        schedule = null;
+
+        // Checking schedule and attributes
+        schedule = scheduleRepository.findByScheduleID(scheduleID);
+        assertNotNull(schedule);
+        assertEquals(scheduleID, schedule.getScheduleID());
+        assertEquals(cashier.getRoleID(), schedule.getEmployee().getRoleID());
+    }
+
+    @Test
+    public void testPersistAndLoadWorkingHour() {
+        
+        // Create cashier
+        Integer roleID = 1;
+        Cashier cashier = new Cashier();
+        cashier.setRoleID(roleID);
+        cashierRepository.save(cashier);
+        
+        // Create working Hour
+        Integer workingHourID = 1;
+        DayOfWeek dayOfWeek = DayOfWeek.Tuesday;
+        Time startTime = Time.valueOf("01:00:00");
+        Time endTime = Time.valueOf("02:00:00");
+        WorkingHour workingHour = new WorkingHour();
+        
+        // Add attributes
+        workingHour.setWorkingHourID(workingHourID);
+        workingHour.setDayOfWeek(dayOfWeek);
+        workingHour.setStartTime(startTime);
+        workingHour.setEndTime(endTime);
+        workingHourRepository.save(workingHour);
+
+        workingHour = null;
+
+        workingHour = workingHourRepository.findByWorkingHourID(workingHourID);
+        assertNotNull(workingHour);
+        assertEquals(workingHourID, workingHour.getWorkingHourID());
+        assertEquals(dayOfWeek, workingHour.getDayOfWeek());
+        assertEquals(startTime, workingHour.getStartTime());
+        assertEquals(endTime, workingHour.getEndTime());
+    }
+    @Test
+    public void testPersistAndLoadDeliveryOrder() {
+
+        Integer roleID = 5;
+        Customer customer = new Customer();
+        customer.setRoleID(roleID);
+        customerRepository.save(customer);
+        
+        Account account= new Account();
+        account.setAccountRole(customer);
+        account.setName("Coco");
+        account.setPassword("Pass");
+        account.setUsername("cocho");
+        account.setPointBalance(50);
+        accountRepository.save(account);
+        
+        DeliveryOrder deliveryOrder = new DeliveryOrder();
+        deliveryOrder.setAccount(account);
+        
+        Date date=Date.valueOf("2022-01-02");
+        deliveryOrder.setDate(date);
+        
+        Set<Item> set = new HashSet<Item> (); 
+        NonPerishableItem nonPerishable = new NonPerishableItem();
+        Integer nonPerishableID = 1;
+        nonPerishable.setItemID(nonPerishableID);
+        nonPerishable.setAvailableOnline(true);
+        nonPerishable.setNumInStock(1);
+        nonPerishable.setPointPerItem(10);
+        nonPerishable.setPrice((float) 50.0);
+        nonPerishable.setProductName("Desk");
+        nonPerishableItemRepository.save(nonPerishable);
+        set.add(nonPerishable);
+        deliveryOrder.setItems(set);
+        
+        deliveryOrder.setOrderID(90);
+        
+        Time time=Time.valueOf("14:02:03");
+        deliveryOrder.setPurchaseTime(time);
+        
+        deliveryOrder.setTotalValue((float) 50.0);
+        
+        Integer timeSlotID=25;
+        Date startDate=Date.valueOf("2022-01-02");
+        Date endDate=Date.valueOf("2022-01-02");
+        Time startTime=Time.valueOf("14:02:03");
+        Time endTime=Time.valueOf("15:00:00");
+
+        TimeSlot timeSlot=new TimeSlot();
+        timeSlot.setTimeSlotID(timeSlotID);
+        timeSlot.setStartDate(startDate);
+        timeSlot.setEndDate(endDate);
+        timeSlot.setStartTime(startTime);
+        timeSlot.setEndTime(endTime);
+        timeSlotRepository.save(timeSlot);
+        
+        deliveryOrder.setTimeSlot(timeSlot);
+        
+        deliveryOrderRepository.save(deliveryOrder);
+        
+        deliveryOrder = null;
+        deliveryOrder = deliveryOrderRepository.findByOrderID(90);
+        assertNotNull(deliveryOrder);
+        assertEquals(90,deliveryOrder.getOrderID());
+        assertEquals((float) 50.0,deliveryOrder.getTotalValue());
+        assertEquals(date,deliveryOrder.getDate());
+        assertEquals(time,deliveryOrder.getPurchaseTime());
+        assertEquals(timeSlot.getTimeSlotID(),deliveryOrder.getTimeSlot().getTimeSlotID());  
+        assertEquals(account.getUsername(), deliveryOrder.getAccount().getUsername());
+    }
  
 }
