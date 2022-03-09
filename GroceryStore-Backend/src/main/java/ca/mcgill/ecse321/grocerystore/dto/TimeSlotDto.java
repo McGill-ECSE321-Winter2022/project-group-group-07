@@ -22,7 +22,7 @@ public class TimeSlotDto {
         this.endTime = endTime;
     }
 
-    // getter
+    // getters
     public Date getStartDate() {
         return startDate;
     }
