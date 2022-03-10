@@ -2,21 +2,19 @@ package ca.mcgill.ecse321.grocerystore.dto;
 
 import java.sql.Date;
 
-public class OwnerDto {
+public class CashierDto {
 
-	
 	private Date employmentDate;
 
-	public OwnerDto() {
+	public CashierDto() {
 
 	}
 
-	public OwnerDto(Date employmentDate) {
+	public CashierDto(Date employmentDate) {
 
 	}
 
 	public Date getEmploymentDate() {
 		return employmentDate;
 	}
-
 }

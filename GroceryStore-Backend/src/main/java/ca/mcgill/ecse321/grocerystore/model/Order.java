@@ -17,7 +17,6 @@ import java.util.Set;
 public abstract class Order {
 
 	//attribute fields
-	private Account account;
 	private Integer orderID;
 	private Float totalValue;
 	private Date date;
@@ -25,6 +24,7 @@ public abstract class Order {
 
 	//association fields
 	private Set<Item> items;
+	private Account account;
 
 	@OneToOne(optional = true)
 	public Account getAccount() {
