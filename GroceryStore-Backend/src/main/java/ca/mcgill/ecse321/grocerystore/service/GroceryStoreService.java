@@ -114,11 +114,11 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Owner getOwner() {
+	public Account getOwner() {
 
-		for (Owner o : ownerRepository.findAll()) {
-			if (o != null) {
-				return o;
+		for (Account a : accountRepository.findAll()) {
+			if (a.getAccountRole() instanceof Owner) {
+				return a;
 			}
 		}
 
@@ -339,7 +339,6 @@ public class GroceryStoreService {
 		return cart;
 	}
 
-
 	@Transactional
 	public Cart createCart(Integer id, OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
 			TimeSlot timeSlot) {
@@ -357,10 +356,10 @@ public class GroceryStoreService {
 
 		return cart;
 	}
-	
+
 	@Transactional
 	public List<Cart> getAllCarts() {
-		
+
 		return toList(cartRepository.findAll());
 	}
 
@@ -369,7 +368,6 @@ public class GroceryStoreService {
 
 		return cartRepository.findByAccount(account);
 	}
-
 
 	@Transactional
 	public DeliveryOrder createDeliveryOrder(Integer id, Float totalValue, Date date, Time purchaseTime,
@@ -388,6 +386,12 @@ public class GroceryStoreService {
 		deliveryOrderRepository.save(deliveryOrder);
 
 		return deliveryOrder;
+	}
+
+	@Transactional
+	public List<DeliveryOrder> getDeliveryOrdersByAccount(Account account) {
+
+		return deliveryOrderRepository.findByAccount(account);
 	}
 
 	@Transactional
@@ -410,6 +414,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public List<PickUpOrder> getPickUpOrdersByAccount(Account account) {
+
+		return pickUpOrderRepository.findByAccount(account);
+	}
+
+	@Transactional
 	public InStoreOrder createInStoreOrder(Integer id, Float totalValue, Date date, Time purchaseTime, Set<Item> items,
 			Account account) {
 
@@ -425,6 +435,12 @@ public class GroceryStoreService {
 		inStoreOrderRepository.save(inStoreOrder);
 
 		return inStoreOrder;
+	}
+
+	@Transactional
+	public List<InStoreOrder> getInStoreOrdersByAccount(Account account) {
+
+		return inStoreOrderRepository.findByAccount(account);
 	}
 
 	@Transactional
@@ -446,6 +462,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public List<PerishableItem> getAllPerishableItems() {
+
+		return toList(perishableItemRepository.findAll());
+	}
+
+	@Transactional
 	public NonPerishableItem createNonPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem) {
 
@@ -461,6 +483,12 @@ public class GroceryStoreService {
 		nonPerishableItemRepository.save(nonPerishableItem);
 
 		return nonPerishableItem;
+	}
+
+	@Transactional
+	public List<NonPerishableItem> getAllNonPerishableItems() {
+
+		return toList(nonPerishableItemRepository.findAll());
 	}
 
 	@Transactional
@@ -480,6 +508,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public List<Report> getAllReports() {
+
+		return toList(reportRepository.findAll());
+	}
+
+	@Transactional
 	public Schedule createSchedule(Integer scheduleID, Employee employee, Set<WorkingHour> workingHour) {
 
 		Schedule schedule = new Schedule();
@@ -491,6 +525,18 @@ public class GroceryStoreService {
 		scheduleRepository.save(schedule);
 
 		return schedule;
+	}
+
+	@Transactional
+	public List<Schedule> getAllSchedules() {
+
+		return toList(scheduleRepository.findAll());
+	}
+
+	@Transactional
+	public Schedule getScheduleByEmployee(Employee employee) {
+
+		return scheduleRepository.findByEmployee(employee);
 	}
 
 	@Transactional
@@ -513,6 +559,18 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public Store getStore() {
+
+		for (Store s : storeRepository.findAll()) {
+			if (s != null) {
+				return s;
+			}
+		}
+		
+		return null;
+	}
+
+	@Transactional
 	public Terminal createTerminal(Integer id) {
 
 		Terminal terminal = new Terminal();
@@ -522,6 +580,12 @@ public class GroceryStoreService {
 		terminalRepository.save(terminal);
 
 		return terminal;
+	}
+	
+	@Transactional
+	public List<Terminal> getAllTerminals(){
+		
+		return toList(terminalRepository.findAll());
 	}
 
 	@Transactional
@@ -538,6 +602,11 @@ public class GroceryStoreService {
 		timeSlotRepository.save(timeSlot);
 
 		return timeSlot;
+	}
+	
+	public List<TimeSlot> getAllHolidays(){
+		
+		return new ArrayList<TimeSlot>(getStore().getHolidays());
 	}
 
 	@Transactional
