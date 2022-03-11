@@ -9,17 +9,19 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek
 
 @Entity
 public class WorkingHour {
-	
-	//attribute fields
+
+	// attribute fields
 	private Integer workingHourID;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
-	//setters and getters
+
+	// setters and getters
 	@Id
 	public Integer getWorkingHourID() {
 		return workingHourID;
 	}
+
 	public void setWorkingHourID(Integer workingHourId) {
 		this.workingHourID = workingHourId;
 	}
@@ -27,6 +29,7 @@ public class WorkingHour {
 	public DayOfWeek getDayOfWeek() {
 		return dayOfWeek;
 	}
+
 	public void setDayOfWeek(DayOfWeek dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
 	}
@@ -34,6 +37,7 @@ public class WorkingHour {
 	public Time getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
 	}
@@ -41,9 +45,9 @@ public class WorkingHour {
 	public Time getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(Time endTime) {
 		this.endTime = endTime;
 	}
 
-	
 }
