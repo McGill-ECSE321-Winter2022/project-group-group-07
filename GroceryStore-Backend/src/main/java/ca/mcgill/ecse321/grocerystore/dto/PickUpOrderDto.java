@@ -89,12 +89,12 @@ public class PickUpOrderDto {
 		public Float getTotalValue() {
 			return totalValue;
 		}
-		/**
-		 * @param totalValue the totalValue to set
-		 */
-		public void setTotalValue(Float totalValue) {
-			this.totalValue = totalValue;
-		}
+//		/**
+//		 * @param totalValue the totalValue to set
+//		 */
+//		public void setTotalValue(Float totalValue) {
+//			this.totalValue = totalValue;
+//		}
 		/**
 		 * @return the date
 		 */
@@ -125,12 +125,12 @@ public class PickUpOrderDto {
 		public Set<Item> getItems() {
 			return items;
 		}
-		/**
-		 * @param items the items to set
-		 */
-		public void setItems(Set<Item> items) {
-			this.items = items;
-		}
+//		/**
+//		 * @param items the items to set
+//		 */
+//		public void setItems(Set<Item> items) {
+//			this.items = items;
+//		}
 		/**
 		 * @return the timeSlot
 		 */

@@ -84,12 +84,12 @@ public class ReportDto {
 		return totalValue;
 	}
 
-	/**
-	 * @param totalValue the totalValue to set
-	 */
-	public void setTotalValue(Float totalValue) {
-		this.totalValue = totalValue;
-	}
+//	/**
+//	 * @param totalValue the totalValue to set
+//	 */
+//	public void setTotalValue(Float totalValue) {
+//		this.totalValue = totalValue;
+//	}
 
 	/**
 	 * @return the orders
@@ -98,12 +98,12 @@ public class ReportDto {
 		return orders;
 	}
 
-	/**
-	 * @param orders the orders to set
-	 */
-	public void setOrders(Set<Order> orders) {
-		this.orders = orders;
-	}
+//	/**
+//	 * @param orders the orders to set
+//	 */
+//	public void setOrders(Set<Order> orders) {
+//		this.orders = orders;
+//	}
 
 	
 	

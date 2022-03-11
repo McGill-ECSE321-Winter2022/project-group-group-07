@@ -86,12 +86,12 @@ public class CartDto {
 		public Float getTotalValue() {
 			return totalValue;
 		}
-		/**
-		 * @param totalValue the totalValue to set
-		 */
-		public void setTotalValue(Float totalValue) {
-			this.totalValue = totalValue;
-		}
+//		/**
+//		 * @param totalValue the totalValue to set
+//		 */
+//		public void setTotalValue(Float totalValue) {
+//			this.totalValue = totalValue;
+//		}
 		/**
 		 * @return the numOfItems
 		 */
@@ -99,36 +99,36 @@ public class CartDto {
 			return numOfItems;
 		}
 	
-		/**
-		 * @param numOfItems the numOfItems to set
-		 */
-		public void setNumOfItems(Integer numOfItems) {
-			this.numOfItems = numOfItems;
-		}
+//		/**
+//		 * @param numOfItems the numOfItems to set
+//		 */
+//		public void setNumOfItems(Integer numOfItems) {
+//			this.numOfItems = numOfItems;
+//		}
 		/**
 		 * @return the items
 		 */
 		public Set<Item> getItems() {
 			return items;
 		}
-		/**
-		 * @param items the items to set
-		 */
-		public void setItems(Set<Item> items) {
-			this.items = items;
-		}
+//		/**
+//		 * @param items the items to set
+//		 */
+//		public void setItems(Set<Item> items) {
+//			this.items = items;
+//		}
 		/**
 		 * @return the timeSlot
 		 */
 		public TimeSlot getTimeSlot() {
 			return timeSlot;
 		}
-		/**
-		 * @param timeSlot the timeSlot to set
-		 */
-		public void setTimeSlot(TimeSlot timeSlot) {
-			this.timeSlot = timeSlot;
-		}
+//		/**
+//		 * @param timeSlot the timeSlot to set
+//		 */
+//		public void setTimeSlot(TimeSlot timeSlot) {
+//			this.timeSlot = timeSlot;
+//		}
 		/**
 		 * @return the account
 		 */

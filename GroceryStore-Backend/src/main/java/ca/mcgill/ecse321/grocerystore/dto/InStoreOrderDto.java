@@ -105,12 +105,12 @@ public class InStoreOrderDto {
 			return totalValue;
 		}
 
-		/**
-		 * @param totalValue the totalValue to set
-		 */
-		public void setTotalValue(Float totalValue) {
-			this.totalValue = totalValue;
-		}
+//		/**
+//		 * @param totalValue the totalValue to set
+//		 */
+//		public void setTotalValue(Float totalValue) {
+//			this.totalValue = totalValue;
+//		}
 
 		/**
 		 * @return the date
@@ -147,12 +147,12 @@ public class InStoreOrderDto {
 			return items;
 		}
 
-		/**
-		 * @param items the items to set
-		 */
-		public void setItems(Set<Item> items) {
-			this.items = items;
-		}
+//		/**
+//		 * @param items the items to set
+//		 */
+//		public void setItems(Set<Item> items) {
+//			this.items = items;
+//		}
 
 		/**
 		 * @return the orderID
