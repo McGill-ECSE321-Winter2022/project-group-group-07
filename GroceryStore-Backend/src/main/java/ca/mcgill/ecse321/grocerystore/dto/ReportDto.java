@@ -14,12 +14,23 @@ public class ReportDto {
 	//association fields
 	private Set<Order> orders;
 
-	public ReportDto(Date startDate, Date endDate) {
-		super();
+	
+	/**
+	 * @param reportID
+	 * @param startDate
+	 * @param endDate
+	 * @param totalValue
+	 * @param orders
+	 */
+	public ReportDto(Integer reportID, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
+		this.reportID = reportID;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.totalValue = totalValue;
+		this.orders = orders;
 	}
-
+	
+	
 	public ReportDto() {
 		super();
 	}
@@ -31,12 +42,12 @@ public class ReportDto {
 		return reportID;
 	}
 
-	/**
-	 * @param reportID the reportID to set
-	 */
-	public void setReportID(Integer reportID) {
-		this.reportID = reportID;
-	}
+//	/**
+//	 * @param reportID the reportID to set
+//	 */
+//	public void setReportID(Integer reportID) {
+//		this.reportID = reportID;
+//	}
 
 	/**
 	 * @return the startDate
@@ -45,12 +56,12 @@ public class ReportDto {
 		return startDate;
 	}
 
-	/**
-	 * @param startDate the startDate to set
-	 */
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+//	/**
+//	 * @param startDate the startDate to set
+//	 */
+//	public void setStartDate(Date startDate) {
+//		this.startDate = startDate;
+//	}
 
 	/**
 	 * @return the endDate
@@ -59,12 +70,12 @@ public class ReportDto {
 		return endDate;
 	}
 
-	/**
-	 * @param endDate the endDate to set
-	 */
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+//	/**
+//	 * @param endDate the endDate to set
+//	 */
+//	public void setEndDate(Date endDate) {
+//		this.endDate = endDate;
+//	}
 
 	/**
 	 * @return the totalValue

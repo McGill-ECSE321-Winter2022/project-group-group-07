@@ -20,50 +20,66 @@ public class CartDto {
 		private Set<Item> items;
 		private TimeSlot timeSlot;
 		private Account account;
+		
 		/**
-		 * @param timeSlot
-		 * @param account
-		 */
-		public CartDto(TimeSlot timeSlot, Account account) {
-			this.timeSlot = timeSlot;
-			this.account = account;
-		}
-		/**
+		 * @param cartID
+		 * @param orderType
+		 * @param totalValue
 		 * @param numOfItems
 		 * @param items
 		 * @param timeSlot
 		 * @param account
 		 */
-		public CartDto(Integer numOfItems, Set<Item> items, TimeSlot timeSlot, Account account) {
+		public CartDto(Integer cartID, OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
+				TimeSlot timeSlot, Account account) {
+			this.cartID = cartID;
+			this.orderType = orderType;
+			this.totalValue = totalValue;
 			this.numOfItems = numOfItems;
 			this.items = items;
 			this.timeSlot = timeSlot;
 			this.account = account;
 		}
+		
+		
+		/**
+		 * @param cartID
+		 * @param orderType
+		 * @param timeSlot
+		 * @param account
+		 */
+		public CartDto(Integer cartID, OrderType orderType, TimeSlot timeSlot, Account account) {
+			this.cartID = cartID;
+			this.orderType = orderType;
+			this.timeSlot = timeSlot;
+			this.account = account;
+		}
+
+
 		/**
 		 * @return the cartID
 		 */
 		public Integer getCartID() {
 			return cartID;
 		}
-		/**
-		 * @param cartID the cartID to set
-		 */
-		public void setCartID(Integer cartID) {
-			this.cartID = cartID;
-		}
+//		/**
+//		 * @param cartID the cartID to set
+//		 */
+//		public void setCartID(Integer cartID) {
+//			this.cartID = cartID;
+//		}
 		/**
 		 * @return the orderType
 		 */
 		public OrderType getOrderType() {
 			return orderType;
 		}
-		/**
-		 * @param orderType the orderType to set
-		 */
-		public void setOrderType(OrderType orderType) {
-			this.orderType = orderType;
-		}
+//		/**
+//		 * @param orderType the orderType to set
+//		 */
+//		public void setOrderType(OrderType orderType) {
+//			this.orderType = orderType;
+//		}
 		/**
 		 * @return the totalValue
 		 */
@@ -82,7 +98,13 @@ public class CartDto {
 		public Integer getNumOfItems() {
 			return numOfItems;
 		}
-		
+	
+		/**
+		 * @param numOfItems the numOfItems to set
+		 */
+		public void setNumOfItems(Integer numOfItems) {
+			this.numOfItems = numOfItems;
+		}
 		/**
 		 * @return the items
 		 */
@@ -94,7 +116,6 @@ public class CartDto {
 		 */
 		public void setItems(Set<Item> items) {
 			this.items = items;
-			this.numOfItems=items.size();
 		}
 		/**
 		 * @return the timeSlot
@@ -114,12 +135,12 @@ public class CartDto {
 		public Account getAccount() {
 			return account;
 		}
-		/**
-		 * @param account the account to set
-		 */
-		public void setAccount(Account account) {
-			this.account = account;
-		}
+//		/**
+//		 * @param account the account to set
+//		 */
+//		public void setAccount(Account account) {
+//			this.account = account;
+//		}
 		
 		
 		

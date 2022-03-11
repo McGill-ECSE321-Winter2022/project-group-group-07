@@ -38,6 +38,22 @@ public class DeliveryOrderDto {
 			this.items = items;
 			this.timeSlot = timeSlot;
 		}
+		
+		/**
+		 * @param account
+		 * @param orderID
+		 * @param date
+		 * @param purchaseTime
+		 * @param timeSlot
+		 */
+		public DeliveryOrderDto(Account account, Integer orderID, Date date, Time purchaseTime, TimeSlot timeSlot) {
+			this.account = account;
+			this.orderID = orderID;
+			this.date = date;
+			this.purchaseTime = purchaseTime;
+			this.timeSlot = timeSlot;
+		}
+
 		/**
 		 * 
 		 */
@@ -49,24 +65,24 @@ public class DeliveryOrderDto {
 		public Account getAccount() {
 			return account;
 		}
-		/**
-		 * @param account the account to set
-		 */
-		public void setAccount(Account account) {
-			this.account = account;
-		}
+//		/**
+//		 * @param account the account to set
+//		 */
+//		public void setAccount(Account account) {
+//			this.account = account;
+//		}
 		/**
 		 * @return the orderID
 		 */
 		public Integer getOrderID() {
 			return orderID;
 		}
-		/**
-		 * @param orderID the orderID to set
-		 */
-		public void setOrderID(Integer orderID) {
-			this.orderID = orderID;
-		}
+//		/**
+//		 * @param orderID the orderID to set
+//		 */
+//		public void setOrderID(Integer orderID) {
+//			this.orderID = orderID;
+//		}
 		/**
 		 * @return the totalValue
 		 */
@@ -85,24 +101,24 @@ public class DeliveryOrderDto {
 		public Date getDate() {
 			return date;
 		}
-		/**
-		 * @param date the date to set
-		 */
-		public void setDate(Date date) {
-			this.date = date;
-		}
+//		/**
+//		 * @param date the date to set
+//		 */
+//		public void setDate(Date date) {
+//			this.date = date;
+//		}
 		/**
 		 * @return the purchaseTime
 		 */
 		public Time getPurchaseTime() {
 			return purchaseTime;
 		}
-		/**
-		 * @param purchaseTime the purchaseTime to set
-		 */
-		public void setPurchaseTime(Time purchaseTime) {
-			this.purchaseTime = purchaseTime;
-		}
+//		/**
+//		 * @param purchaseTime the purchaseTime to set
+//		 */
+//		public void setPurchaseTime(Time purchaseTime) {
+//			this.purchaseTime = purchaseTime;
+//		}
 		/**
 		 * @return the items
 		 */
@@ -121,12 +137,12 @@ public class DeliveryOrderDto {
 		public TimeSlot getTimeSlot() {
 			return timeSlot;
 		}
-		/**
-		 * @param timeSlot the timeSlot to set
-		 */
-		public void setTimeSlot(TimeSlot timeSlot) {
-			this.timeSlot = timeSlot;
-		}
+//		/**
+//		 * @param timeSlot the timeSlot to set
+//		 */
+//		public void setTimeSlot(TimeSlot timeSlot) {
+//			this.timeSlot = timeSlot;
+//		}
 		
 		
 		

@@ -20,13 +20,16 @@ public class InStoreOrderDto {
 
 		/**
 		 * @param account
+		 * @param orderID
 		 * @param totalValue
 		 * @param date
 		 * @param purchaseTime
 		 * @param items
 		 */
-		public InStoreOrderDto(Account account, Float totalValue, Date date, Time purchaseTime, Set<Item> items) {
+		public InStoreOrderDto(Account account, Integer orderID, Float totalValue, Date date, Time purchaseTime,
+				Set<Item> items) {
 			this.account = account;
+			this.orderID = orderID;
 			this.totalValue = totalValue;
 			this.date = date;
 			this.purchaseTime = purchaseTime;
@@ -34,16 +37,45 @@ public class InStoreOrderDto {
 		}
 
 		/**
+		 * @param orderID
 		 * @param totalValue
 		 * @param date
 		 * @param purchaseTime
 		 * @param items
 		 */
-		public InStoreOrderDto(Float totalValue, Date date, Time purchaseTime, Set<Item> items) {
+		public InStoreOrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, Set<Item> items) {
+			this.orderID = orderID;
 			this.totalValue = totalValue;
 			this.date = date;
 			this.purchaseTime = purchaseTime;
 			this.items = items;
+		}
+		
+
+
+		/**
+		 * @param account
+		 * @param orderID
+		 * @param date
+		 * @param purchaseTime
+		 */
+		public InStoreOrderDto(Account account, Integer orderID, Date date, Time purchaseTime) {
+			this.account = account;
+			this.orderID = orderID;
+			this.date = date;
+			this.purchaseTime = purchaseTime;
+		}
+		
+		
+		/**
+		 * @param orderID
+		 * @param date
+		 * @param purchaseTime
+		 */
+		public InStoreOrderDto(Integer orderID, Date date, Time purchaseTime) {
+			this.orderID = orderID;
+			this.date = date;
+			this.purchaseTime = purchaseTime;
 		}
 
 		/**
@@ -59,12 +91,12 @@ public class InStoreOrderDto {
 			return account;
 		}
 
-		/**
-		 * @param account the account to set
-		 */
-		public void setAccount(Account account) {
-			this.account = account;
-		}
+//		/**
+//		 * @param account the account to set
+//		 */
+//		public void setAccount(Account account) {
+//			this.account = account;
+//		}
 
 		/**
 		 * @return the totalValue
@@ -87,12 +119,12 @@ public class InStoreOrderDto {
 			return date;
 		}
 
-		/**
-		 * @param date the date to set
-		 */
-		public void setDate(Date date) {
-			this.date = date;
-		}
+//		/**
+//		 * @param date the date to set
+//		 */
+//		public void setDate(Date date) {
+//			this.date = date;
+//		}
 
 		/**
 		 * @return the purchaseTime
@@ -101,12 +133,12 @@ public class InStoreOrderDto {
 			return purchaseTime;
 		}
 
-		/**
-		 * @param purchaseTime the purchaseTime to set
-		 */
-		public void setPurchaseTime(Time purchaseTime) {
-			this.purchaseTime = purchaseTime;
-		}
+//		/**
+//		 * @param purchaseTime the purchaseTime to set
+//		 */
+//		public void setPurchaseTime(Time purchaseTime) {
+//			this.purchaseTime = purchaseTime;
+//		}
 
 		/**
 		 * @return the items
