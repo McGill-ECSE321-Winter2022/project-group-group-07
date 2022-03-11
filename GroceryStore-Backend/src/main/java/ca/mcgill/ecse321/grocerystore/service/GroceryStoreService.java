@@ -2,6 +2,8 @@ package ca.mcgill.ecse321.grocerystore.service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +114,18 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public Owner getOwner() {
+
+		for (Owner o : ownerRepository.findAll()) {
+			if (o != null) {
+				return o;
+			}
+		}
+
+		return null;
+	}
+
+	@Transactional
 	public Clerk createClerkRole(Integer id, Date employmentDate) {
 
 		Clerk clerk = new Clerk();
@@ -121,6 +135,19 @@ public class GroceryStoreService {
 		clerkRepository.save(clerk);
 
 		return clerk;
+	}
+
+	@Transactional
+	public List<Account> getAllClerks() {
+
+		List<Account> clerks = new ArrayList<Account>();
+
+		for (Account a : accountRepository.findAll()) {
+			if (a.getAccountRole() instanceof Clerk) {
+				clerks.add(a);
+			}
+		}
+		return clerks;
 	}
 
 	@Transactional
@@ -136,6 +163,19 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public List<Account> getAllCashiers() {
+
+		List<Account> cashiers = new ArrayList<Account>();
+
+		for (Account a : accountRepository.findAll()) {
+			if (a.getAccountRole() instanceof Cashier) {
+				cashiers.add(a);
+			}
+		}
+		return cashiers;
+	}
+
+	@Transactional
 	public DeliveryPerson createDeliveryPersonRole(Integer id, Date employmentDate) {
 
 		DeliveryPerson deliveryPerson = new DeliveryPerson();
@@ -148,6 +188,19 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public List<Account> getAllDeliverPersons() {
+
+		List<Account> deliveryPersons = new ArrayList<Account>();
+
+		for (Account a : accountRepository.findAll()) {
+			if (a.getAccountRole() instanceof DeliveryPerson) {
+				deliveryPersons.add(a);
+			}
+		}
+		return deliveryPersons;
+	}
+
+	@Transactional
 	public Customer createCustomerRole(Integer id) {
 
 		Customer customer = new Customer();
@@ -156,6 +209,20 @@ public class GroceryStoreService {
 		customerRepository.save(customer);
 
 		return customer;
+	}
+
+	@Transactional
+	public List<Account> getAllCustomers() {
+
+		List<Account> customers = new ArrayList<Account>();
+
+		for (Account a : accountRepository.findAll()) {
+			if (a.getAccountRole() instanceof Customer) {
+				customers.add(a);
+			}
+		}
+
+		return customers;
 	}
 
 	@Transactional
@@ -175,6 +242,18 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public Account getAccount(String username) {
+
+		return accountRepository.findByUsername(username);
+	}
+
+	@Transactional
+	public List<Account> getAllAccounts() {
+
+		return toList(accountRepository.findAll());
+	}
+
+	@Transactional
 	public Address createAddress(Integer id, Integer buildingNo, String street, String town, Account account) {
 
 		Address address = new Address();
@@ -191,6 +270,24 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public Address getAddressByAccount(Account account) {
+
+		for (Address a : addressRepository.findAll()) {
+			if (a.getAccount().equals(account)) {
+				return a;
+			}
+		}
+
+		return null;
+	}
+
+	@Transactional
+	public List<Address> getAllAddresses() {
+
+		return toList(addressRepository.findAll());
+	}
+
+	@Transactional
 	public BusinessHour createBusinessHour(Integer id, DayOfWeek dayOfWeek, Time startTime, Time endTime) {
 
 		BusinessHour hour = new BusinessHour();
@@ -203,6 +300,24 @@ public class GroceryStoreService {
 		businessHourRepository.save(hour);
 
 		return hour;
+	}
+
+	@Transactional
+	public List<BusinessHour> getAllBusinessHours() {
+
+		return toList(businessHourRepository.findAll());
+	}
+
+	@Transactional
+	public BusinessHour getBusinessHourByDay(DayOfWeek dayOfWeek) {
+
+		for (BusinessHour bh : businessHourRepository.findAll()) {
+			if (bh.getDayOfWeek().equals(dayOfWeek)) {
+				return bh;
+			}
+		}
+
+		return null;
 	}
 
 	@Transactional
@@ -224,6 +339,7 @@ public class GroceryStoreService {
 		return cart;
 	}
 
+
 	@Transactional
 	public Cart createCart(Integer id, OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
 			TimeSlot timeSlot) {
@@ -241,6 +357,19 @@ public class GroceryStoreService {
 
 		return cart;
 	}
+	
+	@Transactional
+	public List<Cart> getAllCarts() {
+		
+		return toList(cartRepository.findAll());
+	}
+
+	@Transactional
+	public Cart getCartByAccount(Account account) {
+
+		return cartRepository.findByAccount(account);
+	}
+
 
 	@Transactional
 	public DeliveryOrder createDeliveryOrder(Integer id, Float totalValue, Date date, Time purchaseTime,
@@ -424,6 +553,14 @@ public class GroceryStoreService {
 		workingHourRepository.save(workingHour);
 
 		return workingHour;
+	}
+
+	private <T> List<T> toList(Iterable<T> iterable) {
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
 	}
 
 }
