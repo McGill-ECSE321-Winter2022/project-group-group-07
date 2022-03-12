@@ -208,6 +208,7 @@ public class TestGroceryStorePersistence {
 		store.setEmployeeDiscountRate(employeeDiscount);
 		store.setName(name);
 		store.setPointToCashRatio(pointToCash);
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		Set<TimeSlot> holidays = new HashSet();
 		store.setHolidays(holidays);
 		storeRepository.save(store);
@@ -272,6 +273,7 @@ public class TestGroceryStorePersistence {
 		store.setEmployeeDiscountRate(employeeDiscount);
 		store.setName(name);
 		store.setPointToCashRatio(pointToCash);
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		Set<TimeSlot> holidays = new HashSet();
 		store.setHolidays(holidays);
 		storeRepository.save(store);

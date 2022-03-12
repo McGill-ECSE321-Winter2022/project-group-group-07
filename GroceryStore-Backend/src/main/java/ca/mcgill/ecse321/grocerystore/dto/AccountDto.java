@@ -1,43 +1,97 @@
 package ca.mcgill.ecse321.grocerystore.dto;
 
+import java.util.Collections;
+import java.util.List;
+
 public class AccountDto {
 
-    // attributes
-    private String username;
-    private String name;
-    private Integer pointBalance;
-// TODO: uncomment once Dto is available
-//    private List<OrderDto> orders;
-//    private CartDto cart;
+	// attributes
+	private String username;
+	private String name;
+	private Integer pointBalance;
+	private String role;
 
-    // constructor
+	private List<OrderDto> orders;
+	private AddressDto address;
 
-    public AccountDto() {
-    }
+	/**
+	 * @param username
+	 * @param name
+	 * @param pointBalance
+	 * @param orders
+	 * @param address
+	 * @param role
+	 */
+	public AccountDto(String username, String name, Integer pointBalance, List<OrderDto> orders, AddressDto address,
+			String role) {
 
-    public AccountDto(String username, String name) {
-        this.username = username;
-        this.name = name;
-        this.pointBalance = 0;
-    }
+		this.username = username;
+		this.name = name;
+		this.pointBalance = pointBalance;
+		this.orders = orders;
+		this.address = address;
+		this.role = role;
+	}
 
-    // getter
-    public String getUsername() {
-        return username;
-    }
+	/**
+	 * @param username
+	 * @param name
+	 * @param pointBalance
+	 * @param address
+	 * @param role
+	 */
+	@SuppressWarnings("unchecked")
+	public AccountDto(String username, String name, Integer pointBalance, AddressDto address, String role) {
 
-    public String getName() {
-        return name;
-    }
+		this(username, name, pointBalance, Collections.EMPTY_LIST, address, role);
+	}
 
-    public Integer getPointBalance() {
-        return pointBalance;
-    }
-// TODO: uncomment once Dto is available
-//    public List<OrderDto> getOrders{
-//        return orders;
-//    }
-//    public CartDto getCart{
-//        return cart;
-//    }
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return the pointBalance
+	 */
+	public Integer getPointBalance() {
+		return pointBalance;
+	}
+
+	/**
+	 * @return the orders
+	 */
+	public List<OrderDto> getOrders() {
+		return orders;
+	}
+
+	/**
+	 * @param orders the orders to set
+	 */
+	public void setOrders(List<OrderDto> orders) {
+		this.orders = orders;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public AddressDto getAddress() {
+		return address;
+	}
+
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
 }
