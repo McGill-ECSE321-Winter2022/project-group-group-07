@@ -23,4 +23,24 @@ public abstract class AccountRole {
 		this.roleID = roleID;
 	}
 
+	public String toString() {
+
+		if (this instanceof Customer) {
+			return "Customer";
+		}
+		if (this instanceof Cashier) {
+
+			return "Cashier\nEmployment Date: " + ((Cashier) this).getEmploymentDate();
+		}
+		if (this instanceof Clerk) {
+			return "Clerk\nEmployment Date: " + ((Clerk) this).getEmploymentDate();
+		}
+		if (this instanceof DeliveryPerson) {
+			return "Delivery Person\nEmployment Date: " + ((DeliveryPerson) this).getEmploymentDate();
+		}
+		if (this instanceof Owner) {
+			return "Owner";
+		}
+		return null;
+	}
 }

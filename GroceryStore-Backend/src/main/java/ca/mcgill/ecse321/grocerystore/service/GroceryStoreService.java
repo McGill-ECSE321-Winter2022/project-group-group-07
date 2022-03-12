@@ -101,6 +101,9 @@ public class GroceryStoreService {
 	@Autowired
 	private WorkingHourRepository workingHourRepository;
 
+	private Integer roleID = 0;
+	private Integer addressID = 0;
+
 	@Transactional
 	public Owner createOwnerRole(Integer id, Date employmentDate) {
 
@@ -201,10 +204,11 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Customer createCustomerRole(Integer id) {
+	public Customer createCustomerRole() {
 
 		Customer customer = new Customer();
-		customer.setRoleID(id);
+		customer.setRoleID(roleID);
+		roleID++;
 
 		customerRepository.save(customer);
 
@@ -254,15 +258,17 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Address createAddress(Integer id, Integer buildingNo, String street, String town, Account account) {
+	public Address createAddress( Integer buildingNo, String street, String town, Account account) {
 
 		Address address = new Address();
 
-		address.setAddressID(id);
+		address.setAddressID(addressID);
 		address.setBuildingNo(buildingNo);
 		address.setStreet(street);
 		address.setTown(town);
 		address.setAccount(account);
+		
+		addressID++;
 
 		addressRepository.save(address);
 
