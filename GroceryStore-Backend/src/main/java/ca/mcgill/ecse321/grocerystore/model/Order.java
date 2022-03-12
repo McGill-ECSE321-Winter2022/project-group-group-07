@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
 import java.util.Set;
 
@@ -17,7 +18,6 @@ import java.util.Set;
 public abstract class Order {
 
 	//attribute fields
-	private Account account;
 	private Integer orderID;
 	private Float totalValue;
 	private Date date;
@@ -25,8 +25,9 @@ public abstract class Order {
 
 	//association fields
 	private Set<Item> items;
+	private Account account;
 
-	@OneToOne(optional = true)
+	@ManyToOne(optional = true)
 	public Account getAccount() {
 		return this.account;
 	}
