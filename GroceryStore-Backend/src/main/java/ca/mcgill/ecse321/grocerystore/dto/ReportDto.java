@@ -1,9 +1,8 @@
 package ca.mcgill.ecse321.grocerystore.dto;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
-import ca.mcgill.ecse321.grocerystore.model.Order;
 
 public class ReportDto {
 	private Integer reportID;
@@ -12,7 +11,7 @@ public class ReportDto {
 	private Float totalValue;
 
 	//association fields
-	private Set<Order> orders;
+	private List<OrderDto> orders;
 
 	
 	/**
@@ -22,7 +21,7 @@ public class ReportDto {
 	 * @param totalValue
 	 * @param orders
 	 */
-	public ReportDto(Integer reportID, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
+	public ReportDto(Integer reportID, Date startDate, Date endDate, Float totalValue, List<OrderDto> orders) {
 		this.reportID = reportID;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -94,14 +93,14 @@ public class ReportDto {
 	/**
 	 * @return the orders
 	 */
-	public Set<Order> getOrders() {
+	public List<OrderDto> getOrders() {
 		return orders;
 	}
 
 //	/**
 //	 * @param orders the orders to set
 //	 */
-//	public void setOrders(Set<Order> orders) {
+//	public void setOrders(Set<OrderDto> orders) {
 //		this.orders = orders;
 //	}
 

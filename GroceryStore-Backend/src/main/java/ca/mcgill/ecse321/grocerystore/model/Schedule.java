@@ -10,16 +10,19 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Schedule {
-	//attribute fields
-	private Employee employee;
+	// attribute fields
+
 	private Integer scheduleID;
-	//association fields
+	// association fields
 	private Set<WorkingHour> workingHour;
-	//getters and setters
+	private Employee employee;
+
+	// getters and setters
 	@Id
 	public Integer getScheduleID() {
 		return scheduleID;
 	}
+
 	public void setScheduleID(Integer scheduleID) {
 		this.scheduleID = scheduleID;
 	}
@@ -28,6 +31,7 @@ public class Schedule {
 	public Set<WorkingHour> getWorkingHour() {
 		return this.workingHour;
 	}
+
 	public void setWorkingHour(Set<WorkingHour> workingHour) {
 		this.workingHour = workingHour;
 	}
@@ -36,6 +40,7 @@ public class Schedule {
 	public Employee getEmployee() {
 		return this.employee;
 	}
+
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
