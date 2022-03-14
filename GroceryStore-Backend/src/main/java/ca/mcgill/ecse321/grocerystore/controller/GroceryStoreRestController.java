@@ -1,10 +1,12 @@
 package ca.mcgill.ecse321.grocerystore.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,5 +104,128 @@ public class GroceryStoreRestController {
 
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
+	
+	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"})
+	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
+			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
+			@RequestParam Integer pointPerItem) {
+		
+		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		
+		return convertToDto(perishableItem);
+	}
 
+	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
+		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(), perishableItem.getPrice(),
+				perishableItem.getAvailableOnline(), perishableItem.getNumInStock(), perishableItem.getPointPerItem());
+	}
+	
+	/*
+	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"})
+	public PerishableItemDto createPerishableItemWithDate(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
+			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
+			@RequestParam Integer pointPerItem, @RequestParam Date date) {
+		
+		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		
+		return convertToDto(perishableItem, date);
+	}
+	
+	private PerishableItemDto convertToDto(PerishableItem perishableItem, Date date) {
+		
+		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(), perishableItem.getPrice(),
+				perishableItem.getAvailableOnline(), perishableItem.getNumInStock(), perishableItem.getPointPerItem(), date);
+	}*/
+
+	@PostMapping(value = {"/nonperishable/{NonPerishableItemID}","/nonperishable/{NonPerishableItemID}/"})
+	public NonPerishableItemDto createNonPerishableItem(@PathVariable("NonPerishableItemID") Integer id, @RequestParam String productName, 
+			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
+			@RequestParam Integer pointPerItem) {
+		
+		NonPerishableItem nonPerishableItem = service.createNonPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		
+		return convertToDto(nonPerishableItem);
+	}
+	
+	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
+		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(), nonPerishableItem.getPrice(),
+				nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(), nonPerishableItem.getPointPerItem());
+	}
+	
+	@GetMapping(value = {"/items", "/items/"})
+	public List<ItemDto> getAllItems(){
+		
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		
+		for (PerishableItem i : service.getAllPerishableItems()) {
+			if (i != null) {
+				items.add(convertToDto(i));
+			}
+		}
+		for (NonPerishableItem i : service.getAllNonPerishableItems()) {
+			if (i != null) {
+				items.add(convertToDto(i));
+			}
+		}
+		return items;
+	}
+	
+	@GetMapping(value = {"/perishableitems", "/perishableitems/"})
+	public List<ItemDto> getAllPerishableItems(){
+		
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		
+		for (PerishableItem i : service.getAllPerishableItems()) {
+			if (i != null) {
+				items.add(convertToDto(i));
+			}
+		}
+		return items;
+	}
+	
+	@GetMapping(value = {"/nonperishableitems", "/nonperishableitems/"})
+	public List<ItemDto> getAllNonPerishableItems(){
+		
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		
+		for (NonPerishableItem i : service.getAllNonPerishableItems()) {
+			if (i != null) {
+				items.add(convertToDto(i));
+			}
+		}
+		return items;
+	}
+	
+	@GetMapping(value = {"/items/{id}", "/items/{id}/"})
+	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+		Integer ID = Integer.parseInt(id);
+		PerishableItem pitems = service.getPerishableItemsByID(ID);
+		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		ItemDto itemsDto = null;
+		
+		if (pitems != null) {
+			itemsDto=convertToDto(pitems);
+		}
+		else if (npitems != null) {
+			itemsDto=convertToDto(npitems);
+		}
+		
+		return itemsDto;
+	}
+	
+	@GetMapping(value = {"/items/n:{name}", "/items/n:{name}/"})
+	public ItemDto getItemsByName(@PathVariable("name") String name) throws IllegalArgumentException {
+		PerishableItem pitems = service.getPerishableItemsByProductName(name);
+		NonPerishableItem npitems = service.getNonPerishableItemsByProductName(name);
+		ItemDto itemsDto = null;
+		
+		if (pitems != null) {
+			itemsDto=convertToDto(pitems);
+		}
+		else if (npitems != null) {
+			itemsDto=convertToDto(npitems);
+		}
+		return itemsDto;
+	}
+	
 }

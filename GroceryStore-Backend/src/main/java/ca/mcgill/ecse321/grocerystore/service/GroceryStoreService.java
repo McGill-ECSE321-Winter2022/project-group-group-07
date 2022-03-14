@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -472,6 +473,17 @@ public class GroceryStoreService {
 
 		return toList(perishableItemRepository.findAll());
 	}
+	
+	@Transactional
+	public PerishableItem getPerishableItemsByID(Integer id) {
+
+		return perishableItemRepository.findByItemID(id);
+	}
+	
+	@Transactional
+	public PerishableItem getPerishableItemsByProductName(String name) {
+		return perishableItemRepository.findByProductName(name);
+	}
 
 	@Transactional
 	public NonPerishableItem createNonPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
@@ -495,6 +507,17 @@ public class GroceryStoreService {
 	public List<NonPerishableItem> getAllNonPerishableItems() {
 
 		return toList(nonPerishableItemRepository.findAll());
+	}
+	
+	@Transactional
+	public NonPerishableItem getNonPerishableItemsByID(Integer id) {
+		
+		return nonPerishableItemRepository.findByItemID(id);
+	}
+	
+	@Transactional
+	public NonPerishableItem getNonPerishableItemsByProductName(String name) {
+		return nonPerishableItemRepository.findByProductName(name);
 	}
 
 	@Transactional
