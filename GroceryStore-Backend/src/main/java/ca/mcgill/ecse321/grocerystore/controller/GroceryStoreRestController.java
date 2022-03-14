@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.grocerystore.controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +168,7 @@ public class GroceryStoreRestController {
 				items.add(convertToDto(i));
 			}
 		}
+		
 		return items;
 	}
 	
@@ -235,7 +237,7 @@ public class GroceryStoreRestController {
 		return items;
 	}
 	//delete Not working
-	@DeleteMapping(value = {"/items/{id}", "/items/{id}/"})
+	@DeleteMapping(value = {"/deleteItems/{id}", "/deleteItems/{id}/"})
 	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Integer ID = Integer.parseInt(id);
 		
