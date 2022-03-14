@@ -479,9 +479,14 @@ public class GroceryStoreService {
 
 		return perishableItemRepository.findByItemID(id);
 	}
+	@Transactional
+	public void deletePerishableItemsByID(Integer id) {
+		perishableItemRepository.deleteByItemID(id);
+		
+	}
 	
 	@Transactional
-	public PerishableItem getPerishableItemsByProductName(String name) {
+	public List<PerishableItem> getPerishableItemsByProductName(String name) {
 		return perishableItemRepository.findByProductName(name);
 	}
 
@@ -516,8 +521,13 @@ public class GroceryStoreService {
 	}
 	
 	@Transactional
-	public NonPerishableItem getNonPerishableItemsByProductName(String name) {
+	public List<NonPerishableItem> getNonPerishableItemsByProductName(String name) {
 		return nonPerishableItemRepository.findByProductName(name);
+	}
+	
+	@Transactional
+	public void deleteNonPerishableItemsByID(Integer id) {
+		nonPerishableItemRepository.deleteByItemID(id);
 	}
 
 	@Transactional

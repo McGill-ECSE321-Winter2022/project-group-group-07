@@ -196,7 +196,7 @@ public class GroceryStoreRestController {
 		return items;
 	}
 	
-	@GetMapping(value = {"/items/{id}", "/items/{id}/"})
+	@GetMapping(value = {"/items/id:{id}", "/items/id:{id}/"})
 	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Integer ID = Integer.parseInt(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
@@ -213,19 +213,41 @@ public class GroceryStoreRestController {
 		return itemsDto;
 	}
 	
-	@GetMapping(value = {"/items/n:{name}", "/items/n:{name}/"})
-	public ItemDto getItemsByName(@PathVariable("name") String name) throws IllegalArgumentException {
-		PerishableItem pitems = service.getPerishableItemsByProductName(name);
-		NonPerishableItem npitems = service.getNonPerishableItemsByProductName(name);
-		ItemDto itemsDto = null;
+	@GetMapping(value = {"/items/name:{name}", "/items/name:{name}/"})
+	public List<ItemDto> getItemsByName(@PathVariable("name") String name) throws IllegalArgumentException {
+		List<PerishableItem> pitems = service.getPerishableItemsByProductName(name);
+		List<NonPerishableItem> npitems = service.getNonPerishableItemsByProductName(name);
+		List<ItemDto> items = new ArrayList<ItemDto>();
 		
 		if (pitems != null) {
-			itemsDto=convertToDto(pitems);
+			for (PerishableItem p : pitems) {
+				items.add(convertToDto(p));
+			
+			}
 		}
-		else if (npitems != null) {
-			itemsDto=convertToDto(npitems);
+		if (npitems != null) {
+			for (NonPerishableItem p : npitems) {
+				items.add(convertToDto(p));
+			
+			}
 		}
-		return itemsDto;
+		
+		return items;
+	}
+	//delete Not working
+	@DeleteMapping(value = {"/items/{id}", "/items/{id}/"})
+	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+		Integer ID = Integer.parseInt(id);
+		
+		PerishableItem pitems = service.getPerishableItemsByID(ID);
+		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		
+		if (pitems != null) {
+			service.deletePerishableItemsByID(ID);
+		}
+		if (npitems != null) {
+			service.deleteNonPerishableItemsByID(ID);
+		}
 	}
 	
 }
