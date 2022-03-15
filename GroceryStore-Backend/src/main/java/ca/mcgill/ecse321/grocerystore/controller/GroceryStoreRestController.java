@@ -204,6 +204,7 @@ public class GroceryStoreRestController {
 				items.add(convertToDto(i));
 			}
 		}
+		return items;
 		
 	}
 	
