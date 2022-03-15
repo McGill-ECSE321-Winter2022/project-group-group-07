@@ -542,6 +542,17 @@ public class GroceryStoreService {
 		
 		nonPerishableItemRepository.delete(npitem);
 	}
+	@Transactional
+	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		npitem.setItemID(ID);
+		npitem.setProductName(productName);
+		npitem.setPrice(price);
+		npitem.setAvailableOnline(availableOnline);
+		npitem.setNumInStock(numInStock);
+		npitem.setPointPerItem(pointPerItem);
+		return npitem;
+	}
+
 
 	@Transactional
 	public Report createReport(Integer id, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {

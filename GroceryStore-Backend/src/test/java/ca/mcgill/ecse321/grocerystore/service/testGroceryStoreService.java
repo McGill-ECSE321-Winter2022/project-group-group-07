@@ -92,7 +92,5 @@ public class testGroceryStoreService {
 		// check error
 		assertEquals("Account name cannot be empty!", error);
 	}
-
-	
 	
 }

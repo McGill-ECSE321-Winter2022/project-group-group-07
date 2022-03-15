@@ -141,10 +141,10 @@ public class GroceryStoreRestController {
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
 	
-	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"})
+	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"}) 
 	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
-			@RequestParam Integer pointPerItem) {
+			@RequestParam Integer pointPerItem) throws IllegalArgumentException {
 		
 		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
 		
@@ -177,7 +177,7 @@ public class GroceryStoreRestController {
 	@PostMapping(value = {"/nonperishable/{NonPerishableItemID}","/nonperishable/{NonPerishableItemID}/"})
 	public NonPerishableItemDto createNonPerishableItem(@PathVariable("NonPerishableItemID") Integer id, @RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
-			@RequestParam Integer pointPerItem) {
+			@RequestParam Integer pointPerItem) throws IllegalArgumentException {
 		
 		NonPerishableItem nonPerishableItem = service.createNonPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
 		
@@ -288,21 +288,31 @@ public class GroceryStoreRestController {
 		}
 	}
 	
-	@PutMapping(value = {"/perishableitems/{id}","/perishableitems/{id}/"} )   
-	 public PerishableItemDto updatePerishableItem(@PathVariable String id, @RequestParam String productName, 
+	@PutMapping(value = {"/items/{id}","/items/{id}/"} )   
+	 public ItemDto updateItem(@PathVariable String id, @RequestParam String productName, 
 				@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 				@RequestParam Integer pointPerItem)   {
 		Integer ID = Integer.parseInt(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
-		if (pitems == null) {
-			throw new IllegalArgumentException("There is no such Perishable Item!");
+		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item!");
+		} 
+		else if (pitems != null) {
+			PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
+			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
+			return updatedPerishableItem;
 		}
-		PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
-		perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
-		PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
-		return updatedPerishableItem;
+		else {
+			NonPerishableItem nonPerishableItemToUpdate = service.getNonPerishableItemsByID(ID);
+			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			NonPerishableItemDto nonUpdatedPerishableItem = convertToDto(nonPerishableItemToUpdate);
+			return nonUpdatedPerishableItem;
+		}
 		
 	}
+	
 	private StoreDto convertToDto(Store store){
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(), store.getEmployeeDiscountRate(), store.getPointToCashRatio());
 	}
