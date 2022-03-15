@@ -480,8 +480,8 @@ public class GroceryStoreService {
 		return perishableItemRepository.findByItemID(id);
 	}
 	@Transactional
-	public void deletePerishableItemsByID(Integer id) {
-		perishableItemRepository.deleteByItemID(id);
+	public void deletePerishableItems(PerishableItem pitem) {
+		perishableItemRepository.delete(pitem);
 		
 	}
 	
@@ -526,8 +526,9 @@ public class GroceryStoreService {
 	}
 	
 	@Transactional
-	public void deleteNonPerishableItemsByID(Integer id) {
-		nonPerishableItemRepository.deleteByItemID(id);
+	public void deleteNonPerishableItems(NonPerishableItem npitem) {
+		
+		nonPerishableItemRepository.delete(npitem);
 	}
 
 	@Transactional

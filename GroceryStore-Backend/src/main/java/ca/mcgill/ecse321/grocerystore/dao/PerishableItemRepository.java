@@ -11,6 +11,4 @@ public interface PerishableItemRepository extends CrudRepository<PerishableItem,
 	PerishableItem findByItemID(Integer itemID);
 
 	List<PerishableItem> findByProductName(String productName);
-	
-	PerishableItem deleteByItemID(Integer itemID);
 }
