@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -287,6 +288,21 @@ public class GroceryStoreRestController {
 		}
 	}
 	
+	@PutMapping(value = {"/perishableitems/{id}","/perishableitems/{id}/"} )   
+	 public PerishableItemDto updatePerishableItem(@PathVariable String id, @RequestParam String productName, 
+				@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
+				@RequestParam Integer pointPerItem)   {
+		Integer ID = Integer.parseInt(id);
+		PerishableItem pitems = service.getPerishableItemsByID(ID);
+		if (pitems == null) {
+			throw new IllegalArgumentException("There is no such Perishable Item!");
+		}
+		PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
+		perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+		PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
+		return updatedPerishableItem;
+		
+	}
 	private StoreDto convertToDto(Store store){
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(), store.getEmployeeDiscountRate(), store.getPointToCashRatio());
 	}
