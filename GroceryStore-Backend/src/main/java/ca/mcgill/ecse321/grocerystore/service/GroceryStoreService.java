@@ -233,7 +233,9 @@ public class GroceryStoreService {
 	@Transactional
 	public Account createAccount(String username, String password, String name, Integer pointBalance,
 			AccountRole accountRole) {
-
+		if (name == null || name.trim().length() == 0) {
+			throw new IllegalArgumentException("Account name cannot be empty!");
+		}
 		Account account = new Account();
 		account.setUsername(username);
 		account.setPassword(password);
