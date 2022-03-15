@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.grocerystore.dao;
 
+
+import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
@@ -8,5 +10,7 @@ public interface NonPerishableItemRepository extends CrudRepository<NonPerishabl
 
 	NonPerishableItem findByItemID(Integer itemiID);
 
-	NonPerishableItem findByProductName(String productName);
+	List<NonPerishableItem> findByProductName(String productName);
+	
+	NonPerishableItem deleteByItemID(Integer itemID);
 }
