@@ -491,6 +491,16 @@ public class GroceryStoreService {
 	public List<PerishableItem> getPerishableItemsByProductName(String name) {
 		return perishableItemRepository.findByProductName(name);
 	}
+	@Transactional
+	public PerishableItem updatePerishableItem(PerishableItem pitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		pitem.setItemID(ID);
+		pitem.setProductName(productName);
+		pitem.setPrice(price);
+		pitem.setAvailableOnline(availableOnline);
+		pitem.setNumInStock(numInStock);
+		pitem.setPointPerItem(pointPerItem);
+		return pitem;
+	}
 
 	@Transactional
 	public NonPerishableItem createNonPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
