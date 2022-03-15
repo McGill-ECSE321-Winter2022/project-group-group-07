@@ -1,11 +1,15 @@
 package ca.mcgill.ecse321.grocerystore.controller;
 
+
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,10 +86,10 @@ public class GroceryStoreRestController {
 
 		return convertToDto(address, convertToDto(account, account.getAccountRole()));
 	}
-	
+
 	@GetMapping(value = {"/address", "/address/"})
 	public List<AddressDto> getAllAddresses(){
-		
+
 		List<AddressDto> addresses = new ArrayList<AddressDto>();
 
 		for (Address a : service.getAllAddresses()) {
@@ -94,6 +98,36 @@ public class GroceryStoreRestController {
 			}
 		}
 		return addresses;
+	}
+
+	@GetMapping(value = { "/store", "/store/" })
+	public StoreDto getStoreInfo(){
+		return convertToDto(service.getStore());
+	}
+
+	@PostMapping(value = { "/businessHours", "/businessHours/" })
+	public BusinessHourDto createBusinessHours( @RequestParam(name = "id") Integer id,
+								@RequestParam(name = "dayOfWeek") GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek,
+								@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") Time startTime,
+								@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") Time endTime){
+		BusinessHour b = service.createBusinessHour(id, dayOfWeek, startTime, endTime);
+		return convertToDto(b);
+	}
+
+	@GetMapping(value = { "/businessHours", "/businessHours/" })
+	public List<BusinessHourDto> getBusinessHours(){
+		return service.getAllBusinessHours().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+
+	@GetMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}/" })
+	public List<BusinessHourDto> getBusinessHoursByDay(@PathVariable("dayOfWeek") String day){
+		List<BusinessHourDto> businessHours = new ArrayList<>();
+		for (BusinessHour b : service.getAllBusinessHours()) {
+			if (b.getDayOfWeek().toString().equals(day)){
+				businessHours.add(convertToDto(b));
+			}
+		}
+		return businessHours;
 	}
 
 	private AccountDto convertToDto(Account account, AccountRole role) {
@@ -115,6 +149,7 @@ public class GroceryStoreRestController {
 		
 		return convertToDto(perishableItem);
 	}
+
 
 	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(), perishableItem.getPrice(),
@@ -252,4 +287,11 @@ public class GroceryStoreRestController {
 		}
 	}
 	
+	private StoreDto convertToDto(Store store){
+		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(), store.getEmployeeDiscountRate(), store.getPointToCashRatio());
+	}
+
+	private BusinessHourDto convertToDto(BusinessHour businessHour){
+		return new BusinessHourDto(businessHour.getDayOfWeek().toString(), businessHour.getStartTime(), businessHour.getEndTime());
+	}
 }
