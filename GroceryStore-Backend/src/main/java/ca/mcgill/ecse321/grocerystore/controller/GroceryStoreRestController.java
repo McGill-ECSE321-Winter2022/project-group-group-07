@@ -271,7 +271,7 @@ public class GroceryStoreRestController {
 		
 		return items;
 	}
-	//delete Not working
+
 	@DeleteMapping(value = {"/deleteItems/{id}", "/deleteItems/{id}/"})
 	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Integer ID = Integer.parseInt(id);
@@ -280,10 +280,10 @@ public class GroceryStoreRestController {
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		
 		if (pitems != null) {
-			service.deletePerishableItemsByID(ID);
+			service.deletePerishableItems(pitems);
 		}
 		if (npitems != null) {
-			service.deleteNonPerishableItemsByID(ID);
+			service.deleteNonPerishableItems(npitems);
 		}
 	}
 	
