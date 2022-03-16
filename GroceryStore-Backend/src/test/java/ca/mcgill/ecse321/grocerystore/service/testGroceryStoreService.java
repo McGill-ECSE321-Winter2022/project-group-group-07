@@ -44,6 +44,7 @@ import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.model.Account;
 import ca.mcgill.ecse321.grocerystore.model.AccountRole;
 import ca.mcgill.ecse321.grocerystore.model.Customer;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 
@@ -215,7 +216,6 @@ public class testGroceryStoreService {
 		// check error
 		assertEquals("Account name cannot be empty!", error);
 	}
-
 
 	// Test for Store
 	@Test
@@ -664,5 +664,28 @@ public class testGroceryStoreService {
 		assertEquals(PerishableItem_price,getNPitem.getPrice());
 		assertEquals(PerishableItem_numInStock,getNPitem.getNumInStock());
 		assertEquals(PerishableItem_pointPerItem,getNPitem.getPointPerItem());
+	}
+
+	@Test
+	public void testCreateWorkingHour() {
+		assertEquals(0, service.getAllWorkingHourIDs().size());
+		
+		String error = null;
+		WorkingHour workingHour = null;
+		
+		DayOfWeek dayOfWeek = DayOfWeek.Monday;
+		Time startTime = Time.valueOf("1:00");
+		Time endTime = Time.valueOf("2:00");
+		
+		try {
+			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNotNull(workingHour);
+		assertEquals(dayOfWeek, workingHour.getDayOfWeek());
+		assertEquals(startTime, workingHour.getStartTime());
+		assertEquals(startTime, workingHour.getEndTime());
 	}
 }
