@@ -236,7 +236,6 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNotNull(store);
-		assertEquals(storeID, store.getStoreID());
 		assertEquals(name, store.getName());
 		assertEquals(address, store.getAddress());
 		assertEquals(phoneNumber, store.getPhoneNumber());
@@ -357,7 +356,6 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNotNull(businessHour);
-		assertEquals(id, businessHour.getBusinessHourID());
 		assertEquals(dayOfWeek, businessHour.getDayOfWeek());
 		assertEquals(startTime, businessHour.getStartTime());
 		assertEquals(endTime, businessHour.getEndTime());
