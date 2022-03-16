@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.grocerystore.service;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -457,7 +458,29 @@ public class GroceryStoreService {
 			Integer numInStock, Integer pointPerItem) {
 
 		PerishableItem perishableItem = new PerishableItem();
-
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		if (id == null ) {
+			errors.add("ItemID is empty!");
+		}
+		if (name == null || name.trim().length() == 0) {
+			errors.add("Item name is empty!");
+		}
+		if (price == null) {
+			errors.add("Price is empty!");
+		}
+		if (availableOnline == null) {
+			errors.add("Please state whether this item is available online!");
+		}
+		if (numInStock == null) {
+			errors.add("Please state the amount of stock!");
+		}
+		if (pointPerItem == null) {
+			errors.add("Please state the amount of point given per item!");
+		}
+		String listErrors = String.join(", ", errors);
+		if(errors.size() != 0) throw new IllegalArgumentException(listErrors);
+		
 		perishableItem.setItemID(id);
 		perishableItem.setProductName(name);
 		perishableItem.setPrice(price);
@@ -507,6 +530,28 @@ public class GroceryStoreService {
 			Integer numInStock, Integer pointPerItem) {
 
 		NonPerishableItem nonPerishableItem = new NonPerishableItem();
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		if (id == null ) {
+			errors.add("ItemID is empty!");
+		}
+		if (name == null || name.trim().length() == 0) {
+			errors.add("Item name is empty!");
+		}
+		if (price == null) {
+			errors.add("Price is empty!");
+		}
+		if (availableOnline == null) {
+			errors.add("Please state whether this item is available online!");
+		}
+		if (numInStock == null) {
+			errors.add("Please state the amount of stock!");
+		}
+		if (pointPerItem == null) {
+			errors.add("Please state the amount of point given per item!");
+		}
+		String listErrors = String.join(", ", errors);
+		if(errors.size() != 0) throw new IllegalArgumentException(listErrors);
 
 		nonPerishableItem.setItemID(id);
 		nonPerishableItem.setProductName(name);
