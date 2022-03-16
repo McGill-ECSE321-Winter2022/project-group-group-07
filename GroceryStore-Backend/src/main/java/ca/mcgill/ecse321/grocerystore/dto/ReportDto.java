@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class ReportDto {
-	private Integer reportID;
+	private Long reportID;
 	private Date startDate;
 	private Date endDate;
 	private Float totalValue;
@@ -21,7 +21,7 @@ public class ReportDto {
 	 * @param totalValue
 	 * @param orders
 	 */
-	public ReportDto(Integer reportID, Date startDate, Date endDate, Float totalValue, List<OrderDto> orders) {
+	public ReportDto(Long reportID, Date startDate, Date endDate, Float totalValue, List<OrderDto> orders) {
 		this.reportID = reportID;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -37,7 +37,7 @@ public class ReportDto {
 	/**
 	 * @return the reportID
 	 */
-	public Integer getReportID() {
+	public Long getReportID() {
 		return reportID;
 	}
 

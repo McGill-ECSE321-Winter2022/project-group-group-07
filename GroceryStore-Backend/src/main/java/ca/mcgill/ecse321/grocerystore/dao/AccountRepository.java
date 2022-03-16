@@ -8,6 +8,8 @@ public interface AccountRepository extends CrudRepository<Account,String> {
 	
 	Account findByUsername(String username);
 	
+	Account findByUsernameAndPassword(String username, String password);
+	
 	Account findByName(String name);
 	
 	Account findByAccountRole(AccountRole accountRole);

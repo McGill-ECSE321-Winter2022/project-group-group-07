@@ -5,6 +5,8 @@ import java.sql.Time;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -16,15 +18,49 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Order {
 
-	//attribute fields
-	private Integer orderID;
+	// attribute fields
+	private Long orderID;
 	private Float totalValue;
 	private Date date;
 	private Time purchaseTime;
 
-	//association fields
+	// association fields
 	private Set<Item> items;
 	private Account account;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(Long aOrderID) {
+		this.orderID = aOrderID;
+	}
+
+	public Float getTotalValue() {
+		return totalValue;
+	}
+
+	public void setTotalValue(Float aTotalValue) {
+		this.totalValue = aTotalValue;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date aDate) {
+		date = aDate;
+	}
+
+	public Time getPurchaseTime() {
+		return purchaseTime;
+	}
+
+	public void setPurchaseTime(Time aTime) {
+		this.purchaseTime = aTime;
+	}
 
 	@ManyToOne(optional = true)
 	public Account getAccount() {
@@ -35,24 +71,6 @@ public abstract class Order {
 		this.account = account;
 	}
 
-	public void setOrderID(Integer aOrderID) {
-		this.orderID = aOrderID;
-	}
-
-	public void setTotalValue(Float aTotalValue) {
-		this.totalValue = aTotalValue;
-	}
-
-	public void setDate(Date aDate) {
-		date = aDate;
-	}
-
-	public void setPurchaseTime(Time aTime) {
-		this.purchaseTime = aTime;
-	}
-
-
-
 	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Item> getItems() {
 		return this.items;
@@ -60,23 +78,6 @@ public abstract class Order {
 
 	public void setItems(Set<Item> itemss) {
 		this.items = itemss;
-	}
-
-	@Id
-	public Integer getOrderID() {
-		return orderID;
-	}
-
-	public Float getTotalValue() {
-		return totalValue;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
-	public Time getPurchaseTime() {
-		return purchaseTime;
 	}
 
 }

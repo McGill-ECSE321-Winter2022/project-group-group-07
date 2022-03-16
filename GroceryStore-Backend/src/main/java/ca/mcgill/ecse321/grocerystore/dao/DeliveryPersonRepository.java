@@ -7,6 +7,6 @@ import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
 
 public interface DeliveryPersonRepository extends CrudRepository<DeliveryPerson, Integer> {
 	
-	DeliveryPerson findByRoleID(Integer roleID);
+	DeliveryPerson findByRoleID(Long roleID);
 	
 }

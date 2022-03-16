@@ -7,7 +7,7 @@ import ca.mcgill.ecse321.grocerystore.model.Schedule;
 
 public interface ScheduleRepository extends CrudRepository<Schedule,Integer>{
 
-    Schedule findByScheduleID(Integer scheduleID);
+    Schedule findByScheduleID(Long scheduleID);
 
     Schedule findByEmployee(Employee employee);
 }

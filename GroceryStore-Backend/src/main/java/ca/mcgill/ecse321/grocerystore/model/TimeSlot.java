@@ -3,50 +3,60 @@ package ca.mcgill.ecse321.grocerystore.model;
 import java.sql.Date;
 import java.sql.Time;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class TimeSlot {
-	//attribute fields
-	private Integer timeSlotID;
+	// attribute fields
+	private Long timeSlotID;
 	private Date startDate;
 	private Date endDate;
 	private Time startTime;
 	private Time endTime;
-	//getters and setters
+
+	// getters and setters
 	@Id
-	public Integer getTimeSlotID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getTimeSlotID() {
 		return timeSlotID;
 	}
+
+	public void setTimeSlotID(Long timeSlotID) {
+		this.timeSlotID = timeSlotID;
+	}
+
 	public Date getStartDate() {
 		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
 	public Date getEndDate() {
 		return endDate;
 	}
-	public Time getStartTime() {
-		return startTime;
-	}
-
-	public void setTimeSlotID(Integer timeSlotID) {
-		this.timeSlotID = timeSlotID;
-	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
+	public Time getStartTime() {
+		return startTime;
+	}
+
 	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
 	}
 
 	public void setEndTime(Time endTime) {
 		this.endTime = endTime;
 	}
-	public Time getEndTime() {
-		return endTime;
-	}
+
 }
