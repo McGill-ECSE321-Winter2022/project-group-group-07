@@ -263,7 +263,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNull(store);
-		assertEquals("Store id cannot be empty! Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!", error);
+		assertEquals("Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!", error);
 	}
 	@Test
 	public void testCreateStoreEmpty(){
@@ -370,7 +370,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNull(businessHour);
-		assertEquals("Business hour id cannot be empty! Business hour day of the week cannot be empty! Business hour start time cannot be empty! Business hour end time cannot be empty!", error);
+		assertEquals("Business hour day of the week cannot be empty! Business hour start time cannot be empty! Business hour end time cannot be empty!", error);
 	}
 	@Test
 	public void testcreateBusinessHourEndTimeBeforeStartTime() {
@@ -615,7 +615,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}	
 		assertNull(npitem);
-		assertEquals("ItemID is empty!, Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
 				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
 	}
 	@Test
