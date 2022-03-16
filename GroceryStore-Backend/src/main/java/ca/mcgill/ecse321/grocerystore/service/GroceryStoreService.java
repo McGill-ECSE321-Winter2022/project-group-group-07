@@ -25,6 +25,7 @@ import ca.mcgill.ecse321.grocerystore.dao.DeliveryPersonRepository;
 import ca.mcgill.ecse321.grocerystore.dao.EmployeeRepository;
 import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.OrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.OwnerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.PickUpOrderRepository;
@@ -92,6 +93,8 @@ public class GroceryStoreService {
 	private OwnerRepository ownerRepository;
 	@Autowired
 	private PerishableItemRepository perishableItemRepository;
+	@Autowired
+	private OrderRepository orderRepository;
 	@Autowired
 	private PickUpOrderRepository pickUpOrderRepository;
 	@Autowired
@@ -382,7 +385,13 @@ public class GroceryStoreService {
 
 		return cartRepository.findByAccount(account);
 	}
+	
+	@Transactional
+	public List<Order> getAllOrders() {
 
+		return toList(orderRepository.findAll());
+	}
+	
 	@Transactional
 	public DeliveryOrder createDeliveryOrder(Integer id, Float totalValue, Date date, Time purchaseTime,
 			Set<Item> items, TimeSlot timeSlot, Account account) {
