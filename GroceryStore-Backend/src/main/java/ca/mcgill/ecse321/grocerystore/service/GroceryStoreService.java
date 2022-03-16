@@ -107,14 +107,13 @@ public class GroceryStoreService {
 	@Autowired
 	private WorkingHourRepository workingHourRepository;
 
-	private Integer roleID = 0;
 	private Integer addressID = 0;
 
 	@Transactional
-	public Owner createOwnerRole(Integer id, Date employmentDate) {
+	public Owner createOwnerRole(Date employmentDate) {
 
 		Owner owner = new Owner();
-		owner.setRoleID(id);
+
 		owner.setEmploymentDate(employmentDate);
 
 		ownerRepository.save(owner);
@@ -135,10 +134,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Clerk createClerkRole(Integer id, Date employmentDate) {
+	public Clerk createClerkRole(Date employmentDate) {
 
 		Clerk clerk = new Clerk();
-		clerk.setRoleID(id);
+
 		clerk.setEmploymentDate(employmentDate);
 
 		clerkRepository.save(clerk);
@@ -211,13 +210,10 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Customer createCustomerRole() {
-
+		
 		Customer customer = new Customer();
-		customer.setRoleID(roleID);
-		roleID++;
-
 		customerRepository.save(customer);
-
+		
 		return customer;
 	}
 
@@ -266,7 +262,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Address createAddress( Integer buildingNo, String street, String town, Account account) {
+	public Address createAddress(Integer buildingNo, String street, String town, Account account) {
 
 		Address address = new Address();
 
@@ -275,7 +271,7 @@ public class GroceryStoreService {
 		address.setStreet(street);
 		address.setTown(town);
 		address.setAccount(account);
-		
+
 		addressID++;
 
 		addressRepository.save(address);
@@ -458,10 +454,11 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PerishableItem createPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
+	public PerishableItem createPerishableItem(String name, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem) {
 
 		PerishableItem perishableItem = new PerishableItem();
+
 		ArrayList<String> errors = new ArrayList<String>();
 		
 		if (id == null ) {
@@ -485,7 +482,7 @@ public class GroceryStoreService {
 		String listErrors = String.join(", ", errors);
 		if(errors.size() != 0) throw new IllegalArgumentException(listErrors);
 		
-		perishableItem.setItemID(id);
+
 		perishableItem.setProductName(name);
 		perishableItem.setPrice(price);
 		perishableItem.setAvailableOnline(availableOnline);
@@ -502,24 +499,27 @@ public class GroceryStoreService {
 
 		return toList(perishableItemRepository.findAll());
 	}
-	
+
 	@Transactional
 	public PerishableItem getPerishableItemsByID(Integer id) {
 
 		return perishableItemRepository.findByItemID(id);
 	}
+
 	@Transactional
 	public void deletePerishableItems(PerishableItem pitem) {
 		perishableItemRepository.delete(pitem);
-		
+
 	}
-	
+
 	@Transactional
 	public List<PerishableItem> getPerishableItemsByProductName(String name) {
 		return perishableItemRepository.findByProductName(name);
 	}
+
 	@Transactional
 	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+
 		pitem.setProductName(productName);
 		pitem.setPrice(price);
 		pitem.setAvailableOnline(availableOnline);
@@ -573,25 +573,28 @@ public class GroceryStoreService {
 
 		return toList(nonPerishableItemRepository.findAll());
 	}
-	
+
 	@Transactional
 	public NonPerishableItem getNonPerishableItemsByID(Integer id) {
-		
+
 		return nonPerishableItemRepository.findByItemID(id);
 	}
-	
+
 	@Transactional
 	public List<NonPerishableItem> getNonPerishableItemsByProductName(String name) {
 		return nonPerishableItemRepository.findByProductName(name);
 	}
-	
+
 	@Transactional
 	public void deleteNonPerishableItems(NonPerishableItem npitem) {
-		
+
 		nonPerishableItemRepository.delete(npitem);
 	}
+
 	@Transactional
+
 	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+
 		npitem.setProductName(productName);
 		npitem.setPrice(price);
 		npitem.setAvailableOnline(availableOnline);
@@ -599,7 +602,6 @@ public class GroceryStoreService {
 		npitem.setPointPerItem(pointPerItem);
 		return npitem;
 	}
-
 
 	@Transactional
 	public Report createReport(Integer id, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
@@ -682,7 +684,7 @@ public class GroceryStoreService {
 				return s;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -697,10 +699,10 @@ public class GroceryStoreService {
 
 		return terminal;
 	}
-	
+
 	@Transactional
-	public List<Terminal> getAllTerminals(){
-		
+	public List<Terminal> getAllTerminals() {
+
 		return toList(terminalRepository.findAll());
 	}
 
@@ -719,9 +721,9 @@ public class GroceryStoreService {
 
 		return timeSlot;
 	}
-	
-	public List<TimeSlot> getAllHolidays(){
-		
+
+	public List<TimeSlot> getAllHolidays() {
+
 		return new ArrayList<TimeSlot>(getStore().getHolidays());
 	}
 

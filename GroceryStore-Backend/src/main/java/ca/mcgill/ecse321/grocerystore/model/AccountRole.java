@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 
@@ -11,15 +13,16 @@ import javax.persistence.InheritanceType;
 public abstract class AccountRole {
 
 	// attribute field
-	private Integer roleID;
+	private Long roleID;
 
 	// getters and setters
 	@Id
-	public Integer getRoleID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getRoleID() {
 		return this.roleID;
 	}
 
-	public void setRoleID(Integer roleID) {
+	public void setRoleID(Long roleID) {
 		this.roleID = roleID;
 	}
 

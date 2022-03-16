@@ -181,12 +181,12 @@ public class GroceryStoreRestController {
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
 	
-	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"}) 
-	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
+	@PostMapping(value = {"/perishable/","/perishable"}) 
+	public PerishableItemDto createPerishableItem(@RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 			@RequestParam Integer pointPerItem) throws IllegalArgumentException {
 		
-		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline, numInStock, pointPerItem);
 		
 		return convertToDto(perishableItem);
 	}

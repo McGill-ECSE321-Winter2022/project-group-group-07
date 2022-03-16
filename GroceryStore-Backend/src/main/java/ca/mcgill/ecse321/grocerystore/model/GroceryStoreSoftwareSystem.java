@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.grocerystore.model;
 import java.util.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -20,8 +22,20 @@ public class GroceryStoreSoftwareSystem {
 		InStore, Delivery, PickUp
 	}
 
+	public enum DeliveryOrderStatus {
+		Pending, OutForDelivery, Delivered, Canceled
+	}
+
+	public enum ItemCategory {
+		BackedGoods, FruitsAndVegetables, Toiletries, Pantry, MeatsAndFish 
+	}
+
+	public enum PickUpOrderStatus {
+		Pending, Ready, PickedUp, Canceled
+	}
+
 	// attribute fields
-	private int systemID;
+	private Long systemID;
 
 	// association fields
 	private Set<Account> accounts;
@@ -42,11 +56,12 @@ public class GroceryStoreSoftwareSystem {
 	private Set<Address> addresses;
 
 	@Id
-	public int getSystemID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getSystemID() {
 		return systemID;
 	}
 
-	public void setSystemID(int ID) {
+	public void setSystemID(Long ID) {
 		systemID = ID;
 	}
 
@@ -144,6 +159,7 @@ public class GroceryStoreSoftwareSystem {
 	public Set<Clerk> getClerks() {
 		return clerks;
 	}
+
 	public void setClerks(Set<Clerk> clerks) {
 		this.clerks = clerks;
 	}
@@ -152,24 +168,25 @@ public class GroceryStoreSoftwareSystem {
 	public Set<Customer> getCustomers() {
 		return customers;
 	}
+
 	public void setCustomers(Set<Customer> customers) {
 		this.customers = customers;
 	}
-
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Item> getItems() {
 		return items;
 	}
+
 	public void setItems(Set<Item> items) {
 		this.items = items;
 	}
-
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	public Set<Order> getOrders() {
 		return orders;
 	}
+
 	public void setOrders(Set<Order> orders) {
 		this.orders = orders;
 	}
@@ -187,7 +204,6 @@ public class GroceryStoreSoftwareSystem {
 	public Set<Cart> getCarts() {
 		return carts;
 	}
-	
 
 	public void setCarts(Set<Cart> carts) {
 		this.carts = carts;
