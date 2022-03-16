@@ -305,13 +305,13 @@ public class GroceryStoreRestController {
 		} 
 		else if (pitems != null) {
 			PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
-			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,productName,price, availableOnline, numInStock,pointPerItem);
 			PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
 			return updatedPerishableItem;
 		}
 		else {
 			NonPerishableItem nonPerishableItemToUpdate = service.getNonPerishableItemsByID(ID);
-			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate,productName,price, availableOnline, numInStock,pointPerItem);
 			NonPerishableItemDto nonUpdatedPerishableItem = convertToDto(nonPerishableItemToUpdate);
 			return nonUpdatedPerishableItem;
 		}

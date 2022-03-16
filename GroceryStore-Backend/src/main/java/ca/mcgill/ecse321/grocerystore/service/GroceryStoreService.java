@@ -515,8 +515,7 @@ public class GroceryStoreService {
 		return perishableItemRepository.findByProductName(name);
 	}
 	@Transactional
-	public PerishableItem updatePerishableItem(PerishableItem pitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
-		pitem.setItemID(ID);
+	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
 		pitem.setProductName(productName);
 		pitem.setPrice(price);
 		pitem.setAvailableOnline(availableOnline);
@@ -588,8 +587,7 @@ public class GroceryStoreService {
 		nonPerishableItemRepository.delete(npitem);
 	}
 	@Transactional
-	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
-		npitem.setItemID(ID);
+	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
 		npitem.setProductName(productName);
 		npitem.setPrice(price);
 		npitem.setAvailableOnline(availableOnline);
