@@ -298,6 +298,27 @@ public class GroceryStoreService {
 
 	@Transactional
 	public BusinessHour createBusinessHour(Integer id, DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+		String error = "";
+		if (id == null){
+			error = error + "Business hour id cannot be empty! ";
+		}
+		if (dayOfWeek == null){
+			error = error + "Business hour day of the week cannot be empty! ";
+		}
+		if (startTime == null){
+			error = error + "Business hour start time cannot be empty! ";
+		}
+		if (endTime == null){
+			error = error + "Business hour end time cannot be empty! ";
+		}
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			error = error + "Business hour end time cannot be before Business hour start time! ";
+		}
+
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		BusinessHour hour = new BusinessHour();
 
@@ -319,7 +340,9 @@ public class GroceryStoreService {
 
 	@Transactional
 	public BusinessHour getBusinessHourByDay(DayOfWeek dayOfWeek) {
-
+		if (dayOfWeek == null) {
+			throw new IllegalArgumentException("Day of week cannot be empty!");
+		}
 		for (BusinessHour bh : businessHourRepository.findAll()) {
 			if (bh.getDayOfWeek().equals(dayOfWeek)) {
 				return bh;
@@ -605,9 +628,39 @@ public class GroceryStoreService {
 	@Transactional
 	public Store createStore(Integer storeID, String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
+		// Input validation
+		String error = "";
+		if (storeID == null) {
+			error = error + "Store id cannot be empty! ";
+		}
+		if (name == null || name.trim().length() == 0) {
+			error = error + "Store name cannot be empty! ";
+		}
+		if (address == null || address.trim().length() == 0) {
+			error = error + "Store address time cannot be empty! ";
+		}
+		if (phoneNumber == null || phoneNumber.trim().length() == 0) {
+			error = error + "Store phone number cannot be empty! ";
+		}
+		if (email == null || email.trim().length() == 0) {
+			error = error + "Store email cannot be empty! ";
+		}
+		if (employeeDiscountRate == null){
+			error = error + "Employee discount rate cannot be empty! ";
+		}
+		else
+		if (employeeDiscountRate > 100 || employeeDiscountRate < 0){
+			error = error + "Employee discount rate must be between 0 and 100! ";
+		}
+		if (pointToCashRatio == null){
+			error = error + "Point to cash ratio cannot be empty! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		Store store = new Store();
-
 		store.setStoreID(storeID);
 		store.setName(name);
 		store.setAddress(address);
