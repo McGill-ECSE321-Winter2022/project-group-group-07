@@ -108,11 +108,10 @@ public class GroceryStoreService {
 	private WorkingHourRepository workingHourRepository;
 
 	@Transactional
-	public Owner createOwnerRole(Date employmentDate) {
+	public Owner createOwnerRole() {
 
 		Owner owner = new Owner();
-
-		owner.setEmploymentDate(employmentDate);
+		owner.setEmploymentDate(getCurrentDate());
 
 		ownerRepository.save(owner);
 
@@ -132,11 +131,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Clerk createClerkRole(Date employmentDate) {
+	public Clerk createClerkRole() {
 
 		Clerk clerk = new Clerk();
-
-		clerk.setEmploymentDate(employmentDate);
+		clerk.setEmploymentDate(getCurrentDate());
 
 		clerkRepository.save(clerk);
 
@@ -157,10 +155,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cashier createCashierRole(Date employmentDate) {
+	public Cashier createCashierRole() {
 
 		Cashier cashier = new Cashier();
-		cashier.setEmploymentDate(employmentDate);
+		cashier.setEmploymentDate(getCurrentDate());
 
 		cashierRepository.save(cashier);
 
@@ -181,11 +179,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryPerson createDeliveryPersonRole(Date employmentDate) {
+	public DeliveryPerson createDeliveryPersonRole() {
 
 		DeliveryPerson deliveryPerson = new DeliveryPerson();
-
-		deliveryPerson.setEmploymentDate(employmentDate);
+		deliveryPerson.setEmploymentDate(getCurrentDate());
 
 		deliveryPersonRepository.save(deliveryPerson);
 
@@ -252,9 +249,43 @@ public class GroceryStoreService {
 		return accountRepository.findByUsername(username);
 	}
 
+	@Transactional 
+	public void deleteAccount(String username, String password) {
+		
+		Account account = accountRepository.findByUsernameAndPassword(username,password);
+		
+		if(account != null) {
+			accountRepository.delete(account);
+		}
+		
+		return;
+	}
+	
+	@Transactional 
+	public Account updatePassword(String username, String oldPassword, String newPassword){
+		
+		Account account = accountRepository.findByUsernameAndPassword(username, oldPassword);
+
+		account.setPassword(newPassword);
+
+		accountRepository.save(account);
+		
+		return account;
+	}
+	@Transactional
+	public Account updateName(String username, String password, String newName) {
+		
+		Account account = accountRepository.findByUsernameAndPassword(username, password);
+
+		account.setName(newName);
+
+		accountRepository.save(account);
+		
+		return account;
+	}
 	@Transactional
 	public List<Account> getAllAccounts() {
-
+		
 		return toList(accountRepository.findAll());
 	}
 
@@ -292,18 +323,15 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public BusinessHour createBusinessHour(Integer id, DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+	public BusinessHour createBusinessHour(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
 		String error = "";
-		if (id == null){
-			error = error + "Business hour id cannot be empty! ";
-		}
-		if (dayOfWeek == null){
+		if (dayOfWeek == null) {
 			error = error + "Business hour day of the week cannot be empty! ";
 		}
-		if (startTime == null){
+		if (startTime == null) {
 			error = error + "Business hour start time cannot be empty! ";
 		}
-		if (endTime == null){
+		if (endTime == null) {
 			error = error + "Business hour end time cannot be empty! ";
 		}
 		if (endTime != null && startTime != null && endTime.before(startTime)) {
@@ -347,7 +375,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart createCart(Integer id, OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
+	public Cart createCart(OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
 
 		Cart cart = new Cart();
@@ -365,7 +393,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart createCart(Integer id, OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
+	public Cart createCart(OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
 			TimeSlot timeSlot) {
 
 		Cart cart = new Cart();
@@ -394,8 +422,8 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Integer id, Float totalValue, Date date, Time purchaseTime,
-			Set<Item> items, TimeSlot timeSlot, Account account) {
+	public DeliveryOrder createDeliveryOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+			TimeSlot timeSlot, Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
 
@@ -418,7 +446,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PickUpOrder createPickUpOrder(Integer id, Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+	public PickUpOrder createPickUpOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
@@ -442,7 +470,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Integer id, Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+	public InStoreOrder createInStoreOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
 			Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
@@ -538,15 +566,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public NonPerishableItem createNonPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
+	public NonPerishableItem createNonPerishableItem(String name, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem) {
 
 		NonPerishableItem nonPerishableItem = new NonPerishableItem();
 		ArrayList<String> errors = new ArrayList<String>();
 
-		if (id == null) {
-			errors.add("ItemID is empty!");
-		}
 		if (name == null || name.trim().length() == 0) {
 			errors.add("Item name is empty!");
 		}
@@ -614,7 +639,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Report createReport(Integer id, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
+	public Report createReport(Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
 
 		Report report = new Report();
 
@@ -666,13 +691,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Store createStore(Integer storeID, String name, String address, String phoneNumber, String email,
+	public Store createStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
 		// Input validation
 		String error = "";
-		if (storeID == null) {
-			error = error + "Store id cannot be empty! ";
-		}
 		if (name == null || name.trim().length() == 0) {
 			error = error + "Store name cannot be empty! ";
 		}
@@ -685,14 +707,12 @@ public class GroceryStoreService {
 		if (email == null || email.trim().length() == 0) {
 			error = error + "Store email cannot be empty! ";
 		}
-		if (employeeDiscountRate == null){
+		if (employeeDiscountRate == null) {
 			error = error + "Employee discount rate cannot be empty! ";
-		}
-		else
-		if (employeeDiscountRate > 100 || employeeDiscountRate < 0){
+		} else if (employeeDiscountRate > 100 || employeeDiscountRate < 0) {
 			error = error + "Employee discount rate must be between 0 and 100! ";
 		}
-		if (pointToCashRatio == null){
+		if (pointToCashRatio == null) {
 			error = error + "Point to cash ratio cannot be empty! ";
 		}
 		error = error.trim();
@@ -727,7 +747,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Terminal createTerminal(Integer id) {
+	public Terminal createTerminal() {
 
 		Terminal terminal = new Terminal();
 
@@ -743,7 +763,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public TimeSlot createTimeSlot(Integer timeSlotID, Date startDate, Date endDate, Time startTime, Time endTime) {
+	public TimeSlot createTimeSlot(Date startDate, Date endDate, Time startTime, Time endTime) {
 
 		TimeSlot timeSlot = new TimeSlot();
 
@@ -763,7 +783,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public WorkingHour createWorkingHour(Integer workingHourID, DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+	public WorkingHour createWorkingHour(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
 
 		WorkingHour workingHour = new WorkingHour();
 
@@ -809,4 +829,8 @@ public class GroceryStoreService {
 		return resultList;
 	}
 
+	private Date getCurrentDate() {
+		long millis = System.currentTimeMillis();
+		return new Date(millis);
+	}
 }

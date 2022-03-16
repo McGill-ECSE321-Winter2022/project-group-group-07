@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.grocerystore.dto;
 
+import java.util.Locale.Category;
+
 public abstract class ItemDto {
 
 	private Long itemID;
@@ -8,6 +10,7 @@ public abstract class ItemDto {
 	private Boolean availableOnline;
 	private Integer numInStock;
 	private Integer pointPerItem;
+	private Category category;
 
 	/**
 	 * @param itemID
@@ -68,6 +71,20 @@ public abstract class ItemDto {
 	 */
 	public Integer getPointPerItem() {
 		return pointPerItem;
+	}
+
+	/**
+	 * @return the category
+	 */
+	public Category getCategory() {
+		return category;
+	}
+
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 }

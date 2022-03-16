@@ -221,7 +221,7 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateStore() {
 		assertNull(service.getStore());
-		Integer storeID = 1;
+
 		String name = "Store";
 		String address = "123 test street";
 		String phoneNumber = "666";
@@ -231,7 +231,7 @@ public class testGroceryStoreService {
 		String error = null;
 		Store store = null;
 		try {
-			store = service.createStore(storeID, name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -248,7 +248,7 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateStoreNull() {
 		assertNull(service.getStore());
-		Integer storeID = null;
+
 		String name = null;
 		String address = null;
 		String phoneNumber = null;
@@ -258,7 +258,7 @@ public class testGroceryStoreService {
 		String error = null;
 		Store store = null;
 		try {
-			store = service.createStore(storeID, name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -268,7 +268,6 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateStoreEmpty(){
 		assertNull(service.getStore());
-		Integer storeID = 1;
 		String name = "";
 		String address = "";
 		String phoneNumber = "";
@@ -278,7 +277,7 @@ public class testGroceryStoreService {
 		String error = null;
 		Store store = null;
 		try {
-			store = service.createStore(storeID, name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -289,7 +288,6 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateStoreSpace(){
 		assertNull(service.getStore());
-		Integer storeID = 1;
 		String name = " ";
 		String address = " ";
 		String phoneNumber = " ";
@@ -299,7 +297,7 @@ public class testGroceryStoreService {
 		String error = null;
 		Store store = null;
 		try {
-			store = service.createStore(storeID, name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -310,7 +308,6 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateStoreIllegalDiscount() {
 		assertNull(service.getStore());
-		Integer storeID = 1;
 		String name = "Store";
 		String address = "123 test street";
 		String phoneNumber = "666";
@@ -320,7 +317,7 @@ public class testGroceryStoreService {
 		String error = null;
 		Store store = null;
 		try {
-			store = service.createStore(storeID, name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -344,14 +341,13 @@ public class testGroceryStoreService {
 	// Business Hour test
 	@Test
 	public void testcreateBusinessHour() {
-		Integer id = 123;
 		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
 		Time startTime = Time.valueOf("7:59:59");
 		Time endTime = Time.valueOf("23:59:59");
 		BusinessHour businessHour = null;
 		String error = null;
 		try {
-			businessHour = service.createBusinessHour(id, dayOfWeek, startTime, endTime);
+			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -363,14 +359,13 @@ public class testGroceryStoreService {
 	}
 	@Test
 	public void testcreateBusinessHourNull() {
-		Integer id = null;
 		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
 		Time startTime = null;
 		Time endTime = null;
 		BusinessHour businessHour = null;
 		String error = null;
 		try {
-			businessHour = service.createBusinessHour(id, dayOfWeek, startTime, endTime);
+			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -379,14 +374,13 @@ public class testGroceryStoreService {
 	}
 	@Test
 	public void testcreateBusinessHourEndTimeBeforeStartTime() {
-		Integer id = 123;
 		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
 		Time startTime = Time.valueOf("17:59:59");
 		Time endTime = Time.valueOf("3:59:59");
 		BusinessHour businessHour = null;
 		String error = null;
 		try {
-			businessHour = service.createBusinessHour(id, dayOfWeek, startTime, endTime);
+			businessHour = service.createBusinessHour( dayOfWeek, startTime, endTime);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
@@ -560,8 +554,7 @@ public class testGroceryStoreService {
 	@Test
 	public void testCreateNonPerishableItem() {
 		assertEquals(0, service.getAllPerishableItems().size());
-		
-		Integer id = 1;
+
 		String name = "Desk";
 		Float price = (float) 20.0;
 		Boolean availableOnline = true;
@@ -571,7 +564,7 @@ public class testGroceryStoreService {
 		NonPerishableItem npitem = null;
 		
 		try {
-			npitem = service.createNonPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			fail();
@@ -583,8 +576,7 @@ public class testGroceryStoreService {
 	public void testCreateNonPerishableItemNoName() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		String error = null;
-		
-		Integer id = 1;
+	
 		String name = "";
 		Float price = (float) 20.0;
 		Boolean availableOnline = true;
@@ -594,7 +586,7 @@ public class testGroceryStoreService {
 		NonPerishableItem npitem = null;
 		
 		try {
-			npitem = service.createNonPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
@@ -607,7 +599,6 @@ public class testGroceryStoreService {
 	public void testCreateNonPerishableItemNullEverything() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		
-		Integer id = null;
 		String name = null;
 		Float price = null;
 		Boolean availableOnline = null;
@@ -618,7 +609,7 @@ public class testGroceryStoreService {
 		String error = null;
 		
 		try {
-			npitem = service.createNonPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
