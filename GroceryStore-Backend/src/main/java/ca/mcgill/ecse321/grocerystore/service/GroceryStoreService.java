@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.grocerystore.service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import ca.mcgill.ecse321.grocerystore.dao.ClerkRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryPersonRepository;
+import ca.mcgill.ecse321.grocerystore.dao.EmployeeRepository;
 import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.OwnerRepository;
@@ -79,6 +81,8 @@ public class GroceryStoreService {
 	private DeliveryOrderRepository deliveryOrderRepository;
 	@Autowired
 	private DeliveryPersonRepository deliveryPersonRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 	@Autowired
 	private InStoreOrderRepository inStoreOrderRepository;
 	@Autowired
@@ -577,11 +581,17 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Schedule createSchedule(Integer scheduleID, Employee employee, Set<WorkingHour> workingHour) {
+	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHour) {
 
 		Schedule schedule = new Schedule();
+		Employee employee = null;
 
 		schedule.setScheduleID(scheduleID);
+		if (accountRepository.findByUsername(username).getAccountRole() instanceof Employee) {
+			employee = (Employee) accountRepository.findByUsername(username).getAccountRole();
+		} else {
+			throw new IllegalArgumentException("No employee found");
+		}
 		schedule.setEmployee(employee);
 		schedule.setWorkingHour(workingHour);
 
@@ -686,7 +696,32 @@ public class GroceryStoreService {
 
 		return workingHour;
 	}
-
+	
+	@Transactional
+	public WorkingHour getWorkingHourByID(Integer workingHourID) {
+		for (WorkingHour workingHour : workingHourRepository.findAll()) {
+			if (workingHour.getWorkingHourID().equals(workingHourID)) {
+				return workingHour;
+			}
+		}
+		return null;
+	}
+	
+	@Transactional
+	public List<WorkingHour> getAllWorkingHourIDs() {
+		return toList(workingHourRepository.findAll());
+	}
+	
+	@Transactional
+	public Schedule getScheduleByID(Integer scheduleID) {
+		for (Schedule schedule : scheduleRepository.findAll()) {
+			if (schedule.getScheduleID().equals(scheduleID)) {
+				return schedule;
+			}
+		}
+		return null;
+	}
+	
 	private <T> List<T> toList(Iterable<T> iterable) {
 		List<T> resultList = new ArrayList<T>();
 		for (T t : iterable) {
