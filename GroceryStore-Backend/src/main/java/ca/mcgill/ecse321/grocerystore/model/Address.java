@@ -1,26 +1,31 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 @Entity
 public class Address {
+
 	// attribute fields
-	private Integer addressID;
+	private Long addressID;
 	private Integer buildingNo;
 	private String street;
 	private String town;
+
 	// association fields
 	private Account account;
 
 	// getters and setters
 	@Id
-	public Integer getAddressID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getAddressID() {
 		return addressID;
 	}
 
-	public void setAddressID(Integer addressID) {
+	public void setAddressID(Long addressID) {
 		this.addressID = addressID;
 	}
 

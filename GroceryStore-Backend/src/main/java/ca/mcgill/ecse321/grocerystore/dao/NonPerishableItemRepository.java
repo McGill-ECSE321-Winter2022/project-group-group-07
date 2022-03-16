@@ -8,7 +8,7 @@ import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 
 public interface NonPerishableItemRepository extends CrudRepository<NonPerishableItem, Integer> {
 
-	NonPerishableItem findByItemID(Integer itemiID);
+	NonPerishableItem findByItemID(Long nonPerishableID);
 
 	List<NonPerishableItem> findByProductName(String productName);
 }
