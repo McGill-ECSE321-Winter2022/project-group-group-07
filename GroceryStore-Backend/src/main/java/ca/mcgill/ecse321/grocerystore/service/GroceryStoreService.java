@@ -397,6 +397,31 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public BusinessHour updateBusinessHourByDayOfWeek(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+
+		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
+
+		if (bh != null) {
+			bh.setStartTime(startTime);
+			bh.setEndTime(endTime);
+			businessHourRepository.save(bh);
+
+			return bh;
+		} else {
+			throw new IllegalArgumentException("No business hour exists for" + dayOfWeek.toString());
+		}
+	}
+
+	@Transactional
+	public void deleteBusinessHourByDay(DayOfWeek dayOfWeek) {
+
+		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
+		if (bh != null) {
+			businessHourRepository.delete(bh);
+		}
+	}
+
+	@Transactional
 	public Cart createCart(OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
 
@@ -438,17 +463,23 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart getCartByAccount(Account account) {
+	public Cart getCartByAccount(String username) {
 
-		return cartRepository.findByAccount(account);
+		Account account = getAccount(username);
+		Cart cart = cartRepository.findByAccount(account);
+		if(cart != null) {
+			return cart;
+		}else {
+			throw new IllegalArgumentException("User does not have a cart");
+		}
 	}
-	
+
 	@Transactional
 	public List<Order> getAllOrders() {
 
 		return toList(orderRepository.findAll());
 	}
-	
+
 	@Transactional
 	public DeliveryOrder createDeliveryOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
@@ -686,13 +717,13 @@ public class GroceryStoreService {
 
 		return toList(reportRepository.findAll());
 	}
-	
+
 	@Transactional
 	public Report getReportById(Long reportID) {
 
 		return reportRepository.findByReportID(reportID);
 	}
-	
+
 	@Transactional
 	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHour) {
 
@@ -814,6 +845,14 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
+	public void deleteStore() {
+
+		if (getStore() != null) {
+			storeRepository.delete(getStore());
+		}
+	}
+
+	@Transactional
 	public Terminal createTerminal() {
 
 		Terminal terminal = new Terminal();
@@ -900,4 +939,54 @@ public class GroceryStoreService {
 		long millis = System.currentTimeMillis();
 		return new Date(millis);
 	}
+
+	@Transactional
+	public WorkingHour getWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek) {
+
+		Account account = getAccount(username);
+		if (account != null && account.getAccountRole() instanceof Employee) {
+			Schedule schedule = getScheduleByEmployee(username);
+			if (schedule != null) {
+				for (WorkingHour wh : schedule.getWorkingHour()) {
+					if (wh.getDayOfWeek().equals(dayOfWeek)) {
+						return wh;
+					}
+				}
+			} else {
+				throw new IllegalArgumentException("Employee is not assigned a schedule.");
+			}
+		} else {
+			throw new IllegalArgumentException("The username does not belong to any employee.");
+		}
+		return null;
+	}
+
+	@Transactional
+	public WorkingHour updateWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek, Time startTime,
+			Time endTime) {
+
+		WorkingHour wh = getWorkingHourByEmployeeAndDayOfWeek(username, dayOfWeek);
+
+		wh.setStartTime(startTime);
+		wh.setEndTime(endTime);
+		workingHourRepository.save(wh);
+
+		return wh;
+	}
+
+	public void deleteTerminal(Long terminalID) {
+
+		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
+		if (terminal != null) {
+			terminalRepository.delete(terminal);
+		} else {
+			throw new IllegalArgumentException("No terminal with this ID exists");
+		}
+
+	}
+
+	public List<TimeSlot> getAllTimeSlots() {
+		return toList(timeSlotRepository.findAll());
+	}
+
 }

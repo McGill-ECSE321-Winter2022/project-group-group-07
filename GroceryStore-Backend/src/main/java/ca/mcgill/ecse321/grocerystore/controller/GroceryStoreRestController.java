@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +36,7 @@ public class GroceryStoreRestController {
 	private GroceryStoreService service;
 
 	// Account GET, POST, PUT and DELETE
+
 	@PostMapping(value = { "/customerAccount/{username}", "/customerAccount/{username}/" })
 	public AccountDto createCustomerAccount(@PathVariable("username") String username, @RequestParam String name,
 			@RequestParam String password) {
@@ -130,6 +132,7 @@ public class GroceryStoreRestController {
 	}
 
 	// Address GET, POST, PUT and DELETE
+
 	@PostMapping(value = { "/address/{username}", "/address/{username}/" })
 	public AddressDto createAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
 			@RequestParam String street, @RequestParam String town) {
@@ -170,9 +173,11 @@ public class GroceryStoreRestController {
 	}
 
 	// WorkingHour GET, POST, PUT and DELETE
-	@GetMapping(value = { "/workingHour", "/workingHour/" })
-	public WorkingHourDto getWorkingHour(@RequestParam(name = "id") Integer workingHourID) {
-		return convertToDto(service.getWorkingHourByID(workingHourID));
+
+	@GetMapping(value = { "/workingHour/{username}", "/workingHour/{username}/" })
+	public WorkingHourDto getWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
+			String dayOfWeek) {
+		return convertToDto(service.getWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek)));
 	}
 
 	@GetMapping(value = { "/allWorkingHours", "/allWorkingHours/" })
@@ -181,7 +186,7 @@ public class GroceryStoreRestController {
 	}
 
 	@PostMapping(value = { "/workingHour", "/workingHour/" })
-	public WorkingHourDto createWorkingHour(@RequestParam(name = "dayOfWeek") String dayOfWeek,
+	public WorkingHourDto createWorkingHour(@RequestParam("dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime)
 			throws IllegalArgumentException {
@@ -190,7 +195,17 @@ public class GroceryStoreRestController {
 		return convertToDto(workingHour);
 	}
 
+	@PutMapping(value = { "/updateWorkingHour/{username}", "/updateWorkingHour/{username}/" })
+	public WorkingHourDto updateWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
+			@RequestParam String dayOfWeek,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+		return convertToDto(service.updateWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek),
+				Time.valueOf(startTime), Time.valueOf(endTime)));
+	}
+
 	// Schedule GET, POST, PUT and DELETE
+
 	@GetMapping(value = { "/schedule", "/schedule/" })
 	public ScheduleDto getSchedule(@RequestParam(name = "id") Integer scheduleID) {
 		return convertToDto(service.getScheduleByID(scheduleID));
@@ -220,24 +235,42 @@ public class GroceryStoreRestController {
 		service.deleteScheduleByEmployee(username);
 	}
 
+	// Store GET, POST, PUT and DELETE
 	@GetMapping(value = { "/store", "/store/" })
 	public StoreDto getStoreInfo() {
 		return convertToDto(service.getStore());
+	}
+
+	@PostMapping(value = { "/setStoreInfo", "/setStoreInfo/" })
+	public StoreDto createStore(@RequestParam String name, @RequestParam String address,
+			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
+			@RequestParam Float pointToCashRatio) {
+
+		return convertToDto(
+				service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
 
 	@PutMapping(value = { "/updateStore", "/updateStore/" })
 	public StoreDto updateStore(@RequestParam String name, @RequestParam String address,
 			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
 			@RequestParam Float pointToCashRatio) {
-		return convertToDto(service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
+		return convertToDto(
+				service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
+
+	@DeleteMapping(value = { "/deleteStore", "/deleteStore/" })
+	public void deleteStore() {
+		service.deleteStore();
+	}
+
+	// BusinessHours GET, POST, PUT and DELETE
 
 	@PostMapping(value = { "/businessHours", "/businessHours/" })
 	public BusinessHourDto createBusinessHours(
 			@RequestParam(name = "dayOfWeek") GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") Time startTime,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") Time endTime) {
-		BusinessHour b = service.createBusinessHour(dayOfWeek, startTime, endTime);
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+		BusinessHour b = service.createBusinessHour(dayOfWeek, Time.valueOf(startTime), Time.valueOf(endTime));
 		return convertToDto(b);
 	}
 
@@ -247,20 +280,32 @@ public class GroceryStoreRestController {
 	}
 
 	@GetMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}/" })
-	public List<BusinessHourDto> getBusinessHoursByDay(@PathVariable("dayOfWeek") String day) {
+	public List<BusinessHourDto> getBusinessHoursByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
 		List<BusinessHourDto> businessHours = new ArrayList<>();
 		for (BusinessHour b : service.getAllBusinessHours()) {
-			if (b.getDayOfWeek().toString().equals(day)) {
+			if (b.getDayOfWeek().toString().equals(dayOfWeek)) {
 				businessHours.add(convertToDto(b));
 			}
 		}
 		return businessHours;
 	}
 
-	private AddressDto convertToDto(Address address, AccountDto account) {
-
-		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
+	@DeleteMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}" })
+	public void deleteBusinessHourByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
+		service.deleteBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek));
 	}
+
+	@PutMapping(value = { "/updateBusinessHour/{dayOfWeek}", "/updateBusinessHour/{dayOfWeek}/" })
+	public BusinessHourDto updateBusinessHour(@PathVariable("dayOfWeek") String dayOfWeek,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+
+		BusinessHour bh = service.updateBusinessHourByDayOfWeek(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
+				Time.valueOf(endTime));
+		return convertToDto(bh);
+	}
+
+	// Items GET, POST, PUT and DELETE
 
 	@PostMapping(value = { "/perishable/", "/perishable" })
 	public PerishableItemDto createPerishableItem(@RequestParam String productName, @RequestParam Float price,
@@ -271,12 +316,6 @@ public class GroceryStoreRestController {
 				pointPerItem);
 
 		return convertToDto(perishableItem);
-	}
-
-	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
-		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
-				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
-				perishableItem.getPointPerItem());
 	}
 
 	/*
@@ -305,14 +344,6 @@ public class GroceryStoreRestController {
 	 * perishableItem.getPointPerItem(), date); }
 	 */
 
-	private WorkingHourDto convertToDto(WorkingHour workingHour) {
-		return new WorkingHourDto(workingHour.getDayOfWeek(), workingHour.getStartTime(), workingHour.getEndTime());
-	}
-
-	private ScheduleDto convertToDto(Schedule schedule) {
-		return new ScheduleDto(schedule.getScheduleID());
-	}
-
 	@PostMapping(value = { "/nonperishable", "/nonperishable/" })
 	public NonPerishableItemDto createNonPerishableItem(@RequestParam String productName, @RequestParam Float price,
 			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem)
@@ -322,12 +353,6 @@ public class GroceryStoreRestController {
 				numInStock, pointPerItem);
 
 		return convertToDto(nonPerishableItem);
-	}
-
-	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
-		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
-				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
-				nonPerishableItem.getPointPerItem());
 	}
 
 	@GetMapping(value = { "/items", "/items/" })
@@ -453,26 +478,30 @@ public class GroceryStoreRestController {
 
 	}
 
+	// Report GET, POST, PUT and DELETE
+
 	@GetMapping(value = { "/reports", "/reports/" })
-	public List<ReportDto> getReports(){
+	public List<ReportDto> getReports() {
 		List<ReportDto> reports = new ArrayList<ReportDto>();
-		for(Report report : service.getAllReports()) {
+		for (Report report : service.getAllReports()) {
 			reports.add(convertToDto(report));
 		}
 		return reports;
 	}
 
 	@GetMapping(value = { "/report/{id}", "/report/{id}/" })
-	public ReportDto getReportByID(@PathVariable("id") Long id){
+	public ReportDto getReportByID(@PathVariable("id") Long id) {
 		Report report = service.getReportById(id);
 		return convertToDto(report);
 	}
-	@PostMapping(value = {"/report","/report/"})
-	public ReportDto createReport(@RequestParam Date startDate, @RequestParam Date endDate) throws IllegalArgumentException {
+
+	@PostMapping(value = { "/report", "/report/" })
+	public ReportDto createReport(@RequestParam Date startDate, @RequestParam Date endDate)
+			throws IllegalArgumentException {
 		Float totalValue = 0f;
 		Set<Order> orders = new HashSet<Order>();
-		for(Order order : service.getAllOrders()) {
-			if(order.getDate().compareTo(startDate) >= 0 && order.getDate().compareTo(endDate) <= 0) {
+		for (Order order : service.getAllOrders()) {
+			if (order.getDate().compareTo(startDate) >= 0 && order.getDate().compareTo(endDate) <= 0) {
 				orders.add(order);
 				totalValue += order.getTotalValue();
 			}
@@ -480,6 +509,96 @@ public class GroceryStoreRestController {
 		Report report = service.createReport(startDate, endDate, totalValue, orders);
 		return convertToDto(report);
 	}
+
+	// Terminal Get, Post and Delete
+
+	@PostMapping(value = { "/terminal", "/terminal/" })
+	public TerminalDto createTerminal() {
+
+		return convertToDto(service.createTerminal());
+	}
+
+	@GetMapping(value = { "/terminals", "/terminals/" })
+	public List<TerminalDto> getAllTerminals() {
+
+		List<TerminalDto> terminals = new ArrayList<TerminalDto>();
+		for (Terminal t : service.getAllTerminals()) {
+			terminals.add(convertToDto(t));
+		}
+
+		return terminals;
+
+	}
+
+	@DeleteMapping(value = { "/deleteTerminal/{id}", "/deleteteminal/{id}/" })
+	public void deleteTerminalbyID(@PathVariable("id") Long terminalID) {
+
+		service.deleteTerminal(terminalID);
+	}
+
+	// TimerSlot Get and POST
+
+	@GetMapping(value = { "/timeSlot", "/timeSlots/" })
+	public List<TimeSlotDto> getAllTimeSlots() {
+
+		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
+		for (TimeSlot t : service.getAllTimeSlots()) {
+			timeSlots.add(convertToDto(t));
+		}
+
+		return timeSlots;
+	}
+
+	@GetMapping(value = { "/holidays", "/holidays/" })
+	public List<TimeSlotDto> getAllHolidays() {
+
+		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
+		for (TimeSlot t : service.getAllHolidays()) {
+			timeSlots.add(convertToDto(t));
+		}
+
+		return timeSlots;
+	}
+
+	@PostMapping(value = { "/createTimeSlot", "createTimeSlot/" })
+	public TimeSlotDto createTimeSlot(@RequestParam Date startDate, @RequestParam Date endDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+
+		return convertToDto(service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)));
+	}
+
+	// Cart GET, POST and PUT
+
+	@GetMapping(value = { "/cart/{username}", "/cart/{username}/" })
+	public CartDto getCartByAccount(@PathVariable("username") String username) {
+		return convertToDto(service.getCartByAccount(username));
+	}
+	
+	
+
+	// -------------------------------------------------------------------------------------------------------------------------------//
+	// convertToDto Methods
+
+	private CartDto convertToDto(Cart cart) {
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		AccountDto account = convertToDto(cart.getaccount(), cart.getaccount().getAccountRole());
+		TimeSlotDto timeSlot = convertToDto(cart.getTimeSlot());
+		for (Item i : cart.getItems()) {
+			if (i instanceof PerishableItem) {
+				items.add(convertToDto((PerishableItem) i));
+			}
+			if (i instanceof NonPerishableItem) {
+				items.add(convertToDto((NonPerishableItem) i));
+			}
+		}
+		return new CartDto(cart.getOrderType(), cart.getTotalValue(), cart.getNumOfItems(), items, timeSlot, account);
+	}
+
+	private TimeSlotDto convertToDto(TimeSlot t) {
+		return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
+	}
+
 	private StoreDto convertToDto(Store store) {
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(),
 				store.getEmployeeDiscountRate(), store.getPointToCashRatio());
@@ -498,79 +617,100 @@ public class GroceryStoreRestController {
 		Time purchaseTime = order.getPurchaseTime();
 		AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 		TimeSlot timeSlot = new TimeSlot();
-		if(order instanceof DeliveryOrder) timeSlot = ((DeliveryOrder) order).getTimeSlot();
-		if(order instanceof PickUpOrder) timeSlot = ((PickUpOrder) order).getTimeSlot();
+		if (order instanceof DeliveryOrder)
+			timeSlot = ((DeliveryOrder) order).getTimeSlot();
+		if (order instanceof PickUpOrder)
+			timeSlot = ((PickUpOrder) order).getTimeSlot();
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		if(order.getItems() != null && order.getItems().size() > 0){
-			for(Item i : order.getItems()) {
-				if(i instanceof PerishableItem) {
+		if (order.getItems() != null && order.getItems().size() > 0) {
+			for (Item i : order.getItems()) {
+				if (i instanceof PerishableItem) {
 					items.add(convertToDto((PerishableItem) i));
-				}
-				else {
+				} else {
 					items.add(convertToDto((NonPerishableItem) i));
 				}
-			}	
+			}
 		}
-		if(order instanceof PickUpOrder) {
-			if(order.getItems() != null && order.getItems().size() > 0){
-				if(order.getAccount() == null) {
+		if (order instanceof PickUpOrder) {
+			if (order.getItems() != null && order.getItems().size() > 0) {
+				if (order.getAccount() == null) {
 					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
-				}
-				else {
+				} else {
 					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
 				}
-			}
-			else {
+			} else {
 				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
 			}
-		}
-		else if (order instanceof InStoreOrder){
-			if(order.getItems() != null && order.getItems().size() > 0){
-				if(order.getAccount() == null) {
+		} else if (order instanceof InStoreOrder) {
+			if (order.getItems() != null && order.getItems().size() > 0) {
+				if (order.getAccount() == null) {
 					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, items);
-				}
-				else {
+				} else {
 					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account, items);
 				}
-			}
-			else {
+			} else {
 				return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
 			}
-		}
-		else {
-			if(order.getItems() != null && order.getItems().size() > 0){
-				if(order.getAccount() == null) {
+		} else {
+			if (order.getItems() != null && order.getItems().size() > 0) {
+				if (order.getAccount() == null) {
 					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
-				}
-				else {
+				} else {
 					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
 				}
-			}
-			else {
+			} else {
 				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
 			}
 		}
 	}
+
 	private ReportDto convertToDto(Report report) {
 		List<OrderDto> orders = new ArrayList<OrderDto>();
-		for(Order ord : report.getOrders()) {
-			if(ord instanceof PickUpOrder) {
+		for (Order ord : report.getOrders()) {
+			if (ord instanceof PickUpOrder) {
 				orders.add((PickUpOrderDto) convertToDto(ord));
-			}
-			else if(ord instanceof InStoreOrder) {
+			} else if (ord instanceof InStoreOrder) {
 				orders.add((InStoreOrderDto) convertToDto(ord));
-			}
-			else {
+			} else {
 				orders.add((DeliveryOrderDto) convertToDto(ord));
 			}
 		}
-		return new ReportDto(report.getReportID(), report.getStartDate(), report.getEndDate(), report.getTotalValue(), orders);
+		return new ReportDto(report.getReportID(), report.getStartDate(), report.getEndDate(), report.getTotalValue(),
+				orders);
 	}
-	
 
 	private AccountDto convertToDto(Account account, AccountRole role) {
 
 		return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
+	}
+
+	private AddressDto convertToDto(Address address, AccountDto account) {
+
+		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
+	}
+
+	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
+		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
+				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
+				perishableItem.getPointPerItem());
+	}
+
+	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
+		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
+				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
+				nonPerishableItem.getPointPerItem());
+	}
+
+	private WorkingHourDto convertToDto(WorkingHour workingHour) {
+		return new WorkingHourDto(workingHour.getDayOfWeek(), workingHour.getStartTime(), workingHour.getEndTime());
+	}
+
+	private ScheduleDto convertToDto(Schedule schedule) {
+		return new ScheduleDto(schedule.getScheduleID());
+	}
+
+	private TerminalDto convertToDto(Terminal terminal) {
+		return new TerminalDto(terminal.getTerminalID());
 	}
 
 }
