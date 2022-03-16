@@ -631,7 +631,13 @@ public class GroceryStoreService {
 
 		return toList(reportRepository.findAll());
 	}
+	
+	@Transactional
+	public Report getReportById(Integer reportID) {
 
+		return reportRepository.findByReportID(reportID);
+	}
+	
 	@Transactional
 	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHour) {
 

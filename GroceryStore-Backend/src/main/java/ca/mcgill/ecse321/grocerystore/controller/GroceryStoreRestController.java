@@ -377,15 +377,8 @@ public class GroceryStoreRestController {
 	}
 
 	@GetMapping(value = { "/report/{id}", "/report/{id}/" })
-	public ReportDto getReportByID(@PathVariable("id") String id){
-		Report report = new Report();
-		Integer ID = Integer.parseInt(id);
-		for(Report report2 : service.getAllReports()) {
-			if(report2.getReportID() == ID) {
-				report = report2;
-				break;
-			}
-		}
+	public ReportDto getReportByID(@PathVariable("id") Integer id){
+		Report report = service.getReportById(id);
 		return convertToDto(report);
 	}
 	@PostMapping(value = {"/report/{reportID}","/report/{reportID}/"})
