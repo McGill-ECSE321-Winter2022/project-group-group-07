@@ -968,4 +968,19 @@ public class GroceryStoreService {
 		return wh;
 	}
 
+	public void deleteTerminal(Long terminalID) {
+		
+		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
+		if(terminal != null) {
+			terminalRepository.delete(terminal);
+		}else {
+			throw new IllegalArgumentException("No terminal with this ID exists");
+		}
+		
+	}
+
+	public List<TimeSlot> getAllTimeSlots() {
+		return toList(timeSlotRepository.findAll());
+	}
+
 }

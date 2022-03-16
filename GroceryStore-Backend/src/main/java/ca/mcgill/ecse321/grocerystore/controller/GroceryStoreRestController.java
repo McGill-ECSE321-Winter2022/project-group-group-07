@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +36,7 @@ public class GroceryStoreRestController {
 	private GroceryStoreService service;
 
 	// Account GET, POST, PUT and DELETE
-	
+
 	@PostMapping(value = { "/customerAccount/{username}", "/customerAccount/{username}/" })
 	public AccountDto createCustomerAccount(@PathVariable("username") String username, @RequestParam String name,
 			@RequestParam String password) {
@@ -131,7 +132,7 @@ public class GroceryStoreRestController {
 	}
 
 	// Address GET, POST, PUT and DELETE
-	
+
 	@PostMapping(value = { "/address/{username}", "/address/{username}/" })
 	public AddressDto createAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
 			@RequestParam String street, @RequestParam String town) {
@@ -172,7 +173,7 @@ public class GroceryStoreRestController {
 	}
 
 	// WorkingHour GET, POST, PUT and DELETE
-	
+
 	@GetMapping(value = { "/workingHour/{username}", "/workingHour/{username}/" })
 	public WorkingHourDto getWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
 			String dayOfWeek) {
@@ -204,7 +205,7 @@ public class GroceryStoreRestController {
 	}
 
 	// Schedule GET, POST, PUT and DELETE
-	
+
 	@GetMapping(value = { "/schedule", "/schedule/" })
 	public ScheduleDto getSchedule(@RequestParam(name = "id") Integer scheduleID) {
 		return convertToDto(service.getScheduleByID(scheduleID));
@@ -238,6 +239,14 @@ public class GroceryStoreRestController {
 	@GetMapping(value = { "/store", "/store/" })
 	public StoreDto getStoreInfo() {
 		return convertToDto(service.getStore());
+	}
+
+	@PostMapping(value = { "/setStoreInfo", "/setStoreInfo/" })
+	public StoreDto createStore(@RequestParam String name, @RequestParam String address,
+			@RequestParam String phoneNumber, @RequestParam String email,
+			@RequestParam Integer employeeDiscountRate, @RequestParam Float pointToCashRatio) {
+
+		return convertToDto(service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
 
 	@PutMapping(value = { "/updateStore", "/updateStore/" })
@@ -501,7 +510,7 @@ public class GroceryStoreRestController {
 	}
 
 	// Terminal Get, Post and Delete
-	
+
 	@PostMapping(value = { "/terminal", "/terminal/" })
 	public TerminalDto createTerminal() {
 
@@ -520,10 +529,50 @@ public class GroceryStoreRestController {
 
 	}
 
-	//
+	@DeleteMapping(value = { "/deleteTerminal/{id}", "/deleteteminal/{id}/" })
+	public void deleteTerminalbyID(@PathVariable("id") Long terminalID) {
+
+		service.deleteTerminal(terminalID);
+	}
+
+	// TimerSlot Get and POST
+
+	@GetMapping(value = { "/timeSlot", "/timeSlots/" })
+	public List<TimeSlotDto> getAllTimeSlots() {
+
+		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
+		for (TimeSlot t : service.getAllTimeSlots()) {
+			timeSlots.add(convertToDto(t));
+		}
+
+		return timeSlots;
+	}
+
+	@GetMapping(value = { "/holidays", "/holidays/" })
+	public List<TimeSlotDto> getAllHolidays() {
+
+		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
+		for (TimeSlot t : service.getAllHolidays()) {
+			timeSlots.add(convertToDto(t));
+		}
+
+		return timeSlots;
+	}
+
+	@PostMapping(value = { "/createTimeSlot", "createTimeSlot/" })
+	public TimeSlotDto createTimeSlot(@RequestParam Date startDate, @RequestParam Date endDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+
+		return convertToDto(service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)));
+	}
 
 	// -------------------------------------------------------------------------------------------------------------------------------//
 	// convertToDto Methods
+
+	private TimeSlotDto convertToDto(TimeSlot t) {
+		return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
+	}
 
 	private StoreDto convertToDto(Store store) {
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(),
