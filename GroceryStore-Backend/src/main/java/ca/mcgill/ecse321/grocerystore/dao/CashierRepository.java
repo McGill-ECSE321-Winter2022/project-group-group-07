@@ -7,6 +7,6 @@ import ca.mcgill.ecse321.grocerystore.model.Cashier;
 
 public interface CashierRepository extends CrudRepository<Cashier, Integer> {
 	
-	Cashier findByRoleID(Long roleID);
+	Cashier findByRoleID(Integer roleID);
 	
 }

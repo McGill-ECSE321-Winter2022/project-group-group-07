@@ -5,5 +5,5 @@ import ca.mcgill.ecse321.grocerystore.model.AccountRole;
 
 public interface AccountRoleRepository extends CrudRepository<AccountRole, Integer> {
 	
-	AccountRole findByRoleID(Long roleID);
+	AccountRole findByRoleID(Integer roleID);
 }

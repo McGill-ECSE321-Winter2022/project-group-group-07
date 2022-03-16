@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.sql.Time;
@@ -10,9 +8,10 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek
 
 @Entity
 public class BusinessHour {
+	
 
 	// attribute fields
-	private Long businessHourID;
+	private Integer businessHourId;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
@@ -22,13 +21,12 @@ public class BusinessHour {
 
 	// getters and setters
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getBusinessHourID() {
-		return businessHourID;
+	public int getBusinessHourId() {
+		return businessHourId;
 	}
 
-	public void setBusinessHourID(Long businessHourID) {
-		this.businessHourID = businessHourID;
+	public void setBusinessHourId(Integer aBusinessHourId) {
+		businessHourId = aBusinessHourId;
 	}
 
 	public DayOfWeek getDayOfWeek() {

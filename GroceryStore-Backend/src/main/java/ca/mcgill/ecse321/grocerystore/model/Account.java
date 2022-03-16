@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -8,6 +9,7 @@ import javax.persistence.OneToOne;
 public class Account {
 
 	// attribute fields
+	
 	private String username;
 	private String password;
 	private String name;

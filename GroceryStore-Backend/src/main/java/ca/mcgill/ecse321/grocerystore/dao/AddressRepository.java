@@ -9,7 +9,7 @@ import ca.mcgill.ecse321.grocerystore.model.Address;
 
 public interface AddressRepository extends CrudRepository<Address, Integer> {
 	
-	Address findByAddressID(Long addressID);
+	Address findByAddressID(Integer addressID);
 	
 	Address findByAccount(Account account);
 	

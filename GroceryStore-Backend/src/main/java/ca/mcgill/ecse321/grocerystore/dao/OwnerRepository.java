@@ -7,5 +7,5 @@ import ca.mcgill.ecse321.grocerystore.model.Owner;
 
 public interface OwnerRepository extends CrudRepository<Owner, Integer> {
 	
-	Owner findByRoleID(Long roleID);
+	Owner findByRoleID(Integer roleID);
 }

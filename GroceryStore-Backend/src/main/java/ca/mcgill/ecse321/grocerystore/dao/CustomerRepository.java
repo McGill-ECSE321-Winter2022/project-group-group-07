@@ -7,5 +7,5 @@ import ca.mcgill.ecse321.grocerystore.model.Customer;
 
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
-	Customer findByRoleID(Long roleID);
+	Customer findCustomerByRoleID(Integer roleID);
 }

@@ -6,5 +6,5 @@ import ca.mcgill.ecse321.grocerystore.model.Report;
 
 public interface ReportRepository extends CrudRepository<Report, Integer> {
 
-	Report findByReportID(Long reportID);
+	Report findByReportID(Integer reportID);
 }

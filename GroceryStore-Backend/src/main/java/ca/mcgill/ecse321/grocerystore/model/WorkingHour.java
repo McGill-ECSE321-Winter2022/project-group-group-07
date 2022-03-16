@@ -3,8 +3,6 @@ package ca.mcgill.ecse321.grocerystore.model;
 import java.sql.Time;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
@@ -13,19 +11,18 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek
 public class WorkingHour {
 
 	// attribute fields
-	private Long workingHourID;
+	private Integer workingHourID;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
 
 	// setters and getters
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getWorkingHourID() {
+	public Integer getWorkingHourID() {
 		return workingHourID;
 	}
 
-	public void setWorkingHourID(Long workingHourId) {
+	public void setWorkingHourID(Integer workingHourId) {
 		this.workingHourID = workingHourId;
 	}
 

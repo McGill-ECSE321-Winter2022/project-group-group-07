@@ -7,7 +7,7 @@ import java.util.List;
 public class ScheduleDto {
 
 	// attributes
-	private Long scheduleID;
+	private Integer scheduleID;
 	private Employee employee;
 	private List<WorkingHourDto> workingHours;
 
@@ -16,22 +16,22 @@ public class ScheduleDto {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ScheduleDto(Long scheduleID) {
+	public ScheduleDto(Integer scheduleID) {
 		this(scheduleID, Collections.EMPTY_LIST);
 	}
 
-	public ScheduleDto(Long scheduleID, List<WorkingHourDto> arrayList) {
+	public ScheduleDto(Integer scheduleID, List<WorkingHourDto> arrayList) {
 		this.scheduleID = scheduleID;
 		this.workingHours = arrayList;
 	}
 
-	public ScheduleDto(Employee employee, Long scheduleID) {
+	public ScheduleDto(Employee employee, Integer scheduleID) {
 		this.employee = employee;
 		this.scheduleID = scheduleID;
 	}
 
 	// getter
-	public Long getScheduleID() {
+	public Integer getScheduleID() {
 		return this.scheduleID;
 	}
 

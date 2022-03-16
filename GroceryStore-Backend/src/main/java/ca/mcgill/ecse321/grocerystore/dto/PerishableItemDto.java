@@ -15,7 +15,7 @@ public class PerishableItemDto extends ItemDto {
 	 * @param pointPerItem
 	 * @param perishableDate
 	 */
-	public PerishableItemDto(Long itemID, String productName, Float price, Boolean availableOnline,
+	public PerishableItemDto(Integer itemID, String productName, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem, Date perishableDate) {
 		super(itemID, productName, price, availableOnline, numInStock, pointPerItem);
 		this.perishableDate = perishableDate;
@@ -29,7 +29,7 @@ public class PerishableItemDto extends ItemDto {
 	 * @param numInStock
 	 * @param pointPerItem
 	 */
-	public PerishableItemDto(Long itemID, String productName, Float price, Boolean availableOnline,
+	public PerishableItemDto(Integer itemID, String productName, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem) {
 		super(itemID, productName, price, availableOnline, numInStock, pointPerItem);
 	}

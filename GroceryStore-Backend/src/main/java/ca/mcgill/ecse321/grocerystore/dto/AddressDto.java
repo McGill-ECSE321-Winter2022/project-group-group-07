@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.grocerystore.dto;
 public class AddressDto {
 
 	// attributes
+
 	private Integer buildingNo;
 	private String street;
 	private String town;

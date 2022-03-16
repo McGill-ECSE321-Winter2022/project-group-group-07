@@ -3,14 +3,10 @@ package ca.mcgill.ecse321.grocerystore.model;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DeliveryOrderStatus;
-
 @Entity
 public class DeliveryOrder extends Order {
 
-	// attribute fields
-	private DeliveryOrderStatus status;
-	// association fields
+	// association attributes
 	private TimeSlot timeSlot;
 
 	// getters and setters
@@ -21,14 +17,6 @@ public class DeliveryOrder extends Order {
 
 	public void setTimeSlot(TimeSlot timeSlots) {
 		this.timeSlot = timeSlots;
-	}
-
-	public DeliveryOrderStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(DeliveryOrderStatus status) {
-		this.status = status;
 	}
 
 }

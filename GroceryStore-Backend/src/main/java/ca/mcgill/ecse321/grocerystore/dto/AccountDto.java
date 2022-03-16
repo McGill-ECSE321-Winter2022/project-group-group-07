@@ -7,7 +7,6 @@ public class AccountDto {
 	private String name;
 	private Integer pointBalance;
 	private String role;
-
 	/**
 	 * @param username
 	 * @param name
@@ -20,33 +19,29 @@ public class AccountDto {
 		this.pointBalance = pointBalance;
 		this.role = role;
 	}
-
 	/**
 	 * @return the username
 	 */
 	public String getUsername() {
 		return username;
 	}
-
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
-
 	/**
 	 * @return the pointBalance
 	 */
 	public Integer getPointBalance() {
 		return pointBalance;
 	}
-
 	/**
 	 * @return the role
 	 */
 	public String getRole() {
 		return role;
 	}
-
+	
 }

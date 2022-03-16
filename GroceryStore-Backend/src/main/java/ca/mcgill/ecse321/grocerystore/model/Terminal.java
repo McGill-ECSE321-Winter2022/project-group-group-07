@@ -1,21 +1,18 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Terminal {
 	//attribute fields
-	private Long terminalID;
+	private Integer terminalID;
 	//getters and setters
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getTerminalID() {
+	public Integer getTerminalID() {
 		return terminalID;
 	}
-	public void setTerminalID(Long terminalID) {
+	public void setTerminalID(Integer terminalID) {
 		this.terminalID = terminalID;
 	}
 }
