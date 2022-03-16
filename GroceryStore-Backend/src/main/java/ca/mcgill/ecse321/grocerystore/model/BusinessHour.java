@@ -12,7 +12,7 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek
 public class BusinessHour {
 
 	// attribute fields
-	private Long businessHourId;
+	private Long businessHourID;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
@@ -23,12 +23,12 @@ public class BusinessHour {
 	// getters and setters
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long getBusinessHourId() {
-		return businessHourId;
+	public Long getBusinessHourID() {
+		return businessHourID;
 	}
 
-	public void setBusinessHourId(Long aBusinessHourId) {
-		businessHourId = aBusinessHourId;
+	public void setBusinessHourID(Long businessHourID) {
+		this.businessHourID = businessHourID;
 	}
 
 	public DayOfWeek getDayOfWeek() {

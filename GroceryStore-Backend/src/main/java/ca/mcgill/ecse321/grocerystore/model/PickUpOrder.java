@@ -7,18 +7,19 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.PickUpOrd
 
 @Entity
 public class PickUpOrder extends Order {
-    //association fields
-    private TimeSlot timeSlot;
-    private PickUpOrderStatus status;
 
-    @OneToOne(optional = false)
-    public TimeSlot getTimeSlot() {
-        return this.timeSlot;
-    }
+	// association fields
+	private TimeSlot timeSlot;
+	private PickUpOrderStatus status;
 
-    public void setTimeSlot(TimeSlot timeSlots) {
-        this.timeSlot = timeSlots;
-    }
+	@OneToOne(optional = false)
+	public TimeSlot getTimeSlot() {
+		return this.timeSlot;
+	}
+
+	public void setTimeSlot(TimeSlot timeSlots) {
+		this.timeSlot = timeSlots;
+	}
 
 	public PickUpOrderStatus getStatus() {
 		return status;

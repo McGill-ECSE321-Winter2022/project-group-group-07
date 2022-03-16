@@ -9,7 +9,7 @@ import ca.mcgill.ecse321.grocerystore.model.PickUpOrder;
 
 public interface PickUpOrderRepository extends CrudRepository<PickUpOrder, Integer> {
 
-	PickUpOrder findByOrderID(Integer orderID);
+	PickUpOrder findByOrderID(Long orderID);
 	
 	List<PickUpOrder> findByAccount(Account account);
 }
