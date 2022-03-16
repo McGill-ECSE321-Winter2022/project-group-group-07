@@ -382,13 +382,14 @@ public class GroceryStoreRestController {
 		return convertToDto(report);
 	}
 	@PostMapping(value = {"/report/{reportID}","/report/{reportID}/"})
-	public ReportDto createReport(@PathVariable("reportID") Integer id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate, 
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate, @RequestParam Float totalValue) throws IllegalArgumentException {
-		
+	public ReportDto createReport(@PathVariable("reportID") Integer id, @RequestParam Date startDate, 
+			@RequestParam Date endDate) throws IllegalArgumentException {
+		Float totalValue = 0f;
 		Set<Order> orders = new HashSet<Order>();
 		for(Order order : service.getAllOrders()) {
 			if(order.getDate().compareTo(startDate) >= 0 && order.getDate().compareTo(endDate) <= 0) {
 				orders.add(order);
+				totalValue += order.getTotalValue();
 			}
 		}
 		Report report = service.createReport(id, startDate, endDate, totalValue, orders);
