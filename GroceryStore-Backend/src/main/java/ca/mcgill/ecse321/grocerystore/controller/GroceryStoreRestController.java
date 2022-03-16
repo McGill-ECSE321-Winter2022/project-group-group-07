@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -79,6 +80,32 @@ public class GroceryStoreRestController {
 		return accounts;
 	}
 
+	@GetMapping(value = { "/customerAccounts", "/customerAccounts/" })
+	public List<AccountDto> getAllCustomerAccounts() {
+
+		List<AccountDto> accounts = new ArrayList<AccountDto>();
+
+		for (Account a : service.getAllAccounts()) {
+			if (a != null && a.getAccountRole() instanceof Customer) {
+				accounts.add(convertToDto(a, a.getAccountRole()));
+			}
+		}
+		return accounts;
+	}
+
+	@GetMapping(value = { "/employeeAccounts", "/employeeAccounts/" })
+	public List<AccountDto> getAllEmployeeAccounts() {
+
+		List<AccountDto> accounts = new ArrayList<AccountDto>();
+
+		for (Account a : service.getAllAccounts()) {
+			if (a != null && a.getAccountRole() instanceof Employee) {
+				accounts.add(convertToDto(a, a.getAccountRole()));
+			}
+		}
+		return accounts;
+	}
+
 	@DeleteMapping(value = { "/deleteAccount/{username}", "/deleteAccount/{username}/" })
 	public void deleteAccount(@PathVariable("username") String username, @RequestParam String password) {
 		service.deleteAccount(username, password);
@@ -87,24 +114,23 @@ public class GroceryStoreRestController {
 	@PutMapping(value = { "/updatePassword/{username}", "/updatePassword/{username}/" })
 	public AccountDto updatePassword(@PathVariable("username") String username, @RequestParam String oldPassword,
 			@RequestParam String newPassword) {
-		
+
 		Account account = service.updatePassword(username, oldPassword, newPassword);
-		
+
 		return convertToDto(account, account.getAccountRole());
 	}
-	
 
 	@PutMapping(value = { "/updateName/{username}", "/updateName/{username}/" })
-	public AccountDto updateName(@PathVariable("username") String username, @RequestParam String password,
-			@RequestParam String newName) {
-		
-		Account account = service.updateName(username, password, newName);
-		
+	public AccountDto updateName(@PathVariable("username") String username, @RequestParam String newName) {
+
+		Account account = service.updateName(username, newName);
+
 		return convertToDto(account, account.getAccountRole());
 	}
 
-	@PostMapping(value = { "/address/{Account}", "/address/{Account}/" })
-	public AddressDto createAddress(@PathVariable("Account") String username, @RequestParam Integer buildingNo,
+	// Address GET, POST, PUT and DELETE
+	@PostMapping(value = { "/address/{username}", "/address/{username}/" })
+	public AddressDto createAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
 			@RequestParam String street, @RequestParam String town) {
 
 		Account account = service.getAccount(username);
@@ -126,6 +152,23 @@ public class GroceryStoreRestController {
 		return addresses;
 	}
 
+	@GetMapping(value = { "/address/{username}", "/address/{username}/" })
+	public AddressDto getAddressByAccount(@PathVariable("username") String username) {
+
+		Account account = service.getAccount(username);
+		return convertToDto(service.getAddressByAccount(account), convertToDto(account, account.getAccountRole()));
+
+	}
+
+	@PutMapping(value = { "/updateAddress/{username}", "/updateAddress/{username}/" })
+	public AddressDto updateAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
+			@RequestParam String street, @RequestParam String town) {
+
+		Address address = service.updateAddress(username, buildingNo, street, town);
+		return convertToDto(address, convertToDto(address.getAccount(), address.getAccount().getAccountRole()));
+	}
+
+	// WorkingHour GET, POST, PUT and DELETE
 	@GetMapping(value = { "/workingHour", "/workingHour/" })
 	public WorkingHourDto getWorkingHour(@RequestParam(name = "id") Integer workingHourID) {
 		return convertToDto(service.getWorkingHourByID(workingHourID));
@@ -137,8 +180,7 @@ public class GroceryStoreRestController {
 	}
 
 	@PostMapping(value = { "/workingHour", "/workingHour/" })
-	public WorkingHourDto createWorkingHour(@RequestParam(name = "id") Integer workingHourID,
-			@RequestParam(name = "dayOfWeek") String dayOfWeek,
+	public WorkingHourDto createWorkingHour(@RequestParam(name = "dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime)
 			throws IllegalArgumentException {
@@ -147,9 +189,16 @@ public class GroceryStoreRestController {
 		return convertToDto(workingHour);
 	}
 
+	// Schedule GET, POST, PUT and DELETE
 	@GetMapping(value = { "/schedule", "/schedule/" })
 	public ScheduleDto getSchedule(@RequestParam(name = "id") Integer scheduleID) {
 		return convertToDto(service.getScheduleByID(scheduleID));
+	}
+
+	@GetMapping(value = { "/schedule/{username}", "/schedule/{username}/" })
+	public ScheduleDto getScheduleByEmployee(@PathVariable("username") String username) {
+
+		return convertToDto(service.getScheduleByEmployee(username));
 	}
 
 	@GetMapping(value = { "/allSchedules", "/allSchedules/" })
@@ -165,9 +214,21 @@ public class GroceryStoreRestController {
 		return convertToDto(schedule);
 	}
 
+	@DeleteMapping(value = { "/deleteSchedule/{username}", "/deleteSchedule/{username}" })
+	public void deleteScheduleByEmployee(@PathVariable("username") String username) {
+		service.deleteScheduleByEmployee(username);
+	}
+
 	@GetMapping(value = { "/store", "/store/" })
 	public StoreDto getStoreInfo() {
 		return convertToDto(service.getStore());
+	}
+
+	@PutMapping(value = { "/updateStore", "/updateStore/" })
+	public StoreDto updateStore(@RequestParam String name, @RequestParam String address,
+			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
+			@RequestParam Float pointToCashRatio) {
+		return convertToDto(service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
 
 	@PostMapping(value = { "/businessHours", "/businessHours/" })
@@ -366,8 +427,6 @@ public class GroceryStoreRestController {
 		}
 	}
 
-
-
 	@PutMapping(value = { "/items/{id}", "/items/{id}/" })
 	public ItemDto updateItem(@PathVariable String id, @RequestParam String productName, @RequestParam Float price,
 			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock,
@@ -403,7 +462,7 @@ public class GroceryStoreRestController {
 		return new BusinessHourDto(businessHour.getDayOfWeek().toString(), businessHour.getStartTime(),
 				businessHour.getEndTime());
 	}
-	
+
 	private AccountDto convertToDto(Account account, AccountRole role) {
 
 		return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
