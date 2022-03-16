@@ -669,7 +669,7 @@ public class GroceryStoreService {
 	}
 	
 	@Transactional
-	public Report getReportById(Integer reportID) {
+	public Report getReportById(Long reportID) {
 
 		return reportRepository.findByReportID(reportID);
 	}

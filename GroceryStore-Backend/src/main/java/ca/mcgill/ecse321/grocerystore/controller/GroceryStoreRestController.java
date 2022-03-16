@@ -404,13 +404,12 @@ public class GroceryStoreRestController {
 	}
 
 	@GetMapping(value = { "/report/{id}", "/report/{id}/" })
-	public ReportDto getReportByID(@PathVariable("id") Integer id){
+	public ReportDto getReportByID(@PathVariable("id") Long id){
 		Report report = service.getReportById(id);
 		return convertToDto(report);
 	}
-	@PostMapping(value = {"/report/{reportID}","/report/{reportID}/"})
-	public ReportDto createReport(@PathVariable("reportID") Integer id, @RequestParam Date startDate, 
-			@RequestParam Date endDate) throws IllegalArgumentException {
+	@PostMapping(value = {"/report","/report/"})
+	public ReportDto createReport(@RequestParam Date startDate, @RequestParam Date endDate) throws IllegalArgumentException {
 		Float totalValue = 0f;
 		Set<Order> orders = new HashSet<Order>();
 		for(Order order : service.getAllOrders()) {
@@ -419,7 +418,7 @@ public class GroceryStoreRestController {
 				totalValue += order.getTotalValue();
 			}
 		}
-		Report report = service.createReport(id, startDate, endDate, totalValue, orders);
+		Report report = service.createReport(startDate, endDate, totalValue, orders);
 		return convertToDto(report);
 	}
 	private StoreDto convertToDto(Store store) {
@@ -433,7 +432,7 @@ public class GroceryStoreRestController {
 				businessHour.getEndTime());
 	}
 	private OrderDto convertToDto(Order order) {
-		Integer orderID = order.getOrderID();
+		Long orderID = order.getOrderID();
 		Float totalValue = order.getTotalValue();
 		Date date = order.getDate();
 		Time purchaseTime = order.getPurchaseTime();
