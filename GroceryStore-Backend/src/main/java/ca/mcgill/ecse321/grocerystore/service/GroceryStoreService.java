@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,7 +233,9 @@ public class GroceryStoreService {
 	@Transactional
 	public Account createAccount(String username, String password, String name, Integer pointBalance,
 			AccountRole accountRole) {
-
+		if (name == null || name.trim().length() == 0) {
+			throw new IllegalArgumentException("Account name cannot be empty!");
+		}
 		Account account = new Account();
 		account.setUsername(username);
 		account.setPassword(password);
@@ -472,6 +475,32 @@ public class GroceryStoreService {
 
 		return toList(perishableItemRepository.findAll());
 	}
+	
+	@Transactional
+	public PerishableItem getPerishableItemsByID(Integer id) {
+
+		return perishableItemRepository.findByItemID(id);
+	}
+	@Transactional
+	public void deletePerishableItems(PerishableItem pitem) {
+		perishableItemRepository.delete(pitem);
+		
+	}
+	
+	@Transactional
+	public List<PerishableItem> getPerishableItemsByProductName(String name) {
+		return perishableItemRepository.findByProductName(name);
+	}
+	@Transactional
+	public PerishableItem updatePerishableItem(PerishableItem pitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		pitem.setItemID(ID);
+		pitem.setProductName(productName);
+		pitem.setPrice(price);
+		pitem.setAvailableOnline(availableOnline);
+		pitem.setNumInStock(numInStock);
+		pitem.setPointPerItem(pointPerItem);
+		return pitem;
+	}
 
 	@Transactional
 	public NonPerishableItem createNonPerishableItem(Integer id, String name, Float price, Boolean availableOnline,
@@ -496,6 +525,34 @@ public class GroceryStoreService {
 
 		return toList(nonPerishableItemRepository.findAll());
 	}
+	
+	@Transactional
+	public NonPerishableItem getNonPerishableItemsByID(Integer id) {
+		
+		return nonPerishableItemRepository.findByItemID(id);
+	}
+	
+	@Transactional
+	public List<NonPerishableItem> getNonPerishableItemsByProductName(String name) {
+		return nonPerishableItemRepository.findByProductName(name);
+	}
+	
+	@Transactional
+	public void deleteNonPerishableItems(NonPerishableItem npitem) {
+		
+		nonPerishableItemRepository.delete(npitem);
+	}
+	@Transactional
+	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, Integer ID,String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		npitem.setItemID(ID);
+		npitem.setProductName(productName);
+		npitem.setPrice(price);
+		npitem.setAvailableOnline(availableOnline);
+		npitem.setNumInStock(numInStock);
+		npitem.setPointPerItem(pointPerItem);
+		return npitem;
+	}
+
 
 	@Transactional
 	public Report createReport(Integer id, Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
