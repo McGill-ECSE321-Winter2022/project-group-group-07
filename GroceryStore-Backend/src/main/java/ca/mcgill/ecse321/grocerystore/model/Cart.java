@@ -3,6 +3,8 @@ package ca.mcgill.ecse321.grocerystore.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -13,7 +15,7 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType
 public class Cart {
 
 	// attribute fields
-	private Integer cartID;
+	private Long cartID;
 	private OrderType orderType;
 	private Float totalValue;
 	private Integer numOfItems;
@@ -26,11 +28,12 @@ public class Cart {
 	
 	// getters and setters
 	@Id
-	public Integer getCartID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getCartID() {
 		return cartID;
 	}
 
-	public void setCartID(Integer aCartID) {
+	public void setCartID(Long aCartID) {
 		this.cartID = aCartID;
 	}
 
@@ -67,7 +70,7 @@ public class Cart {
 		this.items = items;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(optional = true)
 	public TimeSlot getTimeSlot() {
 		return this.timeSlot;
 	}

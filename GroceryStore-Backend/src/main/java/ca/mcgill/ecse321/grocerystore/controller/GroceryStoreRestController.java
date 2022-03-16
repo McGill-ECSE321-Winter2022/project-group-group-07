@@ -50,7 +50,7 @@ public class GroceryStoreRestController {
 		long millis = System.currentTimeMillis();
 
 		if (role.contains("Cashier")) {
-			employeeRole = service.createCashierRole(145, new java.sql.Date(millis));
+			employeeRole = service.createCashierRole(new java.sql.Date(millis));
 		} else if (role.equals("Clerk")) {
 			employeeRole = new Clerk();
 		} else if (role.equals("DeliveryPerson")) {
@@ -181,12 +181,12 @@ public class GroceryStoreRestController {
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
 	
-	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"}) 
-	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
+	@PostMapping(value = {"/perishable/","/perishable"}) 
+	public PerishableItemDto createPerishableItem(@RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 			@RequestParam Integer pointPerItem) throws IllegalArgumentException {
 		
-		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline, numInStock, pointPerItem);
 		
 		return convertToDto(perishableItem);
 	}
@@ -283,7 +283,7 @@ public class GroceryStoreRestController {
 	
 	@GetMapping(value = {"/items/id:{id}", "/items/id:{id}/"})
 	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		ItemDto itemsDto = null;
@@ -326,7 +326,7 @@ public class GroceryStoreRestController {
 
 	@DeleteMapping(value = {"/deleteItems/{id}", "/deleteItems/{id}/"})
 	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
@@ -345,7 +345,7 @@ public class GroceryStoreRestController {
 	 public ItemDto updateItem(@PathVariable String id, @RequestParam String productName, 
 				@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 				@RequestParam Integer pointPerItem)   {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		if (pitems == null && npitems == null) {

@@ -19,7 +19,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param items
 	 * @param timeSlot
 	 */
-	public DeliveryOrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
+	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
 			List<ItemDto> items, TimeSlot timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, account, items);
 		this.timeSlot = timeSlot;
@@ -33,7 +33,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param account
 	 * @param timeSlot
 	 */
-	public DeliveryOrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
+	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
 			TimeSlot timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, account);
 		this.timeSlot = timeSlot;
@@ -47,7 +47,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param items
 	 * @param timeSlot
 	 */
-	public DeliveryOrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items,
+	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items,
 			TimeSlot timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, items);
 		this.timeSlot = timeSlot;

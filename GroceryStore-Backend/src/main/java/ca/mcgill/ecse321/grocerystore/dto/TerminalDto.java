@@ -2,17 +2,17 @@ package ca.mcgill.ecse321.grocerystore.dto;
 
 public class TerminalDto {
     // attribute
-    private Integer terminalID;
+    private Long terminalID;
 
     // constructor
     public TerminalDto() {
     }
 
-    public TerminalDto(Integer terminalID){
+    public TerminalDto(Long terminalID){
         this.terminalID = terminalID;
     }
     // getter
-    public Integer getTerminalID() {
+    public Long getTerminalID() {
         return terminalID;
     }
 }

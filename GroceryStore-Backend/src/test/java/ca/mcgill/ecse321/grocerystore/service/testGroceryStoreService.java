@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -55,14 +55,14 @@ public class testGroceryStoreService {
 	private GroceryStoreService service;
 	private static final String Account_KEY = "TestAccount";
 	
-	private static final Integer PerishableItem_ID = 1;
+	private static final Long PerishableItem_ID = 1L;
 	private static final String PerishableItem_name = "Apple";
 	private static final Float PerishableItem_price = (float) 2.5;
 	private static final Boolean PerishableItem_availableOnline = false;
 	private static final Integer PerishableItem_numInStock = 10;
 	private static final Integer PerishableItem_pointPerItem = 2;
 	
-	private static final Integer NonPerishableItem_ID = 2;
+	private static final Long NonPerishableItem_ID = 2L;
 	private static final String NonPerishableItem_name = "Desk";
 	private static final Float NonPerishableItem_price = (float) 20.0;
 	private static final Boolean NonPerishableItem_availableOnline = true;
@@ -87,7 +87,7 @@ public class testGroceryStoreService {
 		lenient().when(customerRoleDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
-		lenient().when(perishableItemDao.findByItemID(anyInt())).thenAnswer( (InvocationOnMock invocation) -> {
+		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer( (InvocationOnMock invocation) -> {
             if(invocation.getArgument(0).equals(PerishableItem_ID)) {
                 PerishableItem pitem = new PerishableItem ();
                 pitem.setItemID(PerishableItem_ID);
@@ -114,7 +114,7 @@ public class testGroceryStoreService {
                 plist.add(pitem);
                 
                 PerishableItem pitem2 = new PerishableItem ();
-                pitem2.setItemID(2);
+                pitem2.setItemID(2L);
                 pitem2.setProductName(PerishableItem_name);
                 pitem2.setPrice(PerishableItem_price);
                 pitem2.setAvailableOnline(PerishableItem_availableOnline);
@@ -126,7 +126,7 @@ public class testGroceryStoreService {
                 return null;
             }
         });
-		lenient().when(nonPerishableItemDao.findByItemID(anyInt())).thenAnswer( (InvocationOnMock invocation) -> {
+		lenient().when(nonPerishableItemDao.findByItemID(anyLong())).thenAnswer( (InvocationOnMock invocation) -> {
             if(invocation.getArgument(0).equals(NonPerishableItem_ID)) {
                 NonPerishableItem npitem = new NonPerishableItem ();
                 npitem.setItemID(NonPerishableItem_ID);
@@ -193,7 +193,6 @@ public class testGroceryStoreService {
 	public void testCreatePerishableItem() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		
-		Integer id = 1;
 		String name = "Apple";
 		Float price = (float) 2.5;
 		Boolean availableOnline = false;
@@ -203,7 +202,7 @@ public class testGroceryStoreService {
 		PerishableItem pitem = null;
 		
 		try {
-			pitem = service.createPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			fail();
@@ -215,7 +214,6 @@ public class testGroceryStoreService {
 	public void testCreatePerishableItemNoNameOrPrice() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		
-		Integer id = 1;
 		String name = null;
 		Float price = null;
 		Boolean availableOnline = false;
@@ -226,7 +224,7 @@ public class testGroceryStoreService {
 		String error = null;
 		
 		try {
-			pitem = service.createPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
@@ -238,7 +236,6 @@ public class testGroceryStoreService {
 	public void testCreatePerishableItemNoName() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		
-		Integer id = 1;
 		String name = "";
 		Float price = (float) 2.5;
 		Boolean availableOnline = false;
@@ -249,7 +246,7 @@ public class testGroceryStoreService {
 		String error = null;
 		
 		try {
-			pitem = service.createPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
@@ -262,7 +259,6 @@ public class testGroceryStoreService {
 	public void testCreatePerishableItemNullEverything() {
 		assertEquals(0, service.getAllPerishableItems().size());
 		
-		Integer id = null;
 		String name = null;
 		Float price = null;
 		Boolean availableOnline = null;
@@ -273,13 +269,13 @@ public class testGroceryStoreService {
 		String error = null;
 		
 		try {
-			pitem = service.createPerishableItem(id, name, price, availableOnline, numInStock, pointPerItem);
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
 		}	
 		assertNull(pitem);
-		assertEquals("ItemID is empty!, Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
 				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
 	}
 	
