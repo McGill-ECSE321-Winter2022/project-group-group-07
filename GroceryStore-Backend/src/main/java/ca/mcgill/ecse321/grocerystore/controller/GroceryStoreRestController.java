@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -393,6 +394,33 @@ public class GroceryStoreRestController {
 
 	}
 
+	@GetMapping(value = { "/reports", "/reports/" })
+	public List<ReportDto> getReports(){
+		List<ReportDto> reports = new ArrayList<ReportDto>();
+		for(Report report : service.getAllReports()) {
+			reports.add(convertToDto(report));
+		}
+		return reports;
+	}
+
+	@GetMapping(value = { "/report/{id}", "/report/{id}/" })
+	public ReportDto getReportByID(@PathVariable("id") Long id){
+		Report report = service.getReportById(id);
+		return convertToDto(report);
+	}
+	@PostMapping(value = {"/report","/report/"})
+	public ReportDto createReport(@RequestParam Date startDate, @RequestParam Date endDate) throws IllegalArgumentException {
+		Float totalValue = 0f;
+		Set<Order> orders = new HashSet<Order>();
+		for(Order order : service.getAllOrders()) {
+			if(order.getDate().compareTo(startDate) >= 0 && order.getDate().compareTo(endDate) <= 0) {
+				orders.add(order);
+				totalValue += order.getTotalValue();
+			}
+		}
+		Report report = service.createReport(startDate, endDate, totalValue, orders);
+		return convertToDto(report);
+	}
 	private StoreDto convertToDto(Store store) {
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(),
 				store.getEmployeeDiscountRate(), store.getPointToCashRatio());
@@ -402,6 +430,81 @@ public class GroceryStoreRestController {
 
 		return new BusinessHourDto(businessHour.getDayOfWeek().toString(), businessHour.getStartTime(),
 				businessHour.getEndTime());
+	}
+	private OrderDto convertToDto(Order order) {
+		Long orderID = order.getOrderID();
+		Float totalValue = order.getTotalValue();
+		Date date = order.getDate();
+		Time purchaseTime = order.getPurchaseTime();
+		AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+		TimeSlot timeSlot = new TimeSlot();
+		if(order instanceof DeliveryOrder) timeSlot = ((DeliveryOrder) order).getTimeSlot();
+		if(order instanceof PickUpOrder) timeSlot = ((PickUpOrder) order).getTimeSlot();
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		if(order.getItems() != null && order.getItems().size() > 0){
+			for(Item i : order.getItems()) {
+				if(i instanceof PerishableItem) {
+					items.add(convertToDto((PerishableItem) i));
+				}
+				else {
+					items.add(convertToDto((NonPerishableItem) i));
+				}
+			}	
+		}
+		if(order instanceof PickUpOrder) {
+			if(order.getItems() != null && order.getItems().size() > 0){
+				if(order.getAccount() == null) {
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+				}
+				else {
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+				}
+			}
+			else {
+				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+			}
+		}
+		else if (order instanceof InStoreOrder){
+			if(order.getItems() != null && order.getItems().size() > 0){
+				if(order.getAccount() == null) {
+					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, items);
+				}
+				else {
+					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account, items);
+				}
+			}
+			else {
+				return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
+			}
+		}
+		else {
+			if(order.getItems() != null && order.getItems().size() > 0){
+				if(order.getAccount() == null) {
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+				}
+				else {
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+				}
+			}
+			else {
+				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+			}
+		}
+	}
+	private ReportDto convertToDto(Report report) {
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for(Order ord : report.getOrders()) {
+			if(ord instanceof PickUpOrder) {
+				orders.add((PickUpOrderDto) convertToDto(ord));
+			}
+			else if(ord instanceof InStoreOrder) {
+				orders.add((InStoreOrderDto) convertToDto(ord));
+			}
+			else {
+				orders.add((DeliveryOrderDto) convertToDto(ord));
+			}
+		}
+		return new ReportDto(report.getReportID(), report.getStartDate(), report.getEndDate(), report.getTotalValue(), orders);
 	}
 	
 	private AccountDto convertToDto(Account account, AccountRole role) {
