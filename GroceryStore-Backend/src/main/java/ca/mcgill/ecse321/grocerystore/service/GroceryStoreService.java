@@ -463,9 +463,15 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart getCartByAccount(Account account) {
+	public Cart getCartByAccount(String username) {
 
-		return cartRepository.findByAccount(account);
+		Account account = getAccount(username);
+		Cart cart = cartRepository.findByAccount(account);
+		if(cart != null) {
+			return cart;
+		}else {
+			throw new IllegalArgumentException("User does not have a cart");
+		}
 	}
 
 	@Transactional
@@ -958,25 +964,25 @@ public class GroceryStoreService {
 	@Transactional
 	public WorkingHour updateWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek, Time startTime,
 			Time endTime) {
-		
+
 		WorkingHour wh = getWorkingHourByEmployeeAndDayOfWeek(username, dayOfWeek);
-		
+
 		wh.setStartTime(startTime);
 		wh.setEndTime(endTime);
 		workingHourRepository.save(wh);
-		
+
 		return wh;
 	}
 
 	public void deleteTerminal(Long terminalID) {
-		
+
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
-		if(terminal != null) {
+		if (terminal != null) {
 			terminalRepository.delete(terminal);
-		}else {
+		} else {
 			throw new IllegalArgumentException("No terminal with this ID exists");
 		}
-		
+
 	}
 
 	public List<TimeSlot> getAllTimeSlots() {

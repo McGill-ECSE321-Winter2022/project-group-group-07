@@ -243,10 +243,11 @@ public class GroceryStoreRestController {
 
 	@PostMapping(value = { "/setStoreInfo", "/setStoreInfo/" })
 	public StoreDto createStore(@RequestParam String name, @RequestParam String address,
-			@RequestParam String phoneNumber, @RequestParam String email,
-			@RequestParam Integer employeeDiscountRate, @RequestParam Float pointToCashRatio) {
+			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
+			@RequestParam Float pointToCashRatio) {
 
-		return convertToDto(service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
+		return convertToDto(
+				service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
 
 	@PutMapping(value = { "/updateStore", "/updateStore/" })
@@ -567,8 +568,32 @@ public class GroceryStoreRestController {
 		return convertToDto(service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)));
 	}
 
+	// Cart GET, POST and PUT
+
+	@GetMapping(value = { "/cart/{username}", "/cart/{username}/" })
+	public CartDto getCartByAccount(@PathVariable("username") String username) {
+		return convertToDto(service.getCartByAccount(username));
+	}
+	
+	
+
 	// -------------------------------------------------------------------------------------------------------------------------------//
 	// convertToDto Methods
+
+	private CartDto convertToDto(Cart cart) {
+		List<ItemDto> items = new ArrayList<ItemDto>();
+		AccountDto account = convertToDto(cart.getaccount(), cart.getaccount().getAccountRole());
+		TimeSlotDto timeSlot = convertToDto(cart.getTimeSlot());
+		for (Item i : cart.getItems()) {
+			if (i instanceof PerishableItem) {
+				items.add(convertToDto((PerishableItem) i));
+			}
+			if (i instanceof NonPerishableItem) {
+				items.add(convertToDto((NonPerishableItem) i));
+			}
+		}
+		return new CartDto(cart.getOrderType(), cart.getTotalValue(), cart.getNumOfItems(), items, timeSlot, account);
+	}
 
 	private TimeSlotDto convertToDto(TimeSlot t) {
 		return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
