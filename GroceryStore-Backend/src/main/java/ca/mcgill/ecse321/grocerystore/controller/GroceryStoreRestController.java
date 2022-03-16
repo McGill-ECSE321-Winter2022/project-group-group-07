@@ -140,7 +140,7 @@ public class GroceryStoreRestController {
 
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
-	
+
 	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"}) 
 	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
@@ -188,7 +188,7 @@ public class GroceryStoreRestController {
 		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(), nonPerishableItem.getPrice(),
 				nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(), nonPerishableItem.getPointPerItem());
 	}
-	
+
 	@GetMapping(value = {"/items", "/items/"})
 	public List<ItemDto> getAllItems(){
 		
@@ -207,7 +207,7 @@ public class GroceryStoreRestController {
 		return items;
 		
 	}
-	
+
 	@GetMapping(value = {"/perishableitems", "/perishableitems/"})
 	public List<ItemDto> getAllPerishableItems(){
 		
@@ -277,19 +277,22 @@ public class GroceryStoreRestController {
 	}
 
 	@DeleteMapping(value = {"/deleteItems/{id}", "/deleteItems/{id}/"})
-	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+	public ItemDto deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Integer ID = Integer.parseInt(id);
 		
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		
 		if (pitems == null && npitems == null) {
 			throw new IllegalArgumentException("There is no such Item to delete!");
 		} 
 		else if (pitems != null) {
-			service.deletePerishableItems(pitems);
+			PerishableItem deletedPitems = service.deletePerishableItems(pitems);
+			 return convertToDto(deletedPitems);
 		}
 		else {
-			service.deleteNonPerishableItems(npitems);
+			NonPerishableItem deletedNPitems = service.deleteNonPerishableItems(npitems);
+			return convertToDto(deletedNPitems);
 		}
 	}
 	

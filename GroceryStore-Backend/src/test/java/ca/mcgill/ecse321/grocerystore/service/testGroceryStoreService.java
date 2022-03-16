@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -454,5 +456,19 @@ public class testGroceryStoreService {
 		assertEquals(PerishableItem_price,getNPitem.getPrice());
 		assertEquals(PerishableItem_numInStock,getNPitem.getNumInStock());
 		assertEquals(PerishableItem_pointPerItem,getNPitem.getPointPerItem());
+	}
+	@Test
+	public void testDeletePerishableItem() {
+		PerishableItem pitem = service.createPerishableItem(PerishableItem_ID, PerishableItem_name, PerishableItem_price, PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
+		PerishableItem deletedPitem = service.deletePerishableItems(pitem);
+		assertNotNull(deletedPitem);
+		assertEquals(PerishableItem_ID,deletedPitem.getItemID());
+	}
+	@Test
+	public void testDeleteNonPerishableItem() {
+		NonPerishableItem npitem = service.createNonPerishableItem(NonPerishableItem_ID, NonPerishableItem_name, NonPerishableItem_price, NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
+		NonPerishableItem deletedNPitem = service.deleteNonPerishableItems(npitem);
+		assertNotNull(deletedNPitem);
+		assertEquals(NonPerishableItem_ID,deletedNPitem.getItemID());
 	}
 }

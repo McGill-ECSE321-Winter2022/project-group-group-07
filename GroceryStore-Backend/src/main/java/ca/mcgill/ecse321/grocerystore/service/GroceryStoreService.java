@@ -505,8 +505,9 @@ public class GroceryStoreService {
 		return perishableItemRepository.findByItemID(id);
 	}
 	@Transactional
-	public void deletePerishableItems(PerishableItem pitem) {
+	public PerishableItem deletePerishableItems(PerishableItem pitem) {
 		perishableItemRepository.delete(pitem);
+		return pitem;
 		
 	}
 	
@@ -582,9 +583,9 @@ public class GroceryStoreService {
 	}
 	
 	@Transactional
-	public void deleteNonPerishableItems(NonPerishableItem npitem) {
-		
+	public NonPerishableItem deleteNonPerishableItems(NonPerishableItem npitem) {
 		nonPerishableItemRepository.delete(npitem);
+		return npitem;
 	}
 	@Transactional
 	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
