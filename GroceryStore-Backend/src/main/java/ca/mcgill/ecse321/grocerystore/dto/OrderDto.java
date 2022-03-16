@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class OrderDto {
 
-	private Integer orderID;
+	private Long orderID;
 	private Float totalValue;
 	private Date date;
 	private Time purchaseTime;
@@ -23,7 +23,7 @@ public abstract class OrderDto {
 	 * @param account
 	 * @param items
 	 */
-	public OrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account, List<ItemDto> items) {
+	public OrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account, List<ItemDto> items) {
 		this.orderID = orderID;
 		this.totalValue = totalValue;
 		this.date = date;
@@ -40,7 +40,7 @@ public abstract class OrderDto {
 	 * @param account
 	 */
 	@SuppressWarnings("unchecked")
-	public OrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account) {
+	public OrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account) {
 		this (orderID, totalValue,date,  purchaseTime, account, Collections.EMPTY_LIST);
 	}
 
@@ -51,7 +51,7 @@ public abstract class OrderDto {
 	 * @param purchaseTime
 	 * @param items
 	 */
-	public OrderDto(Integer orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items) {
+	public OrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items) {
 		this.orderID = orderID;
 		this.totalValue = totalValue;
 		this.date = date;
@@ -104,7 +104,7 @@ public abstract class OrderDto {
 	/**
 	 * @return the orderID
 	 */
-	public Integer getOrderID() {
+	public Long getOrderID() {
 		return orderID;
 	}
 

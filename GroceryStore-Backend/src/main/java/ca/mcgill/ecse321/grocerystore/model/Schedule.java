@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -12,18 +14,19 @@ import javax.persistence.OneToOne;
 public class Schedule {
 	// attribute fields
 
-	private Integer scheduleID;
+	private Long scheduleID;
 	// association fields
 	private Set<WorkingHour> workingHour;
 	private Employee employee;
 
 	// getters and setters
 	@Id
-	public Integer getScheduleID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getScheduleID() {
 		return scheduleID;
 	}
 
-	public void setScheduleID(Integer scheduleID) {
+	public void setScheduleID(Long scheduleID) {
 		this.scheduleID = scheduleID;
 	}
 

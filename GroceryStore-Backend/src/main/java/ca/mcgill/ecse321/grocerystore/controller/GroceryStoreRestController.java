@@ -1,11 +1,12 @@
 package ca.mcgill.ecse321.grocerystore.controller;
 
-
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.grocerystore.dto.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
@@ -47,8 +49,8 @@ public class GroceryStoreRestController {
 		Employee employeeRole = null;
 		long millis = System.currentTimeMillis();
 
-		if (role.equals("Cashier")) {
-			employeeRole = new Cashier();
+		if (role.contains("Cashier")) {
+			employeeRole = service.createCashierRole(new java.sql.Date(millis));
 		} else if (role.equals("Clerk")) {
 			employeeRole = new Clerk();
 		} else if (role.equals("DeliveryPerson")) {
@@ -56,10 +58,11 @@ public class GroceryStoreRestController {
 		} else if (role.equals("Owner")) {
 			employeeRole = new Owner();
 		} else {
+			System.out.print(role);
 			throw new IllegalArgumentException("No such employee role exists");
 		}
 
-		employeeRole.setEmploymentDate(new java.sql.Date(millis));
+		//employeeRole.setEmploymentDate(new java.sql.Date(millis));
 		Account account = service.createAccount(username, password, name, 0, employeeRole);
 
 		return convertToDto(account, employeeRole);
@@ -99,6 +102,43 @@ public class GroceryStoreRestController {
 			}
 		}
 		return addresses;
+	}
+	
+	@GetMapping(value = { "/workingHour", "/workingHour/" })
+	public WorkingHourDto getWorkingHour(@RequestParam(name = "id") Integer workingHourID){
+		return convertToDto(service.getWorkingHourByID(workingHourID));
+	}
+	
+	@GetMapping(value = { "/allWorkingHours", "/allWorkingHours/" })
+	public List<WorkingHourDto> getAllWorkingHours(){
+		return service.getAllWorkingHourIDs().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+	
+	@PostMapping(value = { "/workingHour", "/workingHour/" })
+	public WorkingHourDto createWorkingHour(@RequestParam(name = "id") Integer workingHourID,
+			@RequestParam(name = "dayOfWeek") String dayOfWeek,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) throws IllegalArgumentException {
+		WorkingHour workingHour = service.createWorkingHour(workingHourID, DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime), Time.valueOf(endTime));
+		return convertToDto(workingHour);
+	}
+	
+	@GetMapping(value = { "/schedule", "/schedule/" })
+	public ScheduleDto getSchedule(@RequestParam(name = "id")Integer scheduleID){
+		return convertToDto(service.getScheduleByID(scheduleID));
+	}
+	
+	@GetMapping(value = { "/allSchedules", "/allSchedules/" })
+	public List<ScheduleDto> getAllSchedules(){
+		return service.getAllSchedules().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+	
+	@PostMapping(value = { "/schedule", "/schedules/" })
+	public ScheduleDto createSchedule(@RequestParam(name = "id") Integer scheduleID,
+			@RequestParam(name = "employee") String username,
+			@RequestParam (name = "workingHour") Set<WorkingHour> workingHours) throws IllegalArgumentException {
+		Schedule schedule = service.createSchedule(scheduleID, username, workingHours);
+		return convertToDto(schedule);
 	}
 
 	@GetMapping(value = { "/store", "/store/" })
@@ -141,12 +181,12 @@ public class GroceryStoreRestController {
 		return new AddressDto(address.getBuildingNo(), address.getStreet(), address.getTown(), account);
 	}
 	
-	@PostMapping(value = {"/perishable/{perishableItemID}","/perishable/{perishableItemID}/"}) 
-	public PerishableItemDto createPerishableItem(@PathVariable("perishableItemID") Integer id, @RequestParam String productName, 
+	@PostMapping(value = {"/perishable/","/perishable"}) 
+	public PerishableItemDto createPerishableItem(@RequestParam String productName, 
 			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 			@RequestParam Integer pointPerItem) throws IllegalArgumentException {
 		
-		PerishableItem perishableItem = service.createPerishableItem(id, productName, price, availableOnline, numInStock, pointPerItem);
+		PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline, numInStock, pointPerItem);
 		
 		return convertToDto(perishableItem);
 	}
@@ -173,6 +213,14 @@ public class GroceryStoreRestController {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(), perishableItem.getPrice(),
 				perishableItem.getAvailableOnline(), perishableItem.getNumInStock(), perishableItem.getPointPerItem(), date);
 	}*/
+	
+	private WorkingHourDto convertToDto(WorkingHour workingHour) {
+		return new WorkingHourDto(workingHour.getDayOfWeek(), workingHour.getStartTime(), workingHour.getEndTime());
+	}
+	
+	private ScheduleDto convertToDto(Schedule schedule) {
+		return new ScheduleDto(schedule.getScheduleID());
+	}
 
 	@PostMapping(value = {"/nonperishable/{NonPerishableItemID}","/nonperishable/{NonPerishableItemID}/"})
 	public NonPerishableItemDto createNonPerishableItem(@PathVariable("NonPerishableItemID") Integer id, @RequestParam String productName, 
@@ -204,8 +252,8 @@ public class GroceryStoreRestController {
 				items.add(convertToDto(i));
 			}
 		}
-		
 		return items;
+		
 	}
 	
 	@GetMapping(value = {"/perishableitems", "/perishableitems/"})
@@ -225,7 +273,6 @@ public class GroceryStoreRestController {
 	public List<ItemDto> getAllNonPerishableItems(){
 		
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		
 		for (NonPerishableItem i : service.getAllNonPerishableItems()) {
 			if (i != null) {
 				items.add(convertToDto(i));
@@ -236,15 +283,17 @@ public class GroceryStoreRestController {
 	
 	@GetMapping(value = {"/items/id:{id}", "/items/id:{id}/"})
 	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		ItemDto itemsDto = null;
-		
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to get!");
+		} else
 		if (pitems != null) {
 			itemsDto=convertToDto(pitems);
 		}
-		else if (npitems != null) {
+		else {
 			itemsDto=convertToDto(npitems);
 		}
 		
@@ -256,14 +305,16 @@ public class GroceryStoreRestController {
 		List<PerishableItem> pitems = service.getPerishableItemsByProductName(name);
 		List<NonPerishableItem> npitems = service.getNonPerishableItemsByProductName(name);
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		
-		if (pitems != null) {
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to get!");
+		} 
+		else if (pitems != null) {
 			for (PerishableItem p : pitems) {
 				items.add(convertToDto(p));
 			
 			}
 		}
-		if (npitems != null) {
+		else {
 			for (NonPerishableItem p : npitems) {
 				items.add(convertToDto(p));
 			
@@ -275,15 +326,17 @@ public class GroceryStoreRestController {
 
 	@DeleteMapping(value = {"/deleteItems/{id}", "/deleteItems/{id}/"})
 	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
-		
-		if (pitems != null) {
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to delete!");
+		} 
+		else if (pitems != null) {
 			service.deletePerishableItems(pitems);
 		}
-		if (npitems != null) {
+		else {
 			service.deleteNonPerishableItems(npitems);
 		}
 	}
@@ -292,7 +345,7 @@ public class GroceryStoreRestController {
 	 public ItemDto updateItem(@PathVariable String id, @RequestParam String productName, 
 				@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock, 
 				@RequestParam Integer pointPerItem)   {
-		Integer ID = Integer.parseInt(id);
+		Long ID = Long.parseLong(id);
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		if (pitems == null && npitems == null) {
@@ -300,13 +353,13 @@ public class GroceryStoreRestController {
 		} 
 		else if (pitems != null) {
 			PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
-			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate,productName,price, availableOnline, numInStock,pointPerItem);
 			PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
 			return updatedPerishableItem;
 		}
 		else {
 			NonPerishableItem nonPerishableItemToUpdate = service.getNonPerishableItemsByID(ID);
-			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate,ID,productName,price, availableOnline, numInStock,pointPerItem);
+			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate,productName,price, availableOnline, numInStock,pointPerItem);
 			NonPerishableItemDto nonUpdatedPerishableItem = convertToDto(nonPerishableItemToUpdate);
 			return nonUpdatedPerishableItem;
 		}

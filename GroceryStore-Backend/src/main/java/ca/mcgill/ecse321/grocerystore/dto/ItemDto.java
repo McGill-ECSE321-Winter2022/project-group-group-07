@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.grocerystore.dto;
 
 public abstract class ItemDto {
 
-	private Integer itemID;
+	private Long itemID;
 	private String productName;
 	private Float price;
 	private Boolean availableOnline;
@@ -17,7 +17,7 @@ public abstract class ItemDto {
 	 * @param numInStock
 	 * @param pointPerItem
 	 */
-	public ItemDto(Integer itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
+	public ItemDto(Long itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
 			Integer pointPerItem) {
 		super();
 		this.itemID = itemID;
@@ -31,7 +31,7 @@ public abstract class ItemDto {
 	/**
 	 * @return the itemID
 	 */
-	public Integer getItemID() {
+	public Long getItemID() {
 		return itemID;
 	}
 
