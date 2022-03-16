@@ -7,7 +7,6 @@ import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek
 public class WorkingHourDto {
 
 	// attributes
-	private Integer workingHourID;
 	private DayOfWeek dayOfWeek;
 	private Time startTime;
 	private Time endTime;
@@ -16,17 +15,13 @@ public class WorkingHourDto {
 	public WorkingHourDto() {
 	}
 
-	public WorkingHourDto(Integer workingHourID, DayOfWeek dayOfWeek, Time startTime, Time endTime) {
-		this.workingHourID = workingHourID;
+	public WorkingHourDto(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
 		this.dayOfWeek = dayOfWeek;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
 
 	// getter
-	public Integer getWorkingHourID() {
-		return this.workingHourID;
-	}
 
 	public DayOfWeek getDayOfWeek() {
 		return this.dayOfWeek;

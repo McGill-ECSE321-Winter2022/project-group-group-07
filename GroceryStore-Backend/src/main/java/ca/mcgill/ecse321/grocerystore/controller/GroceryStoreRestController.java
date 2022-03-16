@@ -1,11 +1,12 @@
 package ca.mcgill.ecse321.grocerystore.controller;
 
-
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.grocerystore.dto.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
@@ -47,8 +49,8 @@ public class GroceryStoreRestController {
 		Employee employeeRole = null;
 		long millis = System.currentTimeMillis();
 
-		if (role.equals("Cashier")) {
-			employeeRole = new Cashier();
+		if (role.contains("Cashier")) {
+			employeeRole = service.createCashierRole(145, new java.sql.Date(millis));
 		} else if (role.equals("Clerk")) {
 			employeeRole = new Clerk();
 		} else if (role.equals("DeliveryPerson")) {
@@ -56,10 +58,11 @@ public class GroceryStoreRestController {
 		} else if (role.equals("Owner")) {
 			employeeRole = new Owner();
 		} else {
+			System.out.print(role);
 			throw new IllegalArgumentException("No such employee role exists");
 		}
 
-		employeeRole.setEmploymentDate(new java.sql.Date(millis));
+		//employeeRole.setEmploymentDate(new java.sql.Date(millis));
 		Account account = service.createAccount(username, password, name, 0, employeeRole);
 
 		return convertToDto(account, employeeRole);
@@ -99,6 +102,43 @@ public class GroceryStoreRestController {
 			}
 		}
 		return addresses;
+	}
+	
+	@GetMapping(value = { "/workingHour", "/workingHour/" })
+	public WorkingHourDto getWorkingHour(@RequestParam(name = "id") Integer workingHourID){
+		return convertToDto(service.getWorkingHourByID(workingHourID));
+	}
+	
+	@GetMapping(value = { "/allWorkingHours", "/allWorkingHours/" })
+	public List<WorkingHourDto> getAllWorkingHours(){
+		return service.getAllWorkingHourIDs().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+	
+	@PostMapping(value = { "/workingHour", "/workingHour/" })
+	public WorkingHourDto createWorkingHour(@RequestParam(name = "id") Integer workingHourID,
+			@RequestParam(name = "dayOfWeek") String dayOfWeek,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) throws IllegalArgumentException {
+		WorkingHour workingHour = service.createWorkingHour(workingHourID, DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime), Time.valueOf(endTime));
+		return convertToDto(workingHour);
+	}
+	
+	@GetMapping(value = { "/schedule", "/schedule/" })
+	public ScheduleDto getSchedule(@RequestParam(name = "id")Integer scheduleID){
+		return convertToDto(service.getScheduleByID(scheduleID));
+	}
+	
+	@GetMapping(value = { "/allSchedules", "/allSchedules/" })
+	public List<ScheduleDto> getAllSchedules(){
+		return service.getAllSchedules().stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+	
+	@PostMapping(value = { "/schedule", "/schedules/" })
+	public ScheduleDto createSchedule(@RequestParam(name = "id") Integer scheduleID,
+			@RequestParam(name = "employee") String username,
+			@RequestParam (name = "workingHour") Set<WorkingHour> workingHours) throws IllegalArgumentException {
+		Schedule schedule = service.createSchedule(scheduleID, username, workingHours);
+		return convertToDto(schedule);
 	}
 
 	@GetMapping(value = { "/store", "/store/" })
@@ -173,6 +213,14 @@ public class GroceryStoreRestController {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(), perishableItem.getPrice(),
 				perishableItem.getAvailableOnline(), perishableItem.getNumInStock(), perishableItem.getPointPerItem(), date);
 	}*/
+	
+	private WorkingHourDto convertToDto(WorkingHour workingHour) {
+		return new WorkingHourDto(workingHour.getDayOfWeek(), workingHour.getStartTime(), workingHour.getEndTime());
+	}
+	
+	private ScheduleDto convertToDto(Schedule schedule) {
+		return new ScheduleDto(schedule.getScheduleID());
+	}
 
 	@PostMapping(value = {"/nonperishable/{NonPerishableItemID}","/nonperishable/{NonPerishableItemID}/"})
 	public NonPerishableItemDto createNonPerishableItem(@PathVariable("NonPerishableItemID") Integer id, @RequestParam String productName, 

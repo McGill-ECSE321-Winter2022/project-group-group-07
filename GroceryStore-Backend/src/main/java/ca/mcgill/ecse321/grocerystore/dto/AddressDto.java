@@ -20,7 +20,6 @@ public class AddressDto {
 		this.account = account;
 	}
 
-
 	//getter
 	public Integer getBuildingNo() {
 		return this.buildingNo;
