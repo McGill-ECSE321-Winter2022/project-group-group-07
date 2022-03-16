@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
 import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
@@ -252,43 +253,45 @@ public class GroceryStoreService {
 		return accountRepository.findByUsername(username);
 	}
 
-	@Transactional 
+	@Transactional
 	public void deleteAccount(String username, String password) {
-		
-		Account account = accountRepository.findByUsernameAndPassword(username,password);
-		
-		if(account != null) {
+
+		Account account = accountRepository.findByUsernameAndPassword(username, password);
+
+		if (account != null) {
 			accountRepository.delete(account);
 		}
-		
+
 		return;
 	}
-	
-	@Transactional 
-	public Account updatePassword(String username, String oldPassword, String newPassword){
-		
+
+	@Transactional
+	public Account updatePassword(String username, String oldPassword, String newPassword) {
+
 		Account account = accountRepository.findByUsernameAndPassword(username, oldPassword);
 
 		account.setPassword(newPassword);
 
 		accountRepository.save(account);
-		
+
 		return account;
 	}
+
 	@Transactional
-	public Account updateName(String username, String password, String newName) {
-		
-		Account account = accountRepository.findByUsernameAndPassword(username, password);
+	public Account updateName(String username, String newName) {
+
+		Account account = accountRepository.findByUsername(username);
 
 		account.setName(newName);
 
 		accountRepository.save(account);
-		
+
 		return account;
 	}
+
 	@Transactional
 	public List<Account> getAllAccounts() {
-		
+
 		return toList(accountRepository.findAll());
 	}
 
@@ -323,6 +326,22 @@ public class GroceryStoreService {
 	public List<Address> getAllAddresses() {
 
 		return toList(addressRepository.findAll());
+	}
+
+	@Transactional
+	public Address updateAddress(String username, Integer buildingNo, String street, String town) {
+
+		Account account = accountRepository.findByUsername(username);
+
+		Address address = addressRepository.findByAccount(account);
+
+		address.setBuildingNo(buildingNo);
+		address.setStreet(street);
+		address.setTown(town);
+
+		addressRepository.save(address);
+
+		return address;
 	}
 
 	@Transactional
@@ -700,9 +719,25 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Schedule getScheduleByEmployee(Employee employee) {
+	public Schedule getScheduleByEmployee(String username) {
 
+		Employee employee = null;
+		if (accountRepository.findByUsername(username).getAccountRole() instanceof Employee) {
+			employee = (Employee) accountRepository.findByUsername(username).getAccountRole();
+		}
 		return scheduleRepository.findByEmployee(employee);
+	}
+
+	@Transactional
+	public void deleteScheduleByEmployee(String username) {
+		Schedule schedule = null;
+		Account account = accountRepository.findByUsername(username);
+		if (account.getAccountRole() instanceof Employee) {
+			schedule = scheduleRepository.findByEmployee((Employee) account.getAccountRole());
+			scheduleRepository.delete(schedule);
+		}
+
+		return;
 	}
 
 	@Transactional
@@ -737,6 +772,23 @@ public class GroceryStoreService {
 
 		Store store = new Store();
 
+		store.setName(name);
+		store.setAddress(address);
+		store.setPhoneNumber(phoneNumber);
+		store.setEmail(email);
+		store.setEmployeeDiscountRate(employeeDiscountRate);
+		store.setPointToCashRatio(pointToCashRatio);
+
+		storeRepository.save(store);
+
+		return store;
+	}
+
+	@Transactional
+	public Store updateStore(String name, String address, String phoneNumber, String email,
+			Integer employeeDiscountRate, Float pointToCashRatio) {
+
+		Store store = getStore();
 		store.setName(name);
 		store.setAddress(address);
 		store.setPhoneNumber(phoneNumber);
