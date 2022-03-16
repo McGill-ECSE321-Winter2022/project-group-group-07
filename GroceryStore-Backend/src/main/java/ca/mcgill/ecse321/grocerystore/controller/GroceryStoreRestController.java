@@ -204,8 +204,8 @@ public class GroceryStoreRestController {
 				items.add(convertToDto(i));
 			}
 		}
-		
 		return items;
+		
 	}
 	
 	@GetMapping(value = {"/perishableitems", "/perishableitems/"})
@@ -225,7 +225,6 @@ public class GroceryStoreRestController {
 	public List<ItemDto> getAllNonPerishableItems(){
 		
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		
 		for (NonPerishableItem i : service.getAllNonPerishableItems()) {
 			if (i != null) {
 				items.add(convertToDto(i));
@@ -240,11 +239,13 @@ public class GroceryStoreRestController {
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
 		ItemDto itemsDto = null;
-		
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to get!");
+		} else
 		if (pitems != null) {
 			itemsDto=convertToDto(pitems);
 		}
-		else if (npitems != null) {
+		else {
 			itemsDto=convertToDto(npitems);
 		}
 		
@@ -256,14 +257,16 @@ public class GroceryStoreRestController {
 		List<PerishableItem> pitems = service.getPerishableItemsByProductName(name);
 		List<NonPerishableItem> npitems = service.getNonPerishableItemsByProductName(name);
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		
-		if (pitems != null) {
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to get!");
+		} 
+		else if (pitems != null) {
 			for (PerishableItem p : pitems) {
 				items.add(convertToDto(p));
 			
 			}
 		}
-		if (npitems != null) {
+		else {
 			for (NonPerishableItem p : npitems) {
 				items.add(convertToDto(p));
 			
@@ -279,11 +282,13 @@ public class GroceryStoreRestController {
 		
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
-		
-		if (pitems != null) {
+		if (pitems == null && npitems == null) {
+			throw new IllegalArgumentException("There is no such Item to delete!");
+		} 
+		else if (pitems != null) {
 			service.deletePerishableItems(pitems);
 		}
-		if (npitems != null) {
+		else {
 			service.deleteNonPerishableItems(npitems);
 		}
 	}
