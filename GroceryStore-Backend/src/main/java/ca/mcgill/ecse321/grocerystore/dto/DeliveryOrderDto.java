@@ -4,11 +4,13 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DeliveryOrderStatus;
 import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 
 public class DeliveryOrderDto extends OrderDto {
 
 	private TimeSlot timeSlot;
+	private DeliveryOrderStatus status;
 
 	/**
 	 * @param orderID
@@ -58,6 +60,20 @@ public class DeliveryOrderDto extends OrderDto {
 	 */
 	public TimeSlot getTimeSlot() {
 		return timeSlot;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public DeliveryOrderStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(DeliveryOrderStatus status) {
+		this.status = status;
 	}
 
 }

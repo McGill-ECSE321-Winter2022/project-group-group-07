@@ -33,13 +33,13 @@ public abstract class AccountRole {
 		}
 		if (this instanceof Cashier) {
 
-			return "Cashier\nEmployment Date: " + ((Cashier) this).getEmploymentDate();
+			return "Cashier, Employment Date: " + ((Cashier) this).getEmploymentDate();
 		}
 		if (this instanceof Clerk) {
-			return "Clerk\nEmployment Date: " + ((Clerk) this).getEmploymentDate();
+			return "Clerk, Employment Date: " + ((Clerk) this).getEmploymentDate();
 		}
 		if (this instanceof DeliveryPerson) {
-			return "Delivery Person\nEmployment Date: " + ((DeliveryPerson) this).getEmploymentDate();
+			return "Delivery Person, Employment Date: " + ((DeliveryPerson) this).getEmploymentDate();
 		}
 		if (this instanceof Owner) {
 			return "Owner";
