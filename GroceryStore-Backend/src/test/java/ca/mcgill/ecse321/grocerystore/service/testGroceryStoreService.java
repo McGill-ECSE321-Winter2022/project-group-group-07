@@ -809,10 +809,11 @@ public class testGroceryStoreService {
 	
 	@Test
 	public void testDeleteNonPerishableItem() {
-		NonPerishableItem npitem = service.createNonPerishableItem(NonPerishableItem_ID, NonPerishableItem_name, NonPerishableItem_price, NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
+		NonPerishableItem npitem = service.createNonPerishableItem(NonPerishableItem_name, NonPerishableItem_price, NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
+		Long id=npitem.getItemID();
 		NonPerishableItem deletedNPitem = service.deleteNonPerishableItems(npitem);
 		assertNotNull(deletedNPitem);
-		assertEquals(NonPerishableItem_ID,deletedNPitem.getItemID());
+		assertEquals(id,deletedNPitem.getItemID());
 	}
 	
 	@Test
