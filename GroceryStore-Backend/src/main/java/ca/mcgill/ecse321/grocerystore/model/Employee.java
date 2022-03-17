@@ -1,8 +1,9 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import java.sql.Date;
 import javax.persistence.InheritanceType;
 
 @Entity

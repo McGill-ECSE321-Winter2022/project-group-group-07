@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import java.sql.Date;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-
-import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Report {
@@ -58,7 +58,7 @@ public class Report {
 		this.totalValue = totalValue;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany
 	public Set<Order> getOrders() {
 		return this.orders;
 	}

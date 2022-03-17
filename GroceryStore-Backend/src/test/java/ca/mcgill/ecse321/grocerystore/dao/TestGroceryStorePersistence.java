@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
 import java.sql.Time;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,9 +16,31 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ca.mcgill.ecse321.grocerystore.model.*;
+
+import ca.mcgill.ecse321.grocerystore.model.Account;
+import ca.mcgill.ecse321.grocerystore.model.AccountRole;
+import ca.mcgill.ecse321.grocerystore.model.Address;
+import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
+import ca.mcgill.ecse321.grocerystore.model.Cart;
+import ca.mcgill.ecse321.grocerystore.model.Cashier;
+import ca.mcgill.ecse321.grocerystore.model.Clerk;
+import ca.mcgill.ecse321.grocerystore.model.Customer;
+import ca.mcgill.ecse321.grocerystore.model.DeliveryOrder;
+import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
+import ca.mcgill.ecse321.grocerystore.model.InStoreOrder;
+import ca.mcgill.ecse321.grocerystore.model.Item;
+import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.Owner;
+import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.PickUpOrder;
+import ca.mcgill.ecse321.grocerystore.model.Report;
+import ca.mcgill.ecse321.grocerystore.model.Schedule;
+import ca.mcgill.ecse321.grocerystore.model.Store;
+import ca.mcgill.ecse321.grocerystore.model.Terminal;
+import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
+import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
 
 
 @ExtendWith(SpringExtension.class)

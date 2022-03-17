@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.grocerystore.model;
 
 import java.sql.Date;
 import java.sql.Time;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
