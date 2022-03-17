@@ -615,7 +615,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PerishableItem createPerishableItem(Long id,String name, Float price, Boolean availableOnline, Integer numInStock,
+	public PerishableItem createPerishableItem(String name, Float price, Boolean availableOnline, Integer numInStock,
 			Integer pointPerItem) {
 
 		PerishableItem perishableItem = new PerishableItem();
@@ -640,7 +640,6 @@ public class GroceryStoreService {
 		String listErrors = String.join(", ", errors);
 		if (errors.size() != 0)
 			throw new IllegalArgumentException(listErrors);
-		perishableItem.setItemID(id);
 		perishableItem.setProductName(name);
 		perishableItem.setPrice(price);
 		perishableItem.setAvailableOnline(availableOnline);
@@ -718,7 +717,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public NonPerishableItem createNonPerishableItem(Long id,String name, Float price, Boolean availableOnline,
+	public NonPerishableItem createNonPerishableItem(String name, Float price, Boolean availableOnline,
 			Integer numInStock, Integer pointPerItem) {
 
 		NonPerishableItem nonPerishableItem = new NonPerishableItem();
@@ -742,7 +741,6 @@ public class GroceryStoreService {
 		String listErrors = String.join(", ", errors);
 		if (errors.size() != 0)
 			throw new IllegalArgumentException(listErrors);
-		nonPerishableItem.setItemID(id);
 		nonPerishableItem.setProductName(name);
 		nonPerishableItem.setPrice(price);
 		nonPerishableItem.setAvailableOnline(availableOnline);
