@@ -32,9 +32,9 @@ Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 Sprint Report 2 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-2)
 | Name | Contribution | Hours |
 |------|--------------|-------|
-| Elias Abou Farah | Gradle build and CI (with its documentation) + Unit testing (Mockito) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan  | 47.5 |
-| Karim Moussa | Gradle build and CI (with its documentation) + Unit testing (Mockito) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan | 47.5 |
-| Adam Kazma | Unit testing (Mockito) + RESTful Services + Controller methods | 32.5 |
-| Jasmine Cheung | Unit testing (Mockito) + RESTful Services + Controller methods + Software Quality Assurance Plan + RESTful Service documentation | 19.5 |
-| Ojetta Ye | Unit testing (Mockito) + RESTful Services + Controller methods + Software Quality Assurance Plan + Minute Meeting | 12 |
-| Tran Tuan Khai Phan | Unit testing (Mockito) + RESTful Services + Controller methods + Software Quality Assurance Plan | 8 |
+| Elias Abou Farah | Gradle build and CI (with its documentation) + Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan  | 47.5 |
+| Karim Moussa | Gradle build and CI (with its documentation) + Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan | 47.5 |
+| Adam Kazma | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods | 32.5 |
+| Jasmine Cheung | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan + RESTful Service documentation | 19.5 |
+| Ojetta Ye | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan + Minute Meeting | 12 |
+| Tran Tuan Khai Phan | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan | 8 |
