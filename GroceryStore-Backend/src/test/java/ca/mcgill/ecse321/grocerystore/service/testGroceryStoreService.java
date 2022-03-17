@@ -9,8 +9,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -61,6 +63,16 @@ public class testGroceryStoreService {
 	private ScheduleRepository scheduleDao;
 	@Mock
 	private CartRepository cartDao;
+	@Mock
+	private ReportRepository reportDao;
+	@Mock
+	private OrderRepository orderDao;
+	@Mock
+	private DeliveryOrderRepository deliveryOrderDao;
+	@Mock
+	private PickUpOrderRepository PickUpOrderDao;
+	@Mock
+	private InStoreOrderRepository InStoreOrderDao;
 
 	@InjectMocks
 	private GroceryStoreService service;
@@ -133,6 +145,105 @@ public class testGroceryStoreService {
 				return null;
 			}
 		});
+		lenient().when(businessHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			BusinessHour b1 = new BusinessHour();
+			BusinessHour b2 = new BusinessHour();
+			b1.setBusinessHourID(1L);
+			b1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+			b2.setBusinessHourID(2L);
+			b2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
+			List<BusinessHour> days = new ArrayList<>();
+			days.add(b1);
+			days.add(b2);
+			return days;
+		});
+		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(PerishableItem_ID)) {
+				PerishableItem pitem = new PerishableItem();
+				pitem.setItemID(PerishableItem_ID);
+				pitem.setProductName(PerishableItem_name);
+				pitem.setPrice(PerishableItem_price);
+				pitem.setAvailableOnline(PerishableItem_availableOnline);
+				pitem.setNumInStock(PerishableItem_numInStock);
+				pitem.setPointPerItem(PerishableItem_pointPerItem);
+				return pitem;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(perishableItemDao.findByProductName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(PerishableItem_name)) {
+				List<PerishableItem> plist = new ArrayList<PerishableItem>();
+				PerishableItem pitem = new PerishableItem();
+				pitem.setItemID(PerishableItem_ID);
+				pitem.setProductName(PerishableItem_name);
+				pitem.setPrice(PerishableItem_price);
+				pitem.setAvailableOnline(PerishableItem_availableOnline);
+				pitem.setNumInStock(PerishableItem_numInStock);
+				pitem.setPointPerItem(PerishableItem_pointPerItem);
+				plist.add(pitem);
+
+				PerishableItem pitem2 = new PerishableItem();
+				pitem2.setItemID(2L);
+				pitem2.setProductName(PerishableItem_name);
+				pitem2.setPrice(PerishableItem_price);
+				pitem2.setAvailableOnline(PerishableItem_availableOnline);
+				pitem2.setNumInStock(PerishableItem_numInStock);
+				pitem2.setPointPerItem(PerishableItem_pointPerItem);
+				plist.add(pitem2);
+				return plist;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(nonPerishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(NonPerishableItem_ID)) {
+				NonPerishableItem npitem = new NonPerishableItem();
+				npitem.setItemID(NonPerishableItem_ID);
+				npitem.setProductName(NonPerishableItem_name);
+				npitem.setPrice(NonPerishableItem_price);
+				npitem.setAvailableOnline(NonPerishableItem_availableOnline);
+				npitem.setNumInStock(NonPerishableItem_numInStock);
+				npitem.setPointPerItem(NonPerishableItem_pointPerItem);
+				return npitem;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(nonPerishableItemDao.findByProductName(anyString()))
+				.thenAnswer((InvocationOnMock invocation) -> {
+					if (invocation.getArgument(0).equals(NonPerishableItem_name)) {
+						List<NonPerishableItem> nplist = new ArrayList<NonPerishableItem>();
+						NonPerishableItem npitem = new NonPerishableItem();
+						npitem.setItemID(NonPerishableItem_ID);
+						npitem.setProductName(NonPerishableItem_name);
+						npitem.setPrice(NonPerishableItem_price);
+						npitem.setAvailableOnline(NonPerishableItem_availableOnline);
+						npitem.setNumInStock(NonPerishableItem_numInStock);
+						npitem.setPointPerItem(NonPerishableItem_pointPerItem);
+						nplist.add(npitem);
+						return nplist;
+					} else {
+						return null;
+					}
+				});
+		lenient().when(reportDao.findByReportID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(1L)) {
+				Report report = new Report();
+				Calendar c = Calendar.getInstance();
+				c.set(2001, Calendar.JULY, 17);
+				report.setOrders(null);
+				Date startDate = new Date(c.getTimeInMillis());
+				Date endDate = new Date(c.getTimeInMillis());
+				report.setEndDate(endDate);
+				report.setStartDate(startDate);
+				report.setTotalValue((float) 200.0);
+				return report;
+			} else {
+				return null;
+			}
+		});
+
 		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
 			if (invocation.getArgument(0).equals(PerishableItem_ID)) {
 				PerishableItem pitem = new PerishableItem();
@@ -204,7 +315,7 @@ public class testGroceryStoreService {
 					}
 				});
 		lenient().when(cartDao.findByAccount(any(Account.class))).thenAnswer((InvocationOnMock invocation) -> {
-			if (((Account)invocation.getArgument(0)).getUsername().equals(Account_KEY)) {
+			if (((Account) invocation.getArgument(0)).getUsername().equals(Account_KEY)) {
 				Cart cart = new Cart();
 				return cart;
 			} else {
@@ -1660,6 +1771,153 @@ public class testGroceryStoreService {
 		}
 
 		assertNotNull(carts);
+	}
+	
+
+	@Test
+	public void testCreatePerishableItemNullEverything() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = null;
+		Integer numInStock = null;
+		Integer pointPerItem = null;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	}
+
+
+	@Test
+	public void testCreateAllInvalidParameters() {
+		String name = "";
+		String error = "";
+		Account account = null;
+		Customer customer = service.createCustomerRole();
+		try {
+			account = service.createAccount("", "", name, 0, customer);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertNull(account);
+		// check error
+		assertEquals(
+				"Account username cannot be empty! Account password cannot be empty! Account name cannot be empty!",
+				error);
+	}
+
+	// Report Tests
+	
+	@Test
+	public void testCreateReport() {
+
+		Report report = new Report();
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c.getTimeInMillis());
+
+		try {
+			report = service.createReport(startDate, endDate);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertNotNull(report);
+		assertEquals(startDate, report.getStartDate());
+		assertEquals(endDate, report.getEndDate());
+	}
+
+	@Test
+	public void testCreateReportNullParameters() {
+
+		Report report = null;
+		String error = null;
+		Date startDate = null;
+		Date endDate = null;
+
+		try {
+			report = service.createReport(startDate, endDate);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(report);
+		assertEquals("Time cannot be empty.", error);
+	}
+
+	@Test
+	public void testCreateReportEndBeforeStart() {
+
+		Report report = null;
+		String error = null;
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Calendar c2 = Calendar.getInstance();
+		c2.set(2001, Calendar.JULY, 16);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c2.getTimeInMillis());
+
+		try {
+			report = service.createReport(startDate, endDate);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(report);
+		assertEquals("End time cannot be before start time!", error);
+	}
+
+	@Test
+	public void testGetAllReports() {
+		assertNotNull(service.getAllReports());
+	}
+
+	@Test
+	public void testGetReportByID() {
+		Report report = null;
+		try {
+			report = service.getReportById(1L);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c.getTimeInMillis());
+		assertNotNull(report);
+		assertEquals(startDate, report.getStartDate());
+		assertEquals(endDate, report.getEndDate());
+		assertEquals((float) 200.0, report.getTotalValue());
+	}
+
+	@Test
+	public void testGetReportByIDNullParameter() {
+		Report report = null;
+		String error = null;
+		try {
+			report = service.getReportById(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		
+		assertNull(report);
+		assertEquals("Please enter legal id.", error);
 	}
 
 }
