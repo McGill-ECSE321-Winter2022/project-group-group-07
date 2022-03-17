@@ -558,6 +558,8 @@ public class GroceryStoreRestController {
 	public OrderDto checkout(@PathVariable("username") String username) {
 		return convertToDto(service.checkout(service.getCartByAccount(username)));
 	}
+	
+	
 
 
 	// Terminal Get, Post and Delete
@@ -618,7 +620,7 @@ public class GroceryStoreRestController {
 		return convertToDto(service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)));
 	}
 
-	// Cart GET, POST and PUT
+//	// Cart GET, POST and PUT
 
 	@GetMapping(value = { "/cart/{username}", "/cart/{username}/" })
 	public CartDto getCartByAccount(@PathVariable("username") String username) {
@@ -630,7 +632,7 @@ public class GroceryStoreRestController {
 		return convertToDto(service.createCart(username));
 	}
 
-	@PutMapping(value = { "/addToCart/{id}", "{/addToCart/{id}/" })
+	@PutMapping(value = { "/addToCart/{id}", "/addToCart/{id}/" })
 	public CartDto addToCart(@PathVariable("id") Long id, String username) {
 
 		return convertToDto(service.addToCart(id, username));
@@ -647,7 +649,7 @@ public class GroceryStoreRestController {
 		return convertToDto(service.chooseOrderTypeForCart(username,OrderType.valueOf(orderType)));
 	}
 
-	// -------------------------------------------------------------------------------------------------------------------------------//
+//	// -------------------------------------------------------------------------------------------------------------------------------//
 	// convertToDto Methods
 
 	private CartDto convertToDto(Cart cart) {
