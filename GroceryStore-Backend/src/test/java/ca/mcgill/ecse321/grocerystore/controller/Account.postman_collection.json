@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "f4ca0cac-70c4-4ba6-9bcf-97f76987ff77",
+		"name": "Account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/accounts",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Customer Acccount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/customerAccount/bobTheBuilder?name=Bobby&password=123",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"customerAccount",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Bobby"
+						},
+						{
+							"key": "password",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Robert is an Employee now.\", () => {\r",
+							"  const responseJson = pm.response.json();\r",
+							"  pm.expect(responseJson.username).to.eql(\"emp\");\r",
+							"  pm.expect(responseJson.name).to.eql(\"Robert\");\r",
+							"  pm.expect(responseJson.role).to.contains(\"Clerk\")\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/employeeAccount/emp?name=Robert&password=12345678&role=Clerk",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"employeeAccount",
+						"emp"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Robert"
+						},
+						{
+							"key": "password",
+							"value": "12345678"
+						},
+						{
+							"key": "role",
+							"value": "Clerk"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Bobby changed the name on his account.\", () => {\r",
+							"  const responseJson = pm.response.json();\r",
+							"  pm.expect(responseJson.username).to.eql(\"bobTheBuilder\");\r",
+							"  pm.expect(responseJson.name).to.eql(\"Bobito\");\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/updateName/bobTheBuilder/?newName=Bobito",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"updateName",
+						"bobTheBuilder",
+						""
+					],
+					"query": [
+						{
+							"key": "newName",
+							"value": "Bobito"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test[\"Body is empty\"] = responseBody.length==0;\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/deleteAccount/bobTheBuilder?password=123456",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"deleteAccount",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
