@@ -897,32 +897,37 @@ public class testGroceryStoreService {
 	public void testGetNonExistingStore() {
 		assertNull(service.getStore());
 	}
-
+	
 	@Test
-	public void testCreatePerishableItemNullEverything() {
-		assertEquals(0, service.getAllPerishableItems().size());
-
-		String name = null;
-		Float price = null;
-		Boolean availableOnline = null;
-		Integer numInStock = null;
-		Integer pointPerItem = null;
-
-		PerishableItem pitem = null;
-		String error = null;
-
-		try {
-			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-		} catch (IllegalArgumentException e) {
-			// Check that no error occurred
-			error = e.getMessage();
-		}
-		assertNull(pitem);
-		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	public void testDeleteStore() {
+		
 	}
-
-
+//
+//	@Test
+//	public void testCreatePerishableItemNullEverything() {
+//		assertEquals(0, service.getAllPerishableItems().size());
+//
+//		String name = null;
+//		Float price = null;
+//		Boolean availableOnline = null;
+//		Integer numInStock = null;
+//		Integer pointPerItem = null;
+//
+//		PerishableItem pitem = null;
+//		String error = null;
+//
+//		try {
+//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+//		} catch (IllegalArgumentException e) {
+//			// Check that no error occurred
+//			error = e.getMessage();
+//		}
+//		assertNull(pitem);
+//		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+//				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+//	}
+//
+//
 //
 //	// Business Hour test
 //	@Test

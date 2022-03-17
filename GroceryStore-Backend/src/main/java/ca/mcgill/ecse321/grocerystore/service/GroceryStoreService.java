@@ -1289,11 +1289,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteStore() {
+	public Store deleteStore() {
 
-		if (getStore() != null) {
-			storeRepository.delete(getStore());
+		Store store = getStore();
+		if (store != null) {
+			storeRepository.delete(store);
 		}
+		return store;
 	}
 
 	// Terminal
