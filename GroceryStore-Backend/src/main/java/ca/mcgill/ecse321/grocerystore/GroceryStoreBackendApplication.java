@@ -5,21 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.grocerystore.model.Account;
-
 @RestController
 @SpringBootApplication
 public class GroceryStoreBackendApplication {
-	
-	public static Account currUser;
-
-	public static Account getCurrUser() {
-		return currUser;
-	}
-
-	public static void setCurrUser(Account currUser) {
-		GroceryStoreBackendApplication.currUser = currUser;
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(GroceryStoreBackendApplication.class, args);
