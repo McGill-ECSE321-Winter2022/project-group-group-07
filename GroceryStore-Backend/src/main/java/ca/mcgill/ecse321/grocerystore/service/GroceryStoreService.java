@@ -235,9 +235,22 @@ public class GroceryStoreService {
 	@Transactional
 	public Account createAccount(String username, String password, String name, Integer pointBalance,
 			AccountRole accountRole) {
-		if (name == null || name.trim().length() == 0) {
-			throw new IllegalArgumentException("Account name cannot be empty!");
+		String error = "";
+
+		if (username == null || name.trim().length() == 0) {
+			error = error + "Account username cannot be empty! ";
 		}
+		if (password == null || name.trim().length() == 0) {
+			error = error + "Account password cannot be empty! ";
+		}
+		if (name == null || name.trim().length() == 0) {
+			error = error + "Account name cannot be empty! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+
 		Account account = new Account();
 		account.setUsername(username);
 		account.setPassword(password);
@@ -252,26 +265,38 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Account getAccount(String username) {
-
+		if (username == null || username.trim().length() == 0) {
+			throw new IllegalArgumentException("Please enter a username to search by."); 
+		}
+		Account account = accountRepository.findByUsername(username);
+		
+		if (account == null) {
+			throw new IllegalArgumentException("No such account to be found."); 
+		}
 		return accountRepository.findByUsername(username);
 	}
 
 	@Transactional
-	public void deleteAccount(String username, String password) {
+	public Account deleteAccount(String username, String password) {
 
 		Account account = accountRepository.findByUsernameAndPassword(username, password);
 
 		if (account != null) {
 			accountRepository.delete(account);
-		}
+			return account;
+		} throw new IllegalArgumentException("No such account found. Cannot delete.");
 
-		return;
 	}
 
 	@Transactional
 	public Account updatePassword(String username, String oldPassword, String newPassword) {
-
+		if (newPassword == null || newPassword.trim().length() < 6) {
+			throw new IllegalArgumentException("Your password must at least be 6 characters long."); 
+		}
 		Account account = accountRepository.findByUsernameAndPassword(username, oldPassword);
+		if (account == null ) {
+			throw new IllegalArgumentException("Wrong Username or Password."); 
+		}
 
 		account.setPassword(newPassword);
 
@@ -282,9 +307,13 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Account updateName(String username, String newName) {
-
+		if (newName == null || newName.trim().length() < 6) {
+			throw new IllegalArgumentException("Your name cannot be blank."); 
+		}
 		Account account = accountRepository.findByUsername(username);
-
+		if (account == null ) {
+			throw new IllegalArgumentException("Wrong Username."); 
+		}
 		account.setName(newName);
 
 		accountRepository.save(account);

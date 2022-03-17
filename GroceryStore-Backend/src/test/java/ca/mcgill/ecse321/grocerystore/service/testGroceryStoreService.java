@@ -93,6 +93,18 @@ public class testGroceryStoreService {
 			if (invocation.getArgument(0).equals(Account_KEY)) {
 				Account account = new Account();
 				account.setName(Account_KEY);
+				account.setUsername(Account_KEY);
+				return account;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(accountDao.findByUsernameAndPassword(anyString(), anyString())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals("Testing") && invocation.getArgument(1).equals("Test") ) {
+				Account account = new Account();
+				account.setName(Account_KEY);
+				account.setUsername("Testing");
+				account.setPassword("Test");
 				return account;
 			} else {
 				return null;
@@ -187,7 +199,7 @@ public class testGroceryStoreService {
             }
         });
 	}
-
+	//Test for account
 	@Test
 	public void testCreateAccount() {
 		assertEquals(0, service.getAllAccounts().size());
@@ -206,22 +218,227 @@ public class testGroceryStoreService {
 	}
 
 	@Test
-	public void testCreateAccountNull() {
+	public void testCreateAllNullParameters() {
 		String name = null;
 		String error = null;
 		Account account = null;
 		Customer customer = service.createCustomerRole();
 		try {
-			account = service.createAccount("lel", "batata", name, 0, customer);
+			account = service.createAccount(null, null, name, 0, customer);
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
 
 		assertNull(account);
 		// check error
-		assertEquals("Account name cannot be empty!", error);
+		assertEquals("Account username cannot be empty! Account password cannot be empty! Account name cannot be empty!", error);
 	}
+	@Test
+	public void testCreateAllInvalidParameters() {
+		String name = "";
+		String error = "";
+		Account account = null;
+		Customer customer = service.createCustomerRole();
+		try {
+			account = service.createAccount("", "", name, 0, customer);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
 
+		assertNull(account);
+		// check error
+		assertEquals("Account username cannot be empty! Account password cannot be empty! Account name cannot be empty!", error);
+	}
+	
+	@Test
+	public void testGetAccount() {
+		Account account = null;
+		try {
+			account = service.getAccount(Account_KEY);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(account);
+		assertEquals(Account_KEY, account.getName());
+	}
+	@Test
+	public void testGetAccountNull() {
+		Account account = null;
+		String error = "";
+		try {
+			account = service.getAccount(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(account);
+		assertEquals("Please enter a username to search by.", error);
+	}
+	@Test
+	public void testGetAccountBlankUsername() {
+		Account account = null;
+		String error = "";
+		try {
+			account = service.getAccount("");
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(account);
+		assertEquals("Please enter a username to search by.", error);
+	}
+	@Test
+	public void testGetAccountInvalidUsername() {
+		Account account = null;
+		String error = "";
+		try {
+			account = service.getAccount("LOL");
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(account);
+		assertEquals("No such account to be found.", error);
+	}
+	@Test
+	public void testDeleteAccount() {
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount("Testing", "Test", "TestAccount", 0, customer);
+		Account deletedAccount = null;
+		try{
+			deletedAccount = service.deleteAccount("Testing","Test");
+		}catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		assertNotNull(deletedAccount);
+		assertEquals(account.getUsername(),deletedAccount.getUsername());
+		assertEquals(account.getPassword(),deletedAccount.getPassword());
+		assertEquals(account.getName(),deletedAccount.getName());
+	}
+	@Test
+	public void testDeleteAccountInvalidParameters() {
+		String error = "";
+		Account deletedAccount = null;
+		try{
+			deletedAccount = service.deleteAccount(null,null);
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNull(deletedAccount);
+		assertEquals("No such account found. Cannot delete.",error);
+	}
+	@Test
+	public void testUpdateAccountPassword() {
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount("Testing", "Test", "TestAccount", 0, customer);
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updatePassword("Testing", "Test", "NewTest");
+		}catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		assertNotNull(updatedAccount);
+		assertEquals("Test",account.getPassword());
+		assertEquals("NewTest",updatedAccount.getPassword());
+		assertEquals(account.getName(),updatedAccount.getName());
+		assertEquals(account.getUsername(),updatedAccount.getUsername());
+	}
+	@Test
+	public void testUpdateAccountInvalidPassword() {
+		String error = "";
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updatePassword("Testing", "Test", "NewTe");
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(updatedAccount);
+		assertEquals("Your password must at least be 6 characters long.",error);
+	}
+	public void testUpdateAccountNullPassword() {
+		String error = "";
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updatePassword("Testing", "Test", null);
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(updatedAccount);
+		assertEquals("Your password must at least be 6 characters long.",error);
+	}
+	public void testUpdateAccountInvalidUsername() {
+		String error = "";
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updatePassword("Test", "Test", "NewTest");
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(updatedAccount);
+		assertEquals("Wrong Username or Password.",error);
+	}
+	@Test
+	public void testUpdateAccountName() {
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updateName(Account_KEY, "TestAccount2");
+		}catch(IllegalArgumentException e) {
+			fail();
+		}
+		
+		assertNotNull(updatedAccount);
+		assertEquals( "TestAccount2",updatedAccount.getName());
+		assertEquals( "TestAccount",account.getName());
+		assertEquals(account.getUsername(),updatedAccount.getUsername());
+	}
+	@Test
+	public void testUpdateAccountNameWithNull() {
+		String error = "";
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updateName(Account_KEY, null);
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNull(updatedAccount);
+		assertEquals("Your name cannot be blank.",error);
+	}
+	@Test
+	public void testUpdateAccountNameInvalidName() {
+		String error = "";
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updateName(Account_KEY, "");
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNull(updatedAccount);
+		assertEquals("Your name cannot be blank.",error);
+	}
+	@Test
+	public void testUpdateAccountNameInvalidUsername() {
+		String error = "";
+		Customer customer = service.createCustomerRole();
+		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
+		Account updatedAccount = null;
+		try{
+			updatedAccount = service.updateName("", "");
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNull(updatedAccount);
+		assertEquals("Your name cannot be blank.",error);
+	}
+	
 	// Test for Store
 	@Test
 	public void testCreateStore() {
@@ -958,4 +1175,7 @@ public class testGroceryStoreService {
 		
 		assertEquals("Please enter an item to delete." , error);
 	}
+	
+
+	
 }
