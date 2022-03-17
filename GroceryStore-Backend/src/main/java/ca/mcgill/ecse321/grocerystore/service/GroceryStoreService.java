@@ -275,7 +275,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Account getAccount(String username) {
 		if (username == null || username.trim().length() == 0) {
-			throw new IllegalArgumentException("Please enter a username to search by."); 
+			throw new IllegalArgumentException("Please enter a username"); 
 		}
 		Account account = accountRepository.findByUsername(username);
 		
@@ -345,6 +345,7 @@ public class GroceryStoreService {
 			return false;
 		}
 	}
+	
 	// Address
 
 	@Transactional
@@ -382,15 +383,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Address getAddressByAccount(Account account) {
-
-		for (Address a : addressRepository.findAll()) {
-			if (a.getAccount().equals(account)) {
-				return a;
-			}
-		}
-
-		return null;
+	public Address getAddressByUsername(String username) {
+		
+		Account account = getAccount(username);
+		return addressRepository.findByAccount(account);
 	}
 
 	@Transactional
@@ -402,7 +398,23 @@ public class GroceryStoreService {
 	@Transactional
 	public Address updateAddress(String username, Integer buildingNo, String street, String town) {
 
-		Account account = accountRepository.findByUsername(username);
+		String error = "";
+		if (buildingNo == null || buildingNo < 0) {
+			error = error + "Invalid building number! ";
+		}
+		if (street == null || street.trim().length() == 0) {
+			error = error + "Street cannot be empty! ";
+		}
+		if (town == null || town.trim().length() == 0) {
+			error = error + "Town cannot be empty! ";
+		}
+
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
+		Account account = getAccount(username);
 
 		Address address = addressRepository.findByAccount(account);
 
@@ -416,11 +428,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteAddressByAccount(String username) {
+	public Address deleteAddressByAccount(String username) {
 
 		Account account = getAccount(username);
 		Address address = addressRepository.findByAccount(account);
 		addressRepository.delete(address);
+		
+		 return address;
 	}
 
 	// BusinessHour
