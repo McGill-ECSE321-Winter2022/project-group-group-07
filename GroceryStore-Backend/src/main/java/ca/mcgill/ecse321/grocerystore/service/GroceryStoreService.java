@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -440,17 +441,16 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart createCart(OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
-			TimeSlot timeSlot) {
+	public Cart createCart(String username) {
 
+		Account account = getAccount(username);
 		Cart cart = new Cart();
+		Set<Item> items = new HashSet<Item>();
 
-		cart.setOrderType(orderType);
-		cart.setTotalValue(totalValue);
-		cart.setNumOfItems(numOfItems);
+		cart.setAccount(account);
+		cart.setNumOfItems(0);
 		cart.setItems(items);
-		cart.setTimeSlot(timeSlot);
-
+		cart.setTotalValue(0f);
 		cartRepository.save(cart);
 
 		return cart;
@@ -467,9 +467,9 @@ public class GroceryStoreService {
 
 		Account account = getAccount(username);
 		Cart cart = cartRepository.findByAccount(account);
-		if(cart != null) {
+		if (cart != null) {
 			return cart;
-		}else {
+		} else {
 			throw new IllegalArgumentException("User does not have a cart");
 		}
 	}
@@ -974,6 +974,7 @@ public class GroceryStoreService {
 		return wh;
 	}
 
+	@Transactional
 	public void deleteTerminal(Long terminalID) {
 
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
@@ -985,8 +986,49 @@ public class GroceryStoreService {
 
 	}
 
+	@Transactional
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
+	}
+
+	@Transactional
+	public Cart addToCart(Long id, String username) {
+
+		Cart cart = getCartByAccount(username);
+		Item item = getNonPerishableItemsByID(id);
+		if (item == null) {
+			item = getPerishableItemsByID(id);
+			if (item == null) {
+				throw new IllegalArgumentException("Invalid Item ID");
+			}
+		}
+		cart.getItems().add(item);
+		cart.setNumOfItems(cart.getNumOfItems() + 1);
+		cart.setTotalValue(cart.getTotalValue() + item.getPrice());
+		cartRepository.save(cart);
+
+		return cart;
+	}
+
+	@Transactional
+	public Cart addTimeSlotToCart(String username, TimeSlot createTimeSlot) {
+
+		Cart cart = getCartByAccount(username);
+
+		cart.setTimeSlot(createTimeSlot);
+		cartRepository.save(cart);
+
+		return cart;
+	}
+
+	@Transactional
+	public Cart chooseOrderTypeForCart(String username, OrderType orderType) {
+
+		Cart cart = getCartByAccount(username);
+
+		cart.setOrderType(orderType);
+		cartRepository.save(cart);
+		return cart;
 	}
 
 }

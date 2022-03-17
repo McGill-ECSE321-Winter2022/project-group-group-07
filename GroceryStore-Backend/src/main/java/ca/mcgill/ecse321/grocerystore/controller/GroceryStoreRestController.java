@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.grocerystore.dto.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
@@ -574,8 +575,28 @@ public class GroceryStoreRestController {
 	public CartDto getCartByAccount(@PathVariable("username") String username) {
 		return convertToDto(service.getCartByAccount(username));
 	}
-	
-	
+
+	@PostMapping(value = { "/cart/{username}", "/cart/{username}/" })
+	public CartDto createCart(@PathVariable("username") String username) {
+		return convertToDto(service.createCart(username));
+	}
+
+	@PutMapping(value = { "/addToCart/{id}", "{/addToCart/{id}/" })
+	public CartDto addToCart(@PathVariable("id") Long id, String username) {
+
+		return convertToDto(service.addToCart(id, username));
+	}
+
+	@PutMapping(value = { "/pickTimeSlot/{username}", "/pickTimeSlot/{username}/" })
+	public CartDto addTimeSlotToCart(@PathVariable("username") String username, @RequestParam Date startDate, @RequestParam Date endDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+		return convertToDto(service.addTimeSlotToCart(username, service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime))));
+	}
+	@PutMapping(value = {"/chooseOrderType/{username}","/chooseOrderType/{username}/"})
+	public CartDto chooseOrderTypeForCart(@PathVariable("username") String username, @RequestParam String orderType) {
+		return convertToDto(service.chooseOrderTypeForCart(username,OrderType.valueOf(orderType)));
+	}
 
 	// -------------------------------------------------------------------------------------------------------------------------------//
 	// convertToDto Methods
