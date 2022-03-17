@@ -27,6 +27,7 @@ import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.grocerystore.dao.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 
 @ExtendWith(MockitoExtension.class)
 public class testGroceryStoreService {
@@ -1053,557 +1054,557 @@ public class testGroceryStoreService {
 
 	// Items
 
-//	@Test
-//	public void testCreatePerishableItem() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = "Apple";
-//		Float price = (float) 2.5;
-//		Boolean availableOnline = false;
-//		Integer numInStock = 10;
-//		Integer pointPerItem = 2;
-//
-//		PerishableItem pitem = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertNotNull(pitem);
-//	}
-//
-//	@Test
-//	public void testCreatePerishableItemNoNameOrPrice() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = null;
-//		Float price = null;
-//		Boolean availableOnline = false;
-//		Integer numInStock = 10;
-//		Integer pointPerItem = 2;
-//
-//		PerishableItem pitem = null;
-//		String error = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(pitem);
-//		assertEquals("Item name is empty!, Price is empty!", error);
-//	}
-//
-//	@Test
-//	public void testCreatePerishableItemNoName() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = "";
-//		Float price = (float) 2.5;
-//		Boolean availableOnline = false;
-//		Integer numInStock = 10;
-//		Integer pointPerItem = 2;
-//
-//		PerishableItem pitem = null;
-//		String error = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(pitem);
-//		assertEquals("Item name is empty!", error);
-//	}
-//
-//	@Test
-//	public void testCreatePerishableItemInvalidEverything() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = null;
-//		Float price = null;
-//		Boolean availableOnline = null;
-//		Integer numInStock = null;
-//		Integer pointPerItem = null;
-//
-//		PerishableItem pitem = null;
-//		String error = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(pitem);
-//		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
-//	}
-//
-//	@Test
-//	public void testGetPerishableItem() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		PerishableItem getPitem = null;
-//		try {
-//			getPitem = service.getPerishableItemsByID(PerishableItem_ID);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(PerishableItem_ID, getPitem.getItemID());
-//		assertEquals(PerishableItem_name, getPitem.getProductName());
-//		assertEquals(PerishableItem_availableOnline, getPitem.getAvailableOnline());
-//		assertEquals(PerishableItem_price, getPitem.getPrice());
-//		assertEquals(PerishableItem_numInStock, getPitem.getNumInStock());
-//		assertEquals(PerishableItem_pointPerItem, getPitem.getPointPerItem());
-//	}
-//
-//	@Test
-//	public void testGetPerishableItemInvalidID() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//		String error = null;
-//
-//		PerishableItem getPitem = null;
-//
-//		try {
-//			getPitem = service.getPerishableItemsByID(NonPerishableItem_ID);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(getPitem);
-//		assertEquals("No such perishable item. Please search by another ID.", error);
-//	}
-//
-//	@Test
-//	public void testGetPerishableItemByName() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		List<PerishableItem> getPitem = null;
-//		try {
-//			getPitem = service.getPerishableItemsByProductName(PerishableItem_name);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(2, getPitem.size());
-//	}
-//
-//	@Test
-//	public void testGetPerishableItemByInvalidName() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//		String error = null;
-//
-//		List<PerishableItem> getPitem = null;
-//		try {
-//			getPitem = service.getPerishableItemsByProductName(NonPerishableItem_name);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(getPitem);
-//		assertEquals("No such perishable items. Please search by another name.", error);
-//	}
-//
-//	@Test
-//	public void testUpdatePerishableItem() {
-//		PerishableItem getPitem = service.getPerishableItemsByID(PerishableItem_ID);
-//		try {
-//			getPitem = service.updatePerishableItem(getPitem, "AppleUpdated", NonPerishableItem_price,
-//					NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(PerishableItem_ID, getPitem.getItemID());
-//		assertEquals("AppleUpdated", getPitem.getProductName());
-//		assertEquals(NonPerishableItem_availableOnline, getPitem.getAvailableOnline());
-//		assertEquals(NonPerishableItem_price, getPitem.getPrice());
-//		assertEquals(NonPerishableItem_numInStock, getPitem.getNumInStock());
-//		assertEquals(NonPerishableItem_pointPerItem, getPitem.getPointPerItem());
-//	}
-//
-//	@Test
-//	public void testUpdatePerishableItemInvalidParameters() {
-//		PerishableItem getPitem = service.getPerishableItemsByID(PerishableItem_ID);
-//		String error = null;
-//		try {
-//			getPitem = service.updatePerishableItem(getPitem, null, null, null, null, null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertEquals(
-//				"Item unchanged. Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//						+ "Please state the amount of stock!, Please state the amount of point given per item!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testUpdatePerishableItemInvalidPerishableItem() {
-//		PerishableItem getPitem = null;
-//		String error = null;
-//		try {
-//			getPitem = service.updatePerishableItem(null, null, null, null, null, null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertEquals("Please enter an item to update.", error);
-//	}
-//
-//	@Test
-//	public void testCreateNonPerishableItem() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = "Desk";
-//		Float price = (float) 20.0;
-//		Boolean availableOnline = true;
-//		Integer numInStock = 10;
-//		Integer pointPerItem = 2;
-//
-//		NonPerishableItem npitem = null;
-//
-//		try {
-//			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertNotNull(npitem);
-//	}
-//
-//	@Test
-//	public void testCreateNonPerishableItemNoName() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//		String error = null;
-//
-//		String name = "";
-//		Float price = (float) 20.0;
-//		Boolean availableOnline = true;
-//		Integer numInStock = 10;
-//		Integer pointPerItem = 2;
-//
-//		NonPerishableItem npitem = null;
-//
-//		try {
-//			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(npitem);
-//		assertEquals("Item name is empty!", error);
-//	}
-//
-//	@Test
-//	public void testCreateNonPerishableItemNullEverything() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = null;
-//		Float price = null;
-//		Boolean availableOnline = null;
-//		Integer numInStock = null;
-//		Integer pointPerItem = null;
-//
-//		NonPerishableItem npitem = null;
-//		String error = null;
-//
-//		try {
-//			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(npitem);
-//		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
-//	}
-//
-//	@Test
-//	public void testGetNonPerishableItem() {
-//		assertEquals(0, service.getAllNonPerishableItems().size());
-//
-//		NonPerishableItem getNPitem = null;
-//		try {
-//			getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(NonPerishableItem_ID, getNPitem.getItemID());
-//		assertEquals(NonPerishableItem_name, getNPitem.getProductName());
-//		assertEquals(NonPerishableItem_availableOnline, getNPitem.getAvailableOnline());
-//		assertEquals(NonPerishableItem_price, getNPitem.getPrice());
-//		assertEquals(NonPerishableItem_numInStock, getNPitem.getNumInStock());
-//		assertEquals(NonPerishableItem_pointPerItem, getNPitem.getPointPerItem());
-//	}
-//
-//	@Test
-//	public void testGetNonPerishableItemInvalidID() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//		String error = null;
-//
-//		NonPerishableItem getNPitem = null;
-//
-//		try {
-//			getNPitem = service.getNonPerishableItemsByID(PerishableItem_ID);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(getNPitem);
-//		assertEquals("No such non perishable item. Please search by another ID.", error);
-//	}
-//
-//	@Test
-//	public void testGetNonPerishableItemByName() {
-//		assertEquals(0, service.getAllNonPerishableItems().size());
-//
-//		List<NonPerishableItem> getNPitem = null;
-//		try {
-//			getNPitem = service.getNonPerishableItemsByProductName(NonPerishableItem_name);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(1, getNPitem.size());
-//	}
-//
-//	@Test
-//	public void testGetNonPerishableItemByInvalidName() {
-//		assertEquals(0, service.getAllNonPerishableItems().size());
-//		String error = null;
-//
-//		List<NonPerishableItem> getNPitem = null;
-//		try {
-//			getNPitem = service.getNonPerishableItemsByProductName(PerishableItem_name);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(getNPitem);
-//		assertEquals("No such non perishable items. Please search by another name.", error);
-//	}
-//
-//	@Test
-//	public void testUpdateNonPerishableItem() {
-//		NonPerishableItem getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
-//		try {
-//			getNPitem = service.updateNonPerishableItem(getNPitem, "DeskUpdated", PerishableItem_price,
-//					PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			fail();
-//		}
-//		assertEquals(NonPerishableItem_ID, getNPitem.getItemID());
-//		assertEquals("DeskUpdated", getNPitem.getProductName());
-//		assertEquals(PerishableItem_availableOnline, getNPitem.getAvailableOnline());
-//		assertEquals(PerishableItem_price, getNPitem.getPrice());
-//		assertEquals(PerishableItem_numInStock, getNPitem.getNumInStock());
-//		assertEquals(PerishableItem_pointPerItem, getNPitem.getPointPerItem());
-//	}
-//
-//	// WorkingHour Test
-//	@Test
-//	public void testCreateWorkingHour() {
-//		assertEquals(0, service.getAllWorkingHours().size());
-//
-//		WorkingHour workingHour = null;
-//
-//		DayOfWeek dayOfWeek = DayOfWeek.Monday;
-//		Time startTime = Time.valueOf("1:00:00");
-//		Time endTime = Time.valueOf("2:00:00");
-//		String error = null;
-//
-//		try {
-//			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//
-//		assertNotNull(workingHour);
-//		assertEquals(dayOfWeek, workingHour.getDayOfWeek());
-//		assertEquals(startTime, workingHour.getStartTime());
-//		assertEquals(endTime, workingHour.getEndTime());
-//	}
-//
-//	@Test
-//	public void testcreateWorkingHourNull() {
-//		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
-//		Time startTime = null;
-//		Time endTime = null;
-//		WorkingHour workingHour = null;
-//		String error = null;
-//		try {
-//			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(workingHour);
-//		assertEquals(
-//				"Working hour day of the week cannot be empty! Working hour start time cannot be empty! Working hour end time cannot be empty!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testcreateWorkingHourEndTimeBeforeStartTime() {
-//		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
-//		Time startTime = Time.valueOf("2:00:00");
-//		Time endTime = Time.valueOf("1:00:00");
-//		WorkingHour workingHour = null;
-//		String error = null;
-//		try {
-//			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(workingHour);
-//		assertEquals("Working hour end time cannot be before Working hour start time!", error);
-//	}
-//
-//	@Test
-//	public void testGetAllWorkingHours() {
-//		assertNotNull(service.getAllWorkingHours());
-//	}
-//
-//	/*
-//	 * @Test public void testGetExistingWorkingHours() {
-//	 * assertEquals(service.getWorkingHourByDay(GroceryStoreSoftwareSystem.DayOfWeek
-//	 * .Monday).getDayOfWeek(), GroceryStoreSoftwareSystem.DayOfWeek.Monday); }
-//	 */
-//	@Test
-//	public void testGetWorkingHoursNull() {
-//		String error = null;
-//		try {
-//			service.getWorkingHourByDay(null);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertEquals("Day of week cannot be empty!", error);
-//	}
-//
-//	// Schedule Test
-//	/*
-//	 * @Test public void testCreateSchedule() { assertEquals(0,
-//	 * service.getAllSchedules().size());
-//	 * 
-//	 * Schedule schedule = null; Integer scheduleID = 1; Cashier cashier =
-//	 * service.createCashierRole(); Account employee = service.createAccount("Mark",
-//	 * "123", "Mark", 0, cashier); WorkingHour workingHour =
-//	 * service.createWorkingHour(DayOfWeek.Monday,
-//	 * Time.valueOf("1:00:00"),Time.valueOf("2:00:00")); Set<WorkingHour>
-//	 * workingHours = new HashSet<WorkingHour>(); workingHours.add(workingHour);
-//	 * 
-//	 * String error = null;
-//	 * 
-//	 * try { schedule = service.createSchedule(scheduleID, employee.getUsername(),
-//	 * workingHours); } catch (IllegalArgumentException e) { error = e.getMessage();
-//	 * }
-//	 * 
-//	 * assertNotNull(schedule); assertEquals(schedule, schedule.getScheduleID());
-//	 * assertEquals(employee, schedule.getEmployee()); assertEquals(workingHours,
-//	 * schedule.getWorkingHour()); }
-//	 * 
-//	 * @Test public void testcreateScheduleNull() { Integer scheduleID = null;
-//	 * Account employee = null; Set<WorkingHour> workingHours = null;
-//	 * 
-//	 * Schedule schedule = null; String error = null; try { schedule =
-//	 * service.createSchedule(scheduleID, employee.getUsername(), workingHours); }
-//	 * catch (IllegalArgumentException e) { error = e.getMessage(); }
-//	 * assertNull(schedule);
-//	 * assertEquals("Schedule id cannot be empty! Schedule employee cannot be empty! Schedule working hours cannot be empty!"
-//	 * , error); }
-//	 */
-//
-//	@Test
-//	public void testGetAllSchedules() {
-//		assertNotNull(service.getAllSchedules());
-//	}
-//
-//	@Test
-//	public void testUpdateNonPerishableItemInvalidParameters() {
-//		NonPerishableItem getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
-//		String error = null;
-//		try {
-//			getNPitem = service.updateNonPerishableItem(getNPitem, null, null, null, null, null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertEquals(
-//				"Item unchanged. Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//						+ "Please state the amount of stock!, Please state the amount of point given per item!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testUpdateNonPerishableItemInvalidPerishableItem() {
-//		NonPerishableItem getNPitem = null;
-//		String error = null;
-//		try {
-//			getNPitem = service.updateNonPerishableItem(null, null, null, null, null, null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertEquals("Please enter an item to update.", error);
-//	}
-//
-//	@Test
-//	public void testDeletePerishableItem() {
-//		PerishableItem pitem = service.createPerishableItem(PerishableItem_name, PerishableItem_price,
-//				PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
-//		Long id = pitem.getItemID();
-//		PerishableItem deletedPitem = service.deletePerishableItems(pitem);
-//		assertNotNull(deletedPitem);
-//		assertEquals(id, deletedPitem.getItemID());
-//	}
-//
-//	@Test
-//	public void testDeletePerishableItemInvalidPerishableItem() {
-//
-//		PerishableItem deletedPitem = null;
-//		String error = null;
-//		try {
-//			deletedPitem = service.deletePerishableItems(null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//
-//		assertEquals("Please enter an item to delete.", error);
-//	}
-//
-//	@Test
-//	public void testDeleteNonPerishableItem() {
-//		NonPerishableItem npitem = service.createNonPerishableItem(NonPerishableItem_name, NonPerishableItem_price,
-//				NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
-//		Long id = npitem.getItemID();
-//		NonPerishableItem deletedNPitem = service.deleteNonPerishableItems(npitem);
-//		assertNotNull(deletedNPitem);
-//		assertEquals(id, deletedNPitem.getItemID());
-//	}
-//
-//	@Test
-//	public void testDeleteNonPerishableItemInvalidNonPerishableItem() {
-//
-//		NonPerishableItem deletedNPitem = null;
-//		String error = null;
-//		try {
-//			deletedNPitem = service.deleteNonPerishableItems(null);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//
-//		assertEquals("Please enter an item to delete.", error);
-//	}
+	@Test
+	public void testCreatePerishableItem() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = "Apple";
+		Float price = (float) 2.5;
+		Boolean availableOnline = false;
+		Integer numInStock = 10;
+		Integer pointPerItem = 2;
+
+		PerishableItem pitem = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertNotNull(pitem);
+	}
+
+	@Test
+	public void testCreatePerishableItemNoNameOrPrice() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = false;
+		Integer numInStock = 10;
+		Integer pointPerItem = 2;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!, Price is empty!", error);
+	}
+
+	@Test
+	public void testCreatePerishableItemNoName() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = "";
+		Float price = (float) 2.5;
+		Boolean availableOnline = false;
+		Integer numInStock = 10;
+		Integer pointPerItem = 2;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!", error);
+	}
+
+	@Test
+	public void testCreatePerishableItemInvalidEverything() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = null;
+		Integer numInStock = null;
+		Integer pointPerItem = null;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	}
+
+	@Test
+	public void testGetPerishableItem() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		PerishableItem getPitem = null;
+		try {
+			getPitem = service.getPerishableItemsByID(PerishableItem_ID);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(PerishableItem_ID, getPitem.getItemID());
+		assertEquals(PerishableItem_name, getPitem.getProductName());
+		assertEquals(PerishableItem_availableOnline, getPitem.getAvailableOnline());
+		assertEquals(PerishableItem_price, getPitem.getPrice());
+		assertEquals(PerishableItem_numInStock, getPitem.getNumInStock());
+		assertEquals(PerishableItem_pointPerItem, getPitem.getPointPerItem());
+	}
+
+	@Test
+	public void testGetPerishableItemInvalidID() {
+		assertEquals(0, service.getAllPerishableItems().size());
+		String error = null;
+
+		PerishableItem getPitem = null;
+
+		try {
+			getPitem = service.getPerishableItemsByID(NonPerishableItem_ID);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(getPitem);
+		assertEquals("No such perishable item. Please search by another ID.", error);
+	}
+
+	@Test
+	public void testGetPerishableItemByName() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		List<PerishableItem> getPitem = null;
+		try {
+			getPitem = service.getPerishableItemsByProductName(PerishableItem_name);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(2, getPitem.size());
+	}
+
+	@Test
+	public void testGetPerishableItemByInvalidName() {
+		assertEquals(0, service.getAllPerishableItems().size());
+		String error = null;
+
+		List<PerishableItem> getPitem = null;
+		try {
+			getPitem = service.getPerishableItemsByProductName(NonPerishableItem_name);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(getPitem);
+		assertEquals("No such perishable items. Please search by another name.", error);
+	}
+
+	@Test
+	public void testUpdatePerishableItem() {
+		PerishableItem getPitem = service.getPerishableItemsByID(PerishableItem_ID);
+		try {
+			getPitem = service.updatePerishableItem(getPitem, "AppleUpdated", NonPerishableItem_price,
+					NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(PerishableItem_ID, getPitem.getItemID());
+		assertEquals("AppleUpdated", getPitem.getProductName());
+		assertEquals(NonPerishableItem_availableOnline, getPitem.getAvailableOnline());
+		assertEquals(NonPerishableItem_price, getPitem.getPrice());
+		assertEquals(NonPerishableItem_numInStock, getPitem.getNumInStock());
+		assertEquals(NonPerishableItem_pointPerItem, getPitem.getPointPerItem());
+	}
+
+	@Test
+	public void testUpdatePerishableItemInvalidParameters() {
+		PerishableItem getPitem = service.getPerishableItemsByID(PerishableItem_ID);
+		String error = null;
+		try {
+			getPitem = service.updatePerishableItem(getPitem, null, null, null, null, null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertEquals(
+				"Item unchanged. Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+						+ "Please state the amount of stock!, Please state the amount of point given per item!",
+				error);
+	}
+
+	@Test
+	public void testUpdatePerishableItemInvalidPerishableItem() {
+		PerishableItem getPitem = null;
+		String error = null;
+		try {
+			getPitem = service.updatePerishableItem(null, null, null, null, null, null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertEquals("Please enter an item to update.", error);
+	}
+
+	@Test
+	public void testCreateNonPerishableItem() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = "Desk";
+		Float price = (float) 20.0;
+		Boolean availableOnline = true;
+		Integer numInStock = 10;
+		Integer pointPerItem = 2;
+
+		NonPerishableItem npitem = null;
+
+		try {
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertNotNull(npitem);
+	}
+
+	@Test
+	public void testCreateNonPerishableItemNoName() {
+		assertEquals(0, service.getAllPerishableItems().size());
+		String error = null;
+
+		String name = "";
+		Float price = (float) 20.0;
+		Boolean availableOnline = true;
+		Integer numInStock = 10;
+		Integer pointPerItem = 2;
+
+		NonPerishableItem npitem = null;
+
+		try {
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(npitem);
+		assertEquals("Item name is empty!", error);
+	}
+
+	@Test
+	public void testCreateNonPerishableItemNullEverything() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = null;
+		Integer numInStock = null;
+		Integer pointPerItem = null;
+
+		NonPerishableItem npitem = null;
+		String error = null;
+
+		try {
+			npitem = service.createNonPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(npitem);
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	}
+
+	@Test
+	public void testGetNonPerishableItem() {
+		assertEquals(0, service.getAllNonPerishableItems().size());
+
+		NonPerishableItem getNPitem = null;
+		try {
+			getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(NonPerishableItem_ID, getNPitem.getItemID());
+		assertEquals(NonPerishableItem_name, getNPitem.getProductName());
+		assertEquals(NonPerishableItem_availableOnline, getNPitem.getAvailableOnline());
+		assertEquals(NonPerishableItem_price, getNPitem.getPrice());
+		assertEquals(NonPerishableItem_numInStock, getNPitem.getNumInStock());
+		assertEquals(NonPerishableItem_pointPerItem, getNPitem.getPointPerItem());
+	}
+
+	@Test
+	public void testGetNonPerishableItemInvalidID() {
+		assertEquals(0, service.getAllPerishableItems().size());
+		String error = null;
+
+		NonPerishableItem getNPitem = null;
+
+		try {
+			getNPitem = service.getNonPerishableItemsByID(PerishableItem_ID);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(getNPitem);
+		assertEquals("No such non perishable item. Please search by another ID.", error);
+	}
+
+	@Test
+	public void testGetNonPerishableItemByName() {
+		assertEquals(0, service.getAllNonPerishableItems().size());
+
+		List<NonPerishableItem> getNPitem = null;
+		try {
+			getNPitem = service.getNonPerishableItemsByProductName(NonPerishableItem_name);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(1, getNPitem.size());
+	}
+
+	@Test
+	public void testGetNonPerishableItemByInvalidName() {
+		assertEquals(0, service.getAllNonPerishableItems().size());
+		String error = null;
+
+		List<NonPerishableItem> getNPitem = null;
+		try {
+			getNPitem = service.getNonPerishableItemsByProductName(PerishableItem_name);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(getNPitem);
+		assertEquals("No such non perishable items. Please search by another name.", error);
+	}
+
+	@Test
+	public void testUpdateNonPerishableItem() {
+		NonPerishableItem getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
+		try {
+			getNPitem = service.updateNonPerishableItem(getNPitem, "DeskUpdated", PerishableItem_price,
+					PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}
+		assertEquals(NonPerishableItem_ID, getNPitem.getItemID());
+		assertEquals("DeskUpdated", getNPitem.getProductName());
+		assertEquals(PerishableItem_availableOnline, getNPitem.getAvailableOnline());
+		assertEquals(PerishableItem_price, getNPitem.getPrice());
+		assertEquals(PerishableItem_numInStock, getNPitem.getNumInStock());
+		assertEquals(PerishableItem_pointPerItem, getNPitem.getPointPerItem());
+	}
+
+	// WorkingHour Test
+	@Test
+	public void testCreateWorkingHour() {
+		assertEquals(0, service.getAllWorkingHours().size());
+
+		WorkingHour workingHour = null;
+
+		DayOfWeek dayOfWeek = DayOfWeek.Monday;
+		Time startTime = Time.valueOf("1:00:00");
+		Time endTime = Time.valueOf("2:00:00");
+		String error = null;
+
+		try {
+			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertNotNull(workingHour);
+		assertEquals(dayOfWeek, workingHour.getDayOfWeek());
+		assertEquals(startTime, workingHour.getStartTime());
+		assertEquals(endTime, workingHour.getEndTime());
+	}
+
+	@Test
+	public void testcreateWorkingHourNull() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
+		Time startTime = null;
+		Time endTime = null;
+		WorkingHour workingHour = null;
+		String error = null;
+		try {
+			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(workingHour);
+		assertEquals(
+				"Working hour day of the week cannot be empty! Working hour start time cannot be empty! Working hour end time cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testcreateWorkingHourEndTimeBeforeStartTime() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
+		Time startTime = Time.valueOf("2:00:00");
+		Time endTime = Time.valueOf("1:00:00");
+		WorkingHour workingHour = null;
+		String error = null;
+		try {
+			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(workingHour);
+		assertEquals("Working hour end time cannot be before Working hour start time!", error);
+	}
+
+	@Test
+	public void testGetAllWorkingHours() {
+		assertNotNull(service.getAllWorkingHours());
+	}
+
+	/*
+	 * @Test public void testGetExistingWorkingHours() {
+	 * assertEquals(service.getWorkingHourByDay(GroceryStoreSoftwareSystem.DayOfWeek
+	 * .Monday).getDayOfWeek(), GroceryStoreSoftwareSystem.DayOfWeek.Monday); }
+	 */
+	@Test
+	public void testGetWorkingHoursNull() {
+		String error = null;
+		try {
+			service.getWorkingHourByDay(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertEquals("Day of week cannot be empty!", error);
+	}
+
+	// Schedule Test
+	/*
+	 * @Test public void testCreateSchedule() { assertEquals(0,
+	 * service.getAllSchedules().size());
+	 * 
+	 * Schedule schedule = null; Integer scheduleID = 1; Cashier cashier =
+	 * service.createCashierRole(); Account employee = service.createAccount("Mark",
+	 * "123", "Mark", 0, cashier); WorkingHour workingHour =
+	 * service.createWorkingHour(DayOfWeek.Monday,
+	 * Time.valueOf("1:00:00"),Time.valueOf("2:00:00")); Set<WorkingHour>
+	 * workingHours = new HashSet<WorkingHour>(); workingHours.add(workingHour);
+	 * 
+	 * String error = null;
+	 * 
+	 * try { schedule = service.createSchedule(scheduleID, employee.getUsername(),
+	 * workingHours); } catch (IllegalArgumentException e) { error = e.getMessage();
+	 * }
+	 * 
+	 * assertNotNull(schedule); assertEquals(schedule, schedule.getScheduleID());
+	 * assertEquals(employee, schedule.getEmployee()); assertEquals(workingHours,
+	 * schedule.getWorkingHour()); }
+	 * 
+	 * @Test public void testcreateScheduleNull() { Integer scheduleID = null;
+	 * Account employee = null; Set<WorkingHour> workingHours = null;
+	 * 
+	 * Schedule schedule = null; String error = null; try { schedule =
+	 * service.createSchedule(scheduleID, employee.getUsername(), workingHours); }
+	 * catch (IllegalArgumentException e) { error = e.getMessage(); }
+	 * assertNull(schedule);
+	 * assertEquals("Schedule id cannot be empty! Schedule employee cannot be empty! Schedule working hours cannot be empty!"
+	 * , error); }
+	 */
+
+	@Test
+	public void testGetAllSchedules() {
+		assertNotNull(service.getAllSchedules());
+	}
+
+	@Test
+	public void testUpdateNonPerishableItemInvalidParameters() {
+		NonPerishableItem getNPitem = service.getNonPerishableItemsByID(NonPerishableItem_ID);
+		String error = null;
+		try {
+			getNPitem = service.updateNonPerishableItem(getNPitem, null, null, null, null, null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertEquals(
+				"Item unchanged. Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+						+ "Please state the amount of stock!, Please state the amount of point given per item!",
+				error);
+	}
+
+	@Test
+	public void testUpdateNonPerishableItemInvalidPerishableItem() {
+		NonPerishableItem getNPitem = null;
+		String error = null;
+		try {
+			getNPitem = service.updateNonPerishableItem(null, null, null, null, null, null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertEquals("Please enter an item to update.", error);
+	}
+
+	@Test
+	public void testDeletePerishableItem() {
+		PerishableItem pitem = service.createPerishableItem(PerishableItem_name, PerishableItem_price,
+				PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
+		Long id = pitem.getItemID();
+		PerishableItem deletedPitem = service.deletePerishableItems(pitem);
+		assertNotNull(deletedPitem);
+		assertEquals(id, deletedPitem.getItemID());
+	}
+
+	@Test
+	public void testDeletePerishableItemInvalidPerishableItem() {
+
+		PerishableItem deletedPitem = null;
+		String error = null;
+		try {
+			deletedPitem = service.deletePerishableItems(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+
+		assertEquals("Please enter an item to delete.", error);
+	}
+
+	@Test
+	public void testDeleteNonPerishableItem() {
+		NonPerishableItem npitem = service.createNonPerishableItem(NonPerishableItem_name, NonPerishableItem_price,
+				NonPerishableItem_availableOnline, NonPerishableItem_numInStock, NonPerishableItem_pointPerItem);
+		Long id = npitem.getItemID();
+		NonPerishableItem deletedNPitem = service.deleteNonPerishableItems(npitem);
+		assertNotNull(deletedNPitem);
+		assertEquals(id, deletedNPitem.getItemID());
+	}
+
+	@Test
+	public void testDeleteNonPerishableItemInvalidNonPerishableItem() {
+
+		NonPerishableItem deletedNPitem = null;
+		String error = null;
+		try {
+			deletedNPitem = service.deleteNonPerishableItems(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+
+		assertEquals("Please enter an item to delete.", error);
+	}
 
 	// Cart
 
