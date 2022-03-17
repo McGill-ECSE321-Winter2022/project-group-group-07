@@ -3,9 +3,7 @@ name: Jayce's Worflow
 on:
   push:
     branches: jayce
-  pull_request:
-    branches: jayce
-
+    
 jobs:
   build:
 

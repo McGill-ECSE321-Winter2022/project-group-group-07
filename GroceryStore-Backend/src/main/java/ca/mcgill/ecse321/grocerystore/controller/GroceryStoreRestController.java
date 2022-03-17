@@ -196,7 +196,7 @@ public class GroceryStoreRestController {
 	public AddressDto getAddressByAccount(@PathVariable("username") String username) {
 
 		Account account = service.getAccount(username);
-		return convertToDto(service.getAddressByAccount(account), convertToDto(account, account.getAccountRole()));
+		return convertToDto(service.getAddressByUsername(username), convertToDto(account, account.getAccountRole()));
 
 	}
 

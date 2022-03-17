@@ -195,7 +195,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public List<Account> getAllDeliverPersons() {
+	public List<Account> getAllDeliveryPersons() {
 
 		List<Account> deliveryPersons = new ArrayList<Account>();
 
@@ -236,7 +236,7 @@ public class GroceryStoreService {
 		List<Account> accounts = new ArrayList<Account>();
 		accounts.addAll(getAllCashiers());
 		accounts.addAll(getAllClerks());
-		accounts.addAll(getAllDeliverPersons());
+		accounts.addAll(getAllDeliveryPersons());
 
 		return accounts;
 	};
@@ -275,7 +275,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Account getAccount(String username) {
 		if (username == null || username.trim().length() == 0) {
-			throw new IllegalArgumentException("Please enter a username to search by."); 
+			throw new IllegalArgumentException("Invalid username"); 
 		}
 		Account account = accountRepository.findByUsername(username);
 		
@@ -345,6 +345,7 @@ public class GroceryStoreService {
 			return false;
 		}
 	}
+	
 	// Address
 
 	@Transactional
@@ -382,15 +383,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Address getAddressByAccount(Account account) {
-
-		for (Address a : addressRepository.findAll()) {
-			if (a.getAccount().equals(account)) {
-				return a;
-			}
-		}
-
-		return null;
+	public Address getAddressByUsername(String username) {
+		
+		Account account = getAccount(username);
+		return addressRepository.findByAccount(account);
 	}
 
 	@Transactional
@@ -402,7 +398,23 @@ public class GroceryStoreService {
 	@Transactional
 	public Address updateAddress(String username, Integer buildingNo, String street, String town) {
 
-		Account account = accountRepository.findByUsername(username);
+		String error = "";
+		if (buildingNo == null || buildingNo < 0) {
+			error = error + "Invalid building number! ";
+		}
+		if (street == null || street.trim().length() == 0) {
+			error = error + "Street cannot be empty! ";
+		}
+		if (town == null || town.trim().length() == 0) {
+			error = error + "Town cannot be empty! ";
+		}
+
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
+		Account account = getAccount(username);
 
 		Address address = addressRepository.findByAccount(account);
 
@@ -416,11 +428,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteAddressByAccount(String username) {
+	public Address deleteAddressByAccount(String username) {
 
 		Account account = getAccount(username);
 		Address address = addressRepository.findByAccount(account);
 		addressRepository.delete(address);
+		
+		 return address;
 	}
 
 	// BusinessHour
@@ -1233,6 +1247,32 @@ public class GroceryStoreService {
 	public Store updateStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
 
+		String error = "";
+		if (name == null || name.trim().length() == 0) {
+			error = error + "Store name cannot be empty! ";
+		}
+		if (address == null || address.trim().length() == 0) {
+			error = error + "Store address time cannot be empty! ";
+		}
+		if (phoneNumber == null || phoneNumber.trim().length() == 0) {
+			error = error + "Store phone number cannot be empty! ";
+		}
+		if (email == null || email.trim().length() == 0) {
+			error = error + "Store email cannot be empty! ";
+		}
+		if (employeeDiscountRate == null) {
+			error = error + "Employee discount rate cannot be empty! ";
+		} else if (employeeDiscountRate > 100 || employeeDiscountRate < 0) {
+			error = error + "Employee discount rate must be between 0 and 100! ";
+		}
+		if (pointToCashRatio == null) {
+			error = error + "Point to cash ratio cannot be empty! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
 		Store store = getStore();
 		store.setName(name);
 		store.setAddress(address);
@@ -1259,11 +1299,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteStore() {
+	public Store deleteStore() {
 
-		if (getStore() != null) {
-			storeRepository.delete(getStore());
+		Store store = getStore();
+		if (store != null) {
+			storeRepository.delete(store);
 		}
+		return store;
 	}
 
 	// Terminal

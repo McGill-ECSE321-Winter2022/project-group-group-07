@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.grocerystore.model;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

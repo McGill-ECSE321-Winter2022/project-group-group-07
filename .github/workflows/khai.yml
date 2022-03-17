@@ -3,8 +3,6 @@ name: Khai's Workflow
 on:
   push:
     branches: khai
-  pull_request:
-    branches: khai
 
 jobs:
   build:
