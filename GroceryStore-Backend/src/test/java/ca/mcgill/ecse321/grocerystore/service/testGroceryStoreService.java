@@ -207,7 +207,7 @@ public class testGroceryStoreService {
 		lenient().when(accountDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
 			Set<Account> accounts = new HashSet<Account>();
 			return accounts;
-			});
+		});
 		lenient().when(businessHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
 			BusinessHour b1 = new BusinessHour();
 			BusinessHour b2 = new BusinessHour();
@@ -221,7 +221,8 @@ public class testGroceryStoreService {
 			return days;
 		});
 		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);};
+			return invocation.getArgument(0);
+		};
 		lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(ownerDao.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
@@ -231,7 +232,7 @@ public class testGroceryStoreService {
 		lenient().when(addressDao.save(any(Address.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
-	
+
 	}
 
 	// Test for account
@@ -540,7 +541,72 @@ public class testGroceryStoreService {
 
 		assertNotNull(deliveryPerson);
 	}
+
+	@Test
+	public void testGetAllCustomers() {
+		List<Account> customers = new ArrayList<Account>();
+		try {
+			customers = service.getAllCustomers();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(customers);
+	}
+	@Test
+	public void testGetAllCashiers() {
+		List<Account> cashiers = new ArrayList<Account>();
+		try {
+			cashiers = service.getAllCashiers();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(cashiers);
+	}
+
+	@Test
+	public void testGetAllClerks() {
+		List<Account> clerks = new ArrayList<Account>();
+		try {
+			clerks = service.getAllClerks();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(clerks);
+	}
+
+	@Test
+	public void testGetAllDeliveryPersons() {
+		List<Account> deliveryPersons = new ArrayList<Account>();
+		try {
+			deliveryPersons = service.getAllDeliveryPersons();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(deliveryPersons);
+	}
+
+	@Test
+	public void testGetAllAccounts() {
+		List<Account> accounts = new ArrayList<Account>();
+		try {
+			accounts = service.getAllAccounts();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(accounts);
+	}
 	
+	@Test
+	public void testGetAllEmployees() {
+		List<Account> employees = new ArrayList<Account>();
+		try {
+			employees = service.getAllEmployees();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(employees);
+	}
+
 
 	// Test for Address
 
@@ -701,160 +767,162 @@ public class testGroceryStoreService {
 		assertNull(address);
 		assertEquals(error, "Please enter a username");
 	}
-//	
-//	// Test for Store
-//	
-//	@Test
-//	public void testCreateStore() {
-//		assertNull(service.getStore());
-//
-//		String name = "Store";
-//		String address = "123 test street";
-//		String phoneNumber = "666";
-//		String email = "tes@example.ex";
-//		Integer employeeDiscountRate = 15;
-//		Float pointToCashRatio = 5.5f;
-//		String error = null;
-//		Store store = null;
-//		try {
-//			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNotNull(store);
-//		assertEquals(name, store.getName());
-//		assertEquals(address, store.getAddress());
-//		assertEquals(phoneNumber, store.getPhoneNumber());
-//		assertEquals(email, store.getEmail());
-//		assertEquals(employeeDiscountRate, store.getEmployeeDiscountRate());
-//		assertEquals(pointToCashRatio, store.getPointToCashRatio());
-//		assertNull(error);
-//	}
-//
-//	@Test
-//	public void testCreateStoreNull() {
-//		assertNull(service.getStore());
-//
-//		String name = null;
-//		String address = null;
-//		String phoneNumber = null;
-//		String email = null;
-//		Integer employeeDiscountRate = null;
-//		Float pointToCashRatio = null;
-//		String error = null;
-//		Store store = null;
-//		try {
-//			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(store);
-//		assertEquals(
-//				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testCreateStoreEmpty() {
-//		assertNull(service.getStore());
-//		String name = "";
-//		String address = "";
-//		String phoneNumber = "";
-//		String email = "";
-//		Integer employeeDiscountRate = 15;
-//		Float pointToCashRatio = 5f;
-//		String error = null;
-//		Store store = null;
-//		try {
-//			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(store);
-//		assertEquals(
-//				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testCreateStoreSpace() {
-//		assertNull(service.getStore());
-//		String name = " ";
-//		String address = " ";
-//		String phoneNumber = " ";
-//		String email = " ";
-//		Integer employeeDiscountRate = 15;
-//		Float pointToCashRatio = 5f;
-//		String error = null;
-//		Store store = null;
-//		try {
-//			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(store);
-//		assertEquals(
-//				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testCreateStoreIllegalDiscount() {
-//		assertNull(service.getStore());
-//		String name = "Store";
-//		String address = "123 test street";
-//		String phoneNumber = "666";
-//		String email = "tes@example.ex";
-//		Integer employeeDiscountRate = 200;
-//		Float pointToCashRatio = 5.5f;
-//		String error = null;
-//		Store store = null;
-//		try {
-//			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(store);
-//		assertEquals("Employee discount rate must be between 0 and 100!", error);
-//	}
-//
-//	@Test
-//	public void testCreatePerishableItemNullEverything() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = null;
-//		Float price = null;
-//		Boolean availableOnline = null;
-//		Integer numInStock = null;
-//		Integer pointPerItem = null;
-//
-//		PerishableItem pitem = null;
-//		String error = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(pitem);
-//		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
-//	}
-//
-//	@Test
-//	public void testGetExistingStore() {
-//		Store store = new Store();
-//		store.setStoreID(123L);
-//		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
-//
-//		assertEquals(123, service.getStore().getStoreID());
-//	}
-//
-//	@Test
-//	public void testGetNonExistingStore() {
-//		assertNull(service.getStore());
-//	}
+	
+	// Test for Store
+	
+	@Test
+	public void testCreateStore() {
+		assertNull(service.getStore());
+
+		String name = "Store";
+		String address = "123 test street";
+		String phoneNumber = "666";
+		String email = "tes@example.ex";
+		Integer employeeDiscountRate = 15;
+		Float pointToCashRatio = 5.5f;
+		String error = null;
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNotNull(store);
+		assertEquals(name, store.getName());
+		assertEquals(address, store.getAddress());
+		assertEquals(phoneNumber, store.getPhoneNumber());
+		assertEquals(email, store.getEmail());
+		assertEquals(employeeDiscountRate, store.getEmployeeDiscountRate());
+		assertEquals(pointToCashRatio, store.getPointToCashRatio());
+		assertNull(error);
+	}
+
+	@Test
+	public void testCreateStoreNull() {
+		assertNull(service.getStore());
+
+		String name = null;
+		String address = null;
+		String phoneNumber = null;
+		String email = null;
+		Integer employeeDiscountRate = null;
+		Float pointToCashRatio = null;
+		String error = null;
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(store);
+		assertEquals(
+				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testCreateStoreEmpty() {
+		assertNull(service.getStore());
+		String name = "";
+		String address = "";
+		String phoneNumber = "";
+		String email = "";
+		Integer employeeDiscountRate = 15;
+		Float pointToCashRatio = 5f;
+		String error = null;
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(store);
+		assertEquals(
+				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testCreateStoreSpace() {
+		assertNull(service.getStore());
+		String name = " ";
+		String address = " ";
+		String phoneNumber = " ";
+		String email = " ";
+		Integer employeeDiscountRate = 15;
+		Float pointToCashRatio = 5f;
+		String error = null;
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(store);
+		assertEquals(
+				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testCreateStoreIllegalDiscount() {
+		assertNull(service.getStore());
+		String name = "Store";
+		String address = "123 test street";
+		String phoneNumber = "666";
+		String email = "tes@example.ex";
+		Integer employeeDiscountRate = 200;
+		Float pointToCashRatio = 5.5f;
+		String error = null;
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(store);
+		assertEquals("Employee discount rate must be between 0 and 100!", error);
+	}
+	
+	@Test
+	public void testGetExistingStore() {
+		Store store = new Store();
+		store.setStoreID(123L);
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+
+		assertEquals(123, service.getStore().getStoreID());
+	}
+
+	@Test
+	public void testGetNonExistingStore() {
+		assertNull(service.getStore());
+	}
+
+	@Test
+	public void testCreatePerishableItemNullEverything() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = null;
+		Integer numInStock = null;
+		Integer pointPerItem = null;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	}
+
+
 //
 //	// Business Hour test
 //	@Test

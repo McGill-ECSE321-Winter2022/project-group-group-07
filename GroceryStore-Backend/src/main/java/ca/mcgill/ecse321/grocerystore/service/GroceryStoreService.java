@@ -195,7 +195,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public List<Account> getAllDeliverPersons() {
+	public List<Account> getAllDeliveryPersons() {
 
 		List<Account> deliveryPersons = new ArrayList<Account>();
 
@@ -236,7 +236,7 @@ public class GroceryStoreService {
 		List<Account> accounts = new ArrayList<Account>();
 		accounts.addAll(getAllCashiers());
 		accounts.addAll(getAllClerks());
-		accounts.addAll(getAllDeliverPersons());
+		accounts.addAll(getAllDeliveryPersons());
 
 		return accounts;
 	};
@@ -1237,6 +1237,32 @@ public class GroceryStoreService {
 	public Store updateStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
 
+		String error = "";
+		if (name == null || name.trim().length() == 0) {
+			error = error + "Store name cannot be empty! ";
+		}
+		if (address == null || address.trim().length() == 0) {
+			error = error + "Store address time cannot be empty! ";
+		}
+		if (phoneNumber == null || phoneNumber.trim().length() == 0) {
+			error = error + "Store phone number cannot be empty! ";
+		}
+		if (email == null || email.trim().length() == 0) {
+			error = error + "Store email cannot be empty! ";
+		}
+		if (employeeDiscountRate == null) {
+			error = error + "Employee discount rate cannot be empty! ";
+		} else if (employeeDiscountRate > 100 || employeeDiscountRate < 0) {
+			error = error + "Employee discount rate must be between 0 and 100! ";
+		}
+		if (pointToCashRatio == null) {
+			error = error + "Point to cash ratio cannot be empty! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
 		Store store = getStore();
 		store.setName(name);
 		store.setAddress(address);
