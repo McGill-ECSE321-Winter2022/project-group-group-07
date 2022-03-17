@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,7 +52,9 @@ import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.Order;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DeliveryOrderStatus;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.PickUpOrderStatus;
 import ca.mcgill.ecse321.grocerystore.model.InStoreOrder;
 import ca.mcgill.ecse321.grocerystore.model.Owner;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
@@ -440,17 +443,16 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Cart createCart(OrderType orderType, Float totalValue, Integer numOfItems, Set<Item> items,
-			TimeSlot timeSlot) {
+	public Cart createCart(String username) {
 
+		Account account = getAccount(username);
 		Cart cart = new Cart();
+		Set<Item> items = new HashSet<Item>();
 
-		cart.setOrderType(orderType);
-		cart.setTotalValue(totalValue);
-		cart.setNumOfItems(numOfItems);
+		cart.setAccount(account);
+		cart.setNumOfItems(0);
 		cart.setItems(items);
-		cart.setTimeSlot(timeSlot);
-
+		cart.setTotalValue(0f);
 		cartRepository.save(cart);
 
 		return cart;
@@ -467,9 +469,9 @@ public class GroceryStoreService {
 
 		Account account = getAccount(username);
 		Cart cart = cartRepository.findByAccount(account);
-		if(cart != null) {
+		if (cart != null) {
 			return cart;
-		}else {
+		} else {
 			throw new IllegalArgumentException("User does not have a cart");
 		}
 	}
@@ -481,11 +483,14 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
-
+		Float totalValue=Float.valueOf(0);
+		for(Item i:items) {
+			totalValue+=i.getPrice();
+		}
 		deliveryOrder.setTotalValue(totalValue);
 		deliveryOrder.setDate(date);
 		deliveryOrder.setPurchaseTime(purchaseTime);
@@ -503,13 +508,51 @@ public class GroceryStoreService {
 
 		return deliveryOrderRepository.findByAccount(account);
 	}
-
 	@Transactional
-	public PickUpOrder createPickUpOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+	public DeliveryOrder updateDeliveryOrderStatus(DeliveryOrder order,String status) {
+		order.setStatus(DeliveryOrderStatus.valueOf(status));
+		deliveryOrderRepository.save(order);
+		return order;
+	}
+	@Transactional
+	public PickUpOrder updatePickUpOrderStatus(PickUpOrder order,String status) {
+		order.setStatus(PickUpOrderStatus.valueOf(status));
+		pickUpOrderRepository.save(order);
+		return order;
+	}
+	@Transactional
+	public Order checkout(Cart cart) {
+		Order order;
+		if (cart.getOrderType().equals(OrderType.PickUp)) {
+			order=new PickUpOrder();
+		} else if (cart.getOrderType().equals(OrderType.Delivery)) {
+			order=new DeliveryOrder();
+		} else {
+			throw new IllegalArgumentException("Order must be either a pickup or delivery");
+		}
+		if (paymentSimulator()) {
+			order.setAccount(cart.getaccount());
+		order.setDate(getCurrentDate());
+		order.setItems(cart.getItems());
+		order.setPurchaseTime(getCurrentTime());
+		order.setTotalValue(cart.getTotalValue());
+		orderRepository.save(order);
+		}
+		return order;
+	}
+	private boolean paymentSimulator() {
+		return true;
+	}
+	
+	@Transactional
+	public PickUpOrder createPickUpOrder( Date date, Time purchaseTime, Set<Item> items,
 			TimeSlot timeSlot, Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
-
+		Float totalValue=Float.valueOf(0);
+		for(Item i:items) {
+			totalValue+=i.getPrice();
+		}
 		pickUpOrder.setTotalValue(totalValue);
 		pickUpOrder.setDate(date);
 		pickUpOrder.setPurchaseTime(purchaseTime);
@@ -527,13 +570,33 @@ public class GroceryStoreService {
 
 		return pickUpOrderRepository.findByAccount(account);
 	}
+	@Transactional
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items) {
+
+		InStoreOrder inStoreOrder = new InStoreOrder();
+		Float totalValue=Float.valueOf(0);
+		for(Item i:items) {
+			totalValue+=i.getPrice();
+		}
+		inStoreOrder.setTotalValue(totalValue);
+		inStoreOrder.setDate(date);
+		inStoreOrder.setPurchaseTime(purchaseTime);
+		inStoreOrder.setItems(items);
+
+		inStoreOrderRepository.save(inStoreOrder);
+
+		return inStoreOrder;
+	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Float totalValue, Date date, Time purchaseTime, Set<Item> items,
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items,
 			Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
-
+		float totalValue=0;
+		for(Item i:items) {
+			totalValue+=i.getPrice();
+		}
 		inStoreOrder.setTotalValue(totalValue);
 		inStoreOrder.setDate(date);
 		inStoreOrder.setPurchaseTime(purchaseTime);
@@ -882,7 +945,7 @@ public class GroceryStoreService {
 
 		return timeSlot;
 	}
-
+	@Transactional
 	public List<TimeSlot> getAllHolidays() {
 
 		return new ArrayList<TimeSlot>(getStore().getHolidays());
@@ -940,6 +1003,16 @@ public class GroceryStoreService {
 		return new Date(millis);
 	}
 
+	private Time getCurrentTime() {
+		long millis = System.currentTimeMillis();
+		return new Time(millis);
+	}
+	@Transactional
+	public Order getOrderById(Long orderID) {
+		return orderRepository.findByOrderID(orderID);
+	}
+
+
 	@Transactional
 	public WorkingHour getWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek) {
 
@@ -974,6 +1047,7 @@ public class GroceryStoreService {
 		return wh;
 	}
 
+	@Transactional
 	public void deleteTerminal(Long terminalID) {
 
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
@@ -985,8 +1059,49 @@ public class GroceryStoreService {
 
 	}
 
+	@Transactional
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
+	}
+
+	@Transactional
+	public Cart addToCart(Long id, String username) {
+
+		Cart cart = getCartByAccount(username);
+		Item item = getNonPerishableItemsByID(id);
+		if (item == null) {
+			item = getPerishableItemsByID(id);
+			if (item == null) {
+				throw new IllegalArgumentException("Invalid Item ID");
+			}
+		}
+		cart.getItems().add(item);
+		cart.setNumOfItems(cart.getNumOfItems() + 1);
+		cart.setTotalValue(cart.getTotalValue() + item.getPrice());
+		cartRepository.save(cart);
+
+		return cart;
+	}
+
+	@Transactional
+	public Cart addTimeSlotToCart(String username, TimeSlot createTimeSlot) {
+
+		Cart cart = getCartByAccount(username);
+
+		cart.setTimeSlot(createTimeSlot);
+		cartRepository.save(cart);
+
+		return cart;
+	}
+
+	@Transactional
+	public Cart chooseOrderTypeForCart(String username, OrderType orderType) {
+
+		Cart cart = getCartByAccount(username);
+
+		cart.setOrderType(orderType);
+		cartRepository.save(cart);
+		return cart;
 	}
 
 }

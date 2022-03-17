@@ -27,7 +27,7 @@ public class GroceryStoreSoftwareSystem {
 	}
 
 	public enum ItemCategory {
-		BackedGoods, FruitsAndVegetables, Toiletries, Pantry, MeatsAndFish , Furniture , Clothing
+		BakedGoods, FruitsAndVegetables, Toiletries, Pantry, MeatsAndFish , Furniture , Clothing
 	}
 
 	public enum PickUpOrderStatus {
