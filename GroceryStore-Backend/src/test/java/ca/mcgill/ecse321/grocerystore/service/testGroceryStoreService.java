@@ -358,7 +358,7 @@ public class testGroceryStoreService {
 
 	}
 
-	// Test for account
+	// account
 
 	@Test
 	public void testCreateAccount() {
@@ -891,7 +891,7 @@ public class testGroceryStoreService {
 		assertEquals(error, "Invalid username");
 	}
 
-	// Test for Store
+	// Store
 
 	@Test
 	public void testCreateStore() {
@@ -1772,7 +1772,6 @@ public class testGroceryStoreService {
 
 		assertNotNull(carts);
 	}
-	
 
 	@Test
 	public void testCreatePerishableItemNullEverything() {
@@ -1798,7 +1797,6 @@ public class testGroceryStoreService {
 				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
 	}
 
-
 	@Test
 	public void testCreateAllInvalidParameters() {
 		String name = "";
@@ -1818,8 +1816,8 @@ public class testGroceryStoreService {
 				error);
 	}
 
-	// Report Tests
-	
+	// Report
+
 	@Test
 	public void testCreateReport() {
 
@@ -1915,7 +1913,7 @@ public class testGroceryStoreService {
 			// Check that no error occurred
 			error = e.getMessage();
 		}
-		
+
 		assertNull(report);
 		assertEquals("Please enter legal id.", error);
 	}
