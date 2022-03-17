@@ -6,5 +6,5 @@ import ca.mcgill.ecse321.grocerystore.model.Order;
 
 public interface OrderRepository extends CrudRepository<Order, Integer> {
 
-	Order findByOrderID(Integer orderID);
+	Order findByOrderID(Long orderID);
 }

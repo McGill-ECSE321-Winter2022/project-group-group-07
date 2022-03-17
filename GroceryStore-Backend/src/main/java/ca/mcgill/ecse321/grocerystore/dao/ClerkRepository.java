@@ -7,5 +7,5 @@ import ca.mcgill.ecse321.grocerystore.model.Clerk;
 
 public interface ClerkRepository extends CrudRepository<Clerk, Integer> {
 	
-	Clerk findByRoleID(Integer roleID);
+	Clerk findByRoleID(Long roleID);
 }

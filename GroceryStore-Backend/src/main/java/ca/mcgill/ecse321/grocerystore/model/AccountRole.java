@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 
@@ -11,16 +13,17 @@ import javax.persistence.InheritanceType;
 public abstract class AccountRole {
 
 	// attribute field
-	private Integer roleID;
+	private Long roleID;
 
 	// getters and setters
 	@Id
-	public Integer getRoleID() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getRoleID() {
 		return this.roleID;
 	}
 
-	public void setRoleID(Integer roleID) {
-		this.roleID = roleID;
+	public void setRoleID(Long roleID2) {
+		this.roleID = roleID2;
 	}
 
 	public String toString() {
@@ -30,13 +33,13 @@ public abstract class AccountRole {
 		}
 		if (this instanceof Cashier) {
 
-			return "Cashier\nEmployment Date: " + ((Cashier) this).getEmploymentDate();
+			return "Cashier, Employment Date: " + ((Cashier) this).getEmploymentDate();
 		}
 		if (this instanceof Clerk) {
-			return "Clerk\nEmployment Date: " + ((Clerk) this).getEmploymentDate();
+			return "Clerk, Employment Date: " + ((Clerk) this).getEmploymentDate();
 		}
 		if (this instanceof DeliveryPerson) {
-			return "Delivery Person\nEmployment Date: " + ((DeliveryPerson) this).getEmploymentDate();
+			return "Delivery Person, Employment Date: " + ((DeliveryPerson) this).getEmploymentDate();
 		}
 		if (this instanceof Owner) {
 			return "Owner";
