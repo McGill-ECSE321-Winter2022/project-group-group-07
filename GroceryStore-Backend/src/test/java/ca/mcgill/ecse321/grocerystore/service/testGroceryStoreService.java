@@ -25,6 +25,7 @@ import java.util.Calendar;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,13 +41,7 @@ import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
-
-import ca.mcgill.ecse321.grocerystore.model.Account;
-import ca.mcgill.ecse321.grocerystore.model.AccountRole;
-import ca.mcgill.ecse321.grocerystore.model.Customer;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
-import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
-import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -666,16 +661,17 @@ public class testGroceryStoreService {
 		assertEquals(PerishableItem_pointPerItem,getNPitem.getPointPerItem());
 	}
 
+	// WorkingHour Test
 	@Test
 	public void testCreateWorkingHour() {
 		assertEquals(0, service.getAllWorkingHourIDs().size());
 		
-		String error = null;
 		WorkingHour workingHour = null;
 		
 		DayOfWeek dayOfWeek = DayOfWeek.Monday;
 		Time startTime = Time.valueOf("1:00");
 		Time endTime = Time.valueOf("2:00");
+		String error = null;
 		
 		try {
 			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
@@ -687,5 +683,115 @@ public class testGroceryStoreService {
 		assertEquals(dayOfWeek, workingHour.getDayOfWeek());
 		assertEquals(startTime, workingHour.getStartTime());
 		assertEquals(startTime, workingHour.getEndTime());
+	}
+	
+	@Test
+	public void testcreateWorkingHourNull() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
+		Time startTime = null;
+		Time endTime = null;
+		WorkingHour workingHour = null;
+		String error = null;
+		try {
+			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(workingHour);
+		assertEquals("Working hour day of the week cannot be empty! Working hour start time cannot be empty! Working hour end time cannot be empty!", error);
+	}
+	
+	@Test
+	public void testcreateWorkingHourEndTimeBeforeStartTime() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
+		Time startTime = Time.valueOf("2:00");
+		Time endTime = Time.valueOf("1:00");
+		WorkingHour workingHour = null;
+		String error = null;
+		try {
+			workingHour = service.createWorkingHour( dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(workingHour);
+		assertEquals("Working hour end time cannot be before Working hour start time!" ,error);
+	}
+	@Test
+	public void testGetAllWorkingHours() {
+		assertNotNull(service.getAllWorkingHourIDs());
+	}
+	@Test
+	public void testGetExistingWorkingHours() {
+		assertEquals(service.getWorkingHourByDay(GroceryStoreSoftwareSystem.DayOfWeek.Monday).getDayOfWeek(), GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+	}
+	@Test
+	public void testGetWorkingHoursNull() {
+		String error = null;
+		try {
+			service.getWorkingHourByDay(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertEquals("Day of week cannot be empty!",error);
+	}
+	
+	// Schedule Test
+	@Test
+	public void testCreateSchedule() {
+		assertEquals(0, service.getAllSchedules().size());
+		
+		Schedule schedule = null;
+		Integer scheduleID = 1;
+		Cashier cashier = service.createCashierRole();
+		Account employee = service.createAccount("Mark", "123", "Mark", 0, cashier);
+		WorkingHour workingHour = 
+				service.createWorkingHour(DayOfWeek.Monday, Time.valueOf("1:00"),Time.valueOf("2:00"));
+		Set<WorkingHour> workingHours = null;
+		workingHours.add(workingHour);
+		
+		String error = null;
+		
+		try {
+			schedule = service.createSchedule(scheduleID, employee.getUsername(), workingHours);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertNotNull(schedule);
+		assertEquals(schedule, schedule.getScheduleID());
+		assertEquals(employee, schedule.getEmployee());
+		assertEquals(workingHours, schedule.getWorkingHour());
+	}
+	
+	@Test
+	public void testcreateScheduleNull() {
+		Integer scheduleID = null;
+		Account employee = null;
+		Set<WorkingHour> workingHours = null;
+
+		Schedule schedule = null;
+		String error = null;
+		try {
+			schedule = service.createSchedule(scheduleID, employee.getUsername(), workingHours);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(schedule);
+		assertEquals("Schedule id cannot be empty! Schedule employee cannot be empty! Schedule working hours cannot be empty!", error);
+	}
+	
+	@Test
+	public void testGetAllSchedules() {
+		assertNotNull(service.getAllSchedules());
+	}
+	@Test
+	public void testGetSchedulesNull() {
+		String error = null;
+		try {
+			service.getScheduleByEmployee(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertEquals("Employee cannot be empty!",error);
 	}
 }
