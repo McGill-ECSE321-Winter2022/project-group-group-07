@@ -437,7 +437,7 @@ public class GroceryStoreRestController {
 	}
 
 	@DeleteMapping(value = { "/deleteItems/{id}", "/deleteItems/{id}/" })
-	public void deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+	public ItemDto deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Long ID = Long.parseLong(id);
 
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
