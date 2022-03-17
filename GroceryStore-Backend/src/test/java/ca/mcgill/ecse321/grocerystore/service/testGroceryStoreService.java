@@ -1206,7 +1206,7 @@ public class testGroceryStoreService {
 	// WorkingHour Test
 	@Test
 	public void testCreateWorkingHour() {
-		assertEquals(0, service.getAllWorkingHourIDs().size());
+		assertEquals(0, service.getAllWorkingHours().size());
 
 		WorkingHour workingHour = null;
 
@@ -1263,7 +1263,7 @@ public class testGroceryStoreService {
 
 	@Test
 	public void testGetAllWorkingHours() {
-		assertNotNull(service.getAllWorkingHourIDs());
+		assertNotNull(service.getAllWorkingHours());
 	}
 
 	/*

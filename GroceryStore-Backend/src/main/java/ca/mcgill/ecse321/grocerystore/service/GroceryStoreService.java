@@ -2,18 +2,14 @@ package ca.mcgill.ecse321.grocerystore.service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
 import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
@@ -24,7 +20,6 @@ import ca.mcgill.ecse321.grocerystore.dao.ClerkRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryPersonRepository;
-import ca.mcgill.ecse321.grocerystore.dao.EmployeeRepository;
 import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.OrderRepository;
@@ -87,8 +82,6 @@ public class GroceryStoreService {
 	private DeliveryOrderRepository deliveryOrderRepository;
 	@Autowired
 	private DeliveryPersonRepository deliveryPersonRepository;
-	@Autowired
-	private EmployeeRepository employeeRepository;
 	@Autowired
 	private InStoreOrderRepository inStoreOrderRepository;
 	@Autowired
@@ -302,7 +295,7 @@ public class GroceryStoreService {
 	public Address createAddress(Integer buildingNo, String street, String town, Account account) {
 
 		String error = "";
-		if (buildingNo == null || buildingNo < 0 ) {
+		if (buildingNo == null || buildingNo < 0) {
 			error = error + "Invalid building number! ";
 		}
 		if (street == null || street.trim().length() == 0) {
@@ -319,7 +312,7 @@ public class GroceryStoreService {
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
-		
+
 		Address address = new Address();
 
 		address.setBuildingNo(buildingNo);
@@ -392,6 +385,7 @@ public class GroceryStoreService {
 		hour.setDayOfWeek(dayOfWeek);
 		hour.setStartTime(startTime);
 		hour.setEndTime(endTime);
+		hour.setStore(getStore());
 
 		businessHourRepository.save(hour);
 
@@ -438,9 +432,7 @@ public class GroceryStoreService {
 	public void deleteBusinessHourByDay(DayOfWeek dayOfWeek) {
 
 		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
-		if (bh != null) {
-			businessHourRepository.delete(bh);
-		}
+		businessHourRepository.delete(bh);
 	}
 
 	@Transactional
@@ -502,13 +494,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items,
-			TimeSlot timeSlot, Account account) {
+	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
+			Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
-		Float totalValue=Float.valueOf(0);
-		for(Item i:items) {
-			totalValue+=i.getPrice();
+		Float totalValue = Float.valueOf(0);
+		for (Item i : items) {
+			totalValue += i.getPrice();
 		}
 		deliveryOrder.setTotalValue(totalValue);
 		deliveryOrder.setDate(date);
@@ -527,50 +519,54 @@ public class GroceryStoreService {
 
 		return deliveryOrderRepository.findByAccount(account);
 	}
+
 	@Transactional
-	public DeliveryOrder updateDeliveryOrderStatus(DeliveryOrder order,String status) {
+	public DeliveryOrder updateDeliveryOrderStatus(DeliveryOrder order, String status) {
 		order.setStatus(DeliveryOrderStatus.valueOf(status));
 		deliveryOrderRepository.save(order);
 		return order;
 	}
+
 	@Transactional
-	public PickUpOrder updatePickUpOrderStatus(PickUpOrder order,String status) {
+	public PickUpOrder updatePickUpOrderStatus(PickUpOrder order, String status) {
 		order.setStatus(PickUpOrderStatus.valueOf(status));
 		pickUpOrderRepository.save(order);
 		return order;
 	}
+
 	@Transactional
 	public Order checkout(Cart cart) {
 		Order order;
 		if (cart.getOrderType().equals(OrderType.PickUp)) {
-			order=new PickUpOrder();
+			order = new PickUpOrder();
 		} else if (cart.getOrderType().equals(OrderType.Delivery)) {
-			order=new DeliveryOrder();
+			order = new DeliveryOrder();
 		} else {
 			throw new IllegalArgumentException("Order must be either a pickup or delivery");
 		}
 		if (paymentSimulator()) {
 			order.setAccount(cart.getaccount());
-		order.setDate(getCurrentDate());
-		order.setItems(cart.getItems());
-		order.setPurchaseTime(getCurrentTime());
-		order.setTotalValue(cart.getTotalValue());
-		orderRepository.save(order);
+			order.setDate(getCurrentDate());
+			order.setItems(cart.getItems());
+			order.setPurchaseTime(getCurrentTime());
+			order.setTotalValue(cart.getTotalValue());
+			orderRepository.save(order);
 		}
 		return order;
 	}
+
 	private boolean paymentSimulator() {
 		return true;
 	}
-	
+
 	@Transactional
-	public PickUpOrder createPickUpOrder( Date date, Time purchaseTime, Set<Item> items,
-			TimeSlot timeSlot, Account account) {
+	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
+			Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
-		Float totalValue=Float.valueOf(0);
-		for(Item i:items) {
-			totalValue+=i.getPrice();
+		Float totalValue = Float.valueOf(0);
+		for (Item i : items) {
+			totalValue += i.getPrice();
 		}
 		pickUpOrder.setTotalValue(totalValue);
 		pickUpOrder.setDate(date);
@@ -589,13 +585,14 @@ public class GroceryStoreService {
 
 		return pickUpOrderRepository.findByAccount(account);
 	}
+
 	@Transactional
 	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
-		Float totalValue=Float.valueOf(0);
-		for(Item i:items) {
-			totalValue+=i.getPrice();
+		Float totalValue = Float.valueOf(0);
+		for (Item i : items) {
+			totalValue += i.getPrice();
 		}
 		inStoreOrder.setTotalValue(totalValue);
 		inStoreOrder.setDate(date);
@@ -608,13 +605,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items,
-			Account account) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items, Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
-		float totalValue=0;
-		for(Item i:items) {
-			totalValue+=i.getPrice();
+		float totalValue = 0;
+		for (Item i : items) {
+			totalValue += i.getPrice();
 		}
 		inStoreOrder.setTotalValue(totalValue);
 		inStoreOrder.setDate(date);
@@ -679,17 +675,18 @@ public class GroceryStoreService {
 	@Transactional
 	public PerishableItem getPerishableItemsByID(Long id) {
 		PerishableItem pitem = perishableItemRepository.findByItemID(id);
-		
-		if (pitem == null) 
+
+		if (pitem == null)
 			throw new IllegalArgumentException("No such perishable item. Please search by another ID.");
-		
+
 		return pitem;
 	}
 
 	@Transactional
 	public PerishableItem deletePerishableItems(PerishableItem pitem) {
-		
-		if (pitem == null) throw new IllegalArgumentException("Please enter an item to delete.");
+
+		if (pitem == null)
+			throw new IllegalArgumentException("Please enter an item to delete.");
 		perishableItemRepository.delete(pitem);
 		return pitem;
 	}
@@ -697,19 +694,21 @@ public class GroceryStoreService {
 	@Transactional
 	public List<PerishableItem> getPerishableItemsByProductName(String name) {
 		List<PerishableItem> pitem = perishableItemRepository.findByProductName(name);
-		if (pitem == null) 
+		if (pitem == null)
 			throw new IllegalArgumentException("No such perishable items. Please search by another name.");
-		
+
 		return pitem;
 	}
 
 	@Transactional
-	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
-		
+	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName, Float price,
+			Boolean availableOnline, Integer numInStock, Integer pointPerItem) {
+
 		ArrayList<String> errors = new ArrayList<String>();
-		
-		if (pitem == null) throw new IllegalArgumentException("Please enter an item to update.");
-		
+
+		if (pitem == null)
+			throw new IllegalArgumentException("Please enter an item to update.");
+
 		if (productName == null || productName.trim().length() == 0) {
 			errors.add("Item name is empty!");
 		}
@@ -726,7 +725,8 @@ public class GroceryStoreService {
 			errors.add("Please state the amount of point given per item!");
 		}
 		String listErrors = String.join(", ", errors);
-		if(errors.size() != 0) throw new IllegalArgumentException("Item unchanged. " + listErrors);
+		if (errors.size() != 0)
+			throw new IllegalArgumentException("Item unchanged. " + listErrors);
 		pitem.setProductName(productName);
 		pitem.setPrice(price);
 		pitem.setAvailableOnline(availableOnline);
@@ -780,7 +780,7 @@ public class GroceryStoreService {
 	@Transactional
 	public NonPerishableItem getNonPerishableItemsByID(Long id) {
 		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
-		if (npitem == null) 
+		if (npitem == null)
 			throw new IllegalArgumentException("No such non perishable item. Please search by another ID.");
 
 		return nonPerishableItemRepository.findByItemID(id);
@@ -788,28 +788,31 @@ public class GroceryStoreService {
 
 	@Transactional
 	public List<NonPerishableItem> getNonPerishableItemsByProductName(String name) {
-		
+
 		List<NonPerishableItem> npitem = nonPerishableItemRepository.findByProductName(name);
-		if (npitem == null) 
+		if (npitem == null)
 			throw new IllegalArgumentException("No such non perishable items. Please search by another name.");
-		
+
 		return npitem;
 	}
 
 	@Transactional
 	public NonPerishableItem deleteNonPerishableItems(NonPerishableItem npitem) {
-		if (npitem == null) throw new IllegalArgumentException("Please enter an item to delete.");
+		if (npitem == null)
+			throw new IllegalArgumentException("Please enter an item to delete.");
 		nonPerishableItemRepository.delete(npitem);
 		return npitem;
 	}
 
 	@Transactional
-	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
-		
-ArrayList<String> errors = new ArrayList<String>();
-		
-		if (npitem == null) throw new IllegalArgumentException("Please enter an item to update.");
-		
+	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName, Float price,
+			Boolean availableOnline, Integer numInStock, Integer pointPerItem) {
+
+		ArrayList<String> errors = new ArrayList<String>();
+
+		if (npitem == null)
+			throw new IllegalArgumentException("Please enter an item to update.");
+
 		if (productName == null || productName.trim().length() == 0) {
 			errors.add("Item name is empty!");
 		}
@@ -826,7 +829,8 @@ ArrayList<String> errors = new ArrayList<String>();
 			errors.add("Please state the amount of point given per item!");
 		}
 		String listErrors = String.join(", ", errors);
-		if(errors.size() != 0) throw new IllegalArgumentException("Item unchanged. " + listErrors);
+		if (errors.size() != 0)
+			throw new IllegalArgumentException("Item unchanged. " + listErrors);
 
 		npitem.setProductName(productName);
 		npitem.setPrice(price);
@@ -837,9 +841,18 @@ ArrayList<String> errors = new ArrayList<String>();
 	}
 
 	@Transactional
-	public Report createReport(Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
+	public Report createReport(Date startDate, Date endDate) {
 
 		Report report = new Report();
+		
+		Float totalValue = 0f;
+		Set<Order> orders = new HashSet<Order>();
+		for (Order order : getAllOrders()) {
+			if (order.getDate().compareTo(startDate) >= 0 && order.getDate().compareTo(endDate) <= 0) {
+				orders.add(order);
+				totalValue += order.getTotalValue();
+			}
+		}
 
 		report.setStartDate(startDate);
 		report.setEndDate(endDate);
@@ -864,19 +877,12 @@ ArrayList<String> errors = new ArrayList<String>();
 	}
 
 	@Transactional
-	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHours) {
-		
+	public Schedule createSchedule(String username) {
+
 		String error = "";
-		if (scheduleID == null) {
-			error = error + "Schedule id cannot be empty! ";
-		}
 		if (username == null) {
 			error = error + "Schedule employee cannot be empty! ";
 		}
-		if (workingHours == null) {
-			error = error + "Schedule working hours end time cannot be empty! ";
-		}
-		
 		error = error.trim();
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -891,8 +897,6 @@ ArrayList<String> errors = new ArrayList<String>();
 			throw new IllegalArgumentException("No employee found");
 		}
 		schedule.setEmployee(employee);
-		schedule.setWorkingHour(workingHours);
-
 		scheduleRepository.save(schedule);
 
 		return schedule;
@@ -1037,6 +1041,7 @@ ArrayList<String> errors = new ArrayList<String>();
 
 		return timeSlot;
 	}
+
 	@Transactional
 	public List<TimeSlot> getAllHolidays() {
 
@@ -1045,7 +1050,7 @@ ArrayList<String> errors = new ArrayList<String>();
 
 	@Transactional
 	public WorkingHour createWorkingHour(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
-		
+
 		String error = "";
 		if (dayOfWeek == null) {
 			error = error + "Working hour day of the week cannot be empty! ";
@@ -1059,7 +1064,7 @@ ArrayList<String> errors = new ArrayList<String>();
 		if (endTime != null && startTime != null && endTime.before(startTime)) {
 			error = error + "Working hour end time cannot be before Working hour start time! ";
 		}
-		
+
 		error = error.trim();
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
@@ -1087,10 +1092,10 @@ ArrayList<String> errors = new ArrayList<String>();
 	}
 
 	@Transactional
-	public List<WorkingHour> getAllWorkingHourIDs() {
+	public List<WorkingHour> getAllWorkingHours() {
 		return toList(workingHourRepository.findAll());
 	}
-	
+
 	@Transactional
 	public WorkingHour getWorkingHourByDay(DayOfWeek dayOfWeek) {
 		if (dayOfWeek == null) {
@@ -1132,11 +1137,11 @@ ArrayList<String> errors = new ArrayList<String>();
 		long millis = System.currentTimeMillis();
 		return new Time(millis);
 	}
+
 	@Transactional
 	public Order getOrderById(Long orderID) {
 		return orderRepository.findByOrderID(orderID);
 	}
-
 
 	@Transactional
 	public WorkingHour getWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek) {
@@ -1227,6 +1232,37 @@ ArrayList<String> errors = new ArrayList<String>();
 		cart.setOrderType(orderType);
 		cartRepository.save(cart);
 		return cart;
+	}
+
+	public Schedule addWorkingHourToScheduleOfEmployee(String username, DayOfWeek dayOfWeek, Time startTime,
+			Time endTime) {
+
+		Schedule schedule = getScheduleByEmployee(username);
+
+		WorkingHour wh = new WorkingHour();
+		wh.setDayOfWeek(dayOfWeek);
+		wh.setStartTime(startTime);
+		wh.setEndTime(endTime);
+		workingHourRepository.save(wh);
+
+		schedule.getWorkingHour().add(wh);
+
+		scheduleRepository.save(schedule);
+
+		return schedule;
+	}
+
+	public void deleteWorkingHourByEmployeeAndDayOfWeek(String username, DayOfWeek dayOfWeek) {
+
+		Schedule schedule = getScheduleByEmployee(username);
+		for (WorkingHour wh : schedule.getWorkingHour()) {
+			if (wh.getDayOfWeek().equals(dayOfWeek)) {
+				schedule.getWorkingHour().remove(wh);
+			}
+		}
+
+		scheduleRepository.save(schedule);
+
 	}
 
 }

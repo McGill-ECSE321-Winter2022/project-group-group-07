@@ -25,14 +25,16 @@ public class GroceryStoreSoftwareSystem {
 	public enum DeliveryOrderStatus {
 		Pending, OutForDelivery, Delivered, Canceled
 	}
+	
+	public enum PickUpOrderStatus {
+		Pending, Ready, PickedUp, Canceled
+	}
 
 	public enum ItemCategory {
 		BakedGoods, FruitsAndVegetables, Toiletries, Pantry, MeatsAndFish , Furniture , Clothing
 	}
 
-	public enum PickUpOrderStatus {
-		Pending, Ready, PickedUp, Canceled
-	}
+	
 
 	// attribute fields
 	private Long systemID;
