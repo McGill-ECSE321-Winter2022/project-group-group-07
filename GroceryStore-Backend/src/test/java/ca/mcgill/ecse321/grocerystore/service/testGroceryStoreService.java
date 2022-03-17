@@ -885,6 +885,61 @@ public class testGroceryStoreService {
 	}
 	
 	@Test
+	public void testUpdateStore() {
+		Store store = new Store();
+		store.setStoreID(123L);
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+
+		String name = "Store";
+		String address = "123 test street";
+		String phoneNumber = "666";
+		String email = "tes@example.ex";
+		Integer employeeDiscountRate = 15;
+		Float pointToCashRatio = 5.5f;
+		String error = null;
+		Store testStore = null;
+		
+		try {
+			testStore = service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNotNull(testStore);
+		assertEquals(name, testStore.getName());
+		assertEquals(address, testStore.getAddress());
+		assertEquals(phoneNumber, testStore.getPhoneNumber());
+		assertEquals(email, testStore.getEmail());
+		assertEquals(employeeDiscountRate, testStore.getEmployeeDiscountRate());
+		assertEquals(pointToCashRatio, testStore.getPointToCashRatio());
+		assertNull(error);
+	}
+	
+	@Test
+	public void testUpdateStoreWithInvalidInputs() {
+		Store store = new Store();
+		store.setStoreID(123L);
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+
+		String name = null;
+		String address = null;
+		String phoneNumber = null;
+		String email = null;
+		Integer employeeDiscountRate = null;
+		Float pointToCashRatio = null;
+		String error = null;
+		Store testStore = null;
+		try {
+			testStore = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(testStore);
+		assertEquals(
+				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!",
+				error);
+	}
+	
+	@Test
 	public void testGetExistingStore() {
 		Store store = new Store();
 		store.setStoreID(123L);
@@ -901,6 +956,11 @@ public class testGroceryStoreService {
 	@Test
 	public void testDeleteStore() {
 		
+		Store store = new Store();
+		store.setStoreID(123L);
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+		
+		assertNotNull(service.deleteStore());
 	}
 //
 //	@Test
