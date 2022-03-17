@@ -300,11 +300,10 @@ public class GroceryStoreRestController {
 	public BusinessHourDto updateBusinessHour(@PathVariable("dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-
-		BusinessHour bh = service.updateBusinessHourByDayOfWeek(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
-				Time.valueOf(endTime));
-		return convertToDto(bh);
-	}
+	    BusinessHour bh = service.updateBusinessHourByDayOfWeek(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
+			Time.valueOf(endTime));
+		  return convertToDto(bh);
+    	}
 
 	// Items GET, POST, PUT and DELETE
 
@@ -356,9 +355,8 @@ public class GroceryStoreRestController {
 		return convertToDto(nonPerishableItem);
 	}
 
-	@GetMapping(value = { "/items", "/items/" })
-	public List<ItemDto> getAllItems() {
-
+	@GetMapping(value = {"/items", "/items/"})
+	public List<ItemDto> getAllItems(){
 		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		for (PerishableItem i : service.getAllPerishableItems()) {
@@ -377,7 +375,6 @@ public class GroceryStoreRestController {
 
 	@GetMapping(value = { "/perishableitems", "/perishableitems/" })
 	public List<ItemDto> getAllPerishableItems() {
-
 		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		for (PerishableItem i : service.getAllPerishableItems()) {
@@ -445,12 +442,15 @@ public class GroceryStoreRestController {
 
 		PerishableItem pitems = service.getPerishableItemsByID(ID);
 		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		
 		if (pitems == null && npitems == null) {
 			throw new IllegalArgumentException("There is no such Item to delete!");
 		} else if (pitems != null) {
-			service.deletePerishableItems(pitems);
+			PerishableItem deletedPitems = service.deletePerishableItems(pitems);
+			 return convertToDto(deletedPitems);
 		} else {
-			service.deleteNonPerishableItems(npitems);
+			NonPerishableItem deletedNPitems = service.deleteNonPerishableItems(npitems);
+			return convertToDto(deletedNPitems);
 		}
 	}
 
