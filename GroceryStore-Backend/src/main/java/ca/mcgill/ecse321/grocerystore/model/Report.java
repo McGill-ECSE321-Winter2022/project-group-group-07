@@ -58,7 +58,7 @@ public class Report {
 		this.totalValue = totalValue;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany
 	public Set<Order> getOrders() {
 		return this.orders;
 	}

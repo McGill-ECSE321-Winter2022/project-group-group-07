@@ -71,7 +71,7 @@ public abstract class Order {
 		this.account = account;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany
 	public Set<Item> getItems() {
 		return this.items;
 	}

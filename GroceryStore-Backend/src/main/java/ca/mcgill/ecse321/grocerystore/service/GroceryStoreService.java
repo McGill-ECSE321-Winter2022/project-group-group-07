@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
+import ca.mcgill.ecse321.grocerystore.dao.AccountRoleRepository;
 import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
 import ca.mcgill.ecse321.grocerystore.dao.BusinessHourRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CartRepository;
@@ -106,7 +107,9 @@ public class GroceryStoreService {
 	private TimeSlotRepository timeSlotRepository;
 	@Autowired
 	private WorkingHourRepository workingHourRepository;
-
+	@Autowired
+	private AccountRoleRepository accountRoleRepository;
+	
 	// Account and Account Role
 
 	@Transactional
@@ -289,6 +292,7 @@ public class GroceryStoreService {
 
 		if (account != null) {
 			accountRepository.delete(account);
+			accountRoleRepository.delete(account.getAccountRole());
 			return account;
 		} throw new IllegalArgumentException("No such account found. Cannot delete.");
 
@@ -623,8 +627,9 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Order checkout(Cart cart) {
+	public Order checkout(String username) {
 		Order order;
+		Cart cart = getCartByAccount(username);
 		if (cart.getOrderType().equals(OrderType.PickUp)) {
 			order = new PickUpOrder();
 		} else if (cart.getOrderType().equals(OrderType.Delivery)) {
@@ -639,8 +644,22 @@ public class GroceryStoreService {
 			order.setPurchaseTime(getCurrentTime());
 			order.setTotalValue(cart.getTotalValue());
 			orderRepository.save(order);
+			emptyCart(cart);
 		}
 		return order;
+	}
+	
+	@Transactional
+	public void emptyCart(Cart cart) {
+		
+		cart.setTotalValue(0f);
+		cart.setNumOfItems(0);
+		cart.setOrderType(null);
+		Set<Item> items = cart.getItems();
+		items.clear();
+		cart.setItems(items);
+		
+		cartRepository.save(cart);
 	}
 
 	@Transactional

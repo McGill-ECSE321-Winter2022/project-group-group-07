@@ -85,7 +85,7 @@ public class GroceryStoreSoftwareSystem {
 		this.accounts = accounts;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(cascade = CascadeType.ALL)
 	public Store getStore() {
 		return store;
 	}
@@ -130,7 +130,7 @@ public class GroceryStoreSoftwareSystem {
 		this.salesReports = salesReports;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(cascade = CascadeType.ALL)
 	public Owner getOwner() {
 		return owner;
 	}

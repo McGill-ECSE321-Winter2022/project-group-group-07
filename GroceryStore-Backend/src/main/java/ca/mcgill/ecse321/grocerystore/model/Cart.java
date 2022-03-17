@@ -62,7 +62,7 @@ public class Cart {
 		return orderType;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany
 	public Set<Item> getItems() {
 		return this.items;
 	}

@@ -583,7 +583,7 @@ public class GroceryStoreRestController {
 
 	@PostMapping(value = { "/checkout/{username}", "/checkout/{username}/" })
 	public OrderDto checkout(@PathVariable("username") String username) {
-		return convertToDto(service.checkout(service.getCartByAccount(username)));
+		return convertToDto(service.checkout(username));
 	}
 
 	// Terminal Get, Post and Delete
