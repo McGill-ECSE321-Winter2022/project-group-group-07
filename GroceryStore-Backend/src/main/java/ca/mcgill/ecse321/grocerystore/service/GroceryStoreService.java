@@ -301,6 +301,25 @@ public class GroceryStoreService {
 	@Transactional
 	public Address createAddress(Integer buildingNo, String street, String town, Account account) {
 
+		String error = "";
+		if (buildingNo == null || buildingNo < 0 ) {
+			error = error + "Invalid building number! ";
+		}
+		if (street == null || street.trim().length() == 0) {
+			error = error + "Street cannot be empty! ";
+		}
+		if (town == null || town.trim().length() == 0) {
+			error = error + "Town cannot be empty! ";
+		}
+		if (account == null) {
+			error = error + "Account cannot be empty! ";
+		}
+
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+		
 		Address address = new Address();
 
 		address.setBuildingNo(buildingNo);
