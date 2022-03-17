@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
-import java.util.*;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
 
 @Entity
 public class GroceryStoreSoftwareSystem {
@@ -25,14 +25,16 @@ public class GroceryStoreSoftwareSystem {
 	public enum DeliveryOrderStatus {
 		Pending, OutForDelivery, Delivered, Canceled
 	}
+	
+	public enum PickUpOrderStatus {
+		Pending, Ready, PickedUp, Canceled
+	}
 
 	public enum ItemCategory {
 		BakedGoods, FruitsAndVegetables, Toiletries, Pantry, MeatsAndFish , Furniture , Clothing
 	}
 
-	public enum PickUpOrderStatus {
-		Pending, Ready, PickedUp, Canceled
-	}
+	
 
 	// attribute fields
 	private Long systemID;
@@ -83,7 +85,7 @@ public class GroceryStoreSoftwareSystem {
 		this.accounts = accounts;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(cascade = CascadeType.ALL)
 	public Store getStore() {
 		return store;
 	}
@@ -128,7 +130,7 @@ public class GroceryStoreSoftwareSystem {
 		this.salesReports = salesReports;
 	}
 
-	@OneToOne(optional = false)
+	@OneToOne(cascade = CascadeType.ALL)
 	public Owner getOwner() {
 		return owner;
 	}

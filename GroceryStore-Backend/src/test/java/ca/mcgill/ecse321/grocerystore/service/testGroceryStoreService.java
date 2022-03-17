@@ -1,13 +1,5 @@
 package ca.mcgill.ecse321.grocerystore.service;
 
-import ca.mcgill.ecse321.grocerystore.dao.BusinessHourRepository;
-import ca.mcgill.ecse321.grocerystore.dao.CashierRepository;
-import ca.mcgill.ecse321.grocerystore.dao.StoreRepository;
-import ca.mcgill.ecse321.grocerystore.dao.WorkingHourRepository;
-import ca.mcgill.ecse321.grocerystore.model.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -16,21 +8,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,18 +27,41 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
+import ca.mcgill.ecse321.grocerystore.dao.AccountRoleRepository;
+import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
+import ca.mcgill.ecse321.grocerystore.dao.BusinessHourRepository;
+import ca.mcgill.ecse321.grocerystore.dao.CashierRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
+import ca.mcgill.ecse321.grocerystore.dao.DeliveryOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.OrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.PickUpOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.ReportRepository;
 import ca.mcgill.ecse321.grocerystore.dao.ScheduleRepository;
-import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.StoreRepository;
+import ca.mcgill.ecse321.grocerystore.dao.WorkingHourRepository;
+import ca.mcgill.ecse321.grocerystore.model.Account;
+import ca.mcgill.ecse321.grocerystore.model.Address;
+import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
+import ca.mcgill.ecse321.grocerystore.model.Customer;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
-
+import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.Order;
+import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.Report;
+import ca.mcgill.ecse321.grocerystore.model.Store;
+import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
 
 @ExtendWith(MockitoExtension.class)
 public class testGroceryStoreService {
 	@Mock
 	private AccountRepository accountDao;
+	
+	@Mock
+	private AccountRoleRepository accountRoleDao;
 	@Mock
 	private CustomerRepository customerRoleDao;
 	@Mock
@@ -66,29 +75,46 @@ public class testGroceryStoreService {
 	@Mock
 	private NonPerishableItemRepository nonPerishableItemDao;
 	@Mock
+	private AddressRepository addressDao;
+	@Mock
 	private WorkingHourRepository workingHourDao;
 	@Mock
 	private ScheduleRepository scheduleDao;
 	@Mock
 	private ReportRepository reportDao;
+	@Mock
+	private OrderRepository orderDao;
+	@Mock
+	private DeliveryOrderRepository deliveryOrderDao;
+	@Mock
+	private PickUpOrderRepository PickUpOrderDao;
+	@Mock
+	private InStoreOrderRepository InStoreOrderDao;
 	
+
 	@InjectMocks
 	private GroceryStoreService service;
 	private static final String Account_KEY = "TestAccount";
-	
+	private static final String testName = "TestName";
+
 	private static final Long PerishableItem_ID = 1L;
 	private static final String PerishableItem_name = "Apple";
 	private static final Float PerishableItem_price = (float) 2.5;
 	private static final Boolean PerishableItem_availableOnline = false;
 	private static final Integer PerishableItem_numInStock = 10;
 	private static final Integer PerishableItem_pointPerItem = 2;
-	
+
 	private static final Long NonPerishableItem_ID = 2L;
 	private static final String NonPerishableItem_name = "Desk";
 	private static final Float NonPerishableItem_price = (float) 20.0;
 	private static final Boolean NonPerishableItem_availableOnline = true;
 	private static final Integer NonPerishableItem_numInStock = 5;
 	private static final Integer NonPerishableItem_pointPerItem = 10;
+
+	private static final Long address_ID = 1L;
+	private static final Integer address_buildingNo = 200;
+	private static final String street = "testStreet";
+	private static final String town = "testTown";
 
 	@BeforeEach
 	public void setMockOutput() {
@@ -114,22 +140,23 @@ public class testGroceryStoreService {
 			}
 		});
 		lenient().when(businessHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
-				BusinessHour b1 = new BusinessHour();
-				BusinessHour b2 = new BusinessHour();
-				b1.setBusinessHourID(1L);
-				b1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
-				b2.setBusinessHourID(2L);
-				b2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
-				List<BusinessHour> days = new ArrayList<>();
-				days.add(b1);
-				days.add(b2);
-				return days;
+			BusinessHour b1 = new BusinessHour();
+			BusinessHour b2 = new BusinessHour();
+			b1.setBusinessHourID(1L);
+			b1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+			b2.setBusinessHourID(2L);
+			b2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
+			List<BusinessHour> days = new ArrayList<>();
+			days.add(b1);
+			days.add(b2);
+			return days;
 		});
 		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
 		lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(customerRoleDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(addressDao.save(any(Address.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(reportDao.save(any(Report.class))).thenAnswer(returnParameterAsAnswer);
@@ -218,12 +245,163 @@ public class testGroceryStoreService {
                 return null;
             }
         });
+
+		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(PerishableItem_ID)) {
+				PerishableItem pitem = new PerishableItem();
+				pitem.setItemID(PerishableItem_ID);
+				pitem.setProductName(PerishableItem_name);
+				pitem.setPrice(PerishableItem_price);
+				pitem.setAvailableOnline(PerishableItem_availableOnline);
+				pitem.setNumInStock(PerishableItem_numInStock);
+				pitem.setPointPerItem(PerishableItem_pointPerItem);
+				return pitem;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(perishableItemDao.findByProductName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(PerishableItem_name)) {
+				List<PerishableItem> plist = new ArrayList<PerishableItem>();
+				PerishableItem pitem = new PerishableItem();
+				pitem.setItemID(PerishableItem_ID);
+				pitem.setProductName(PerishableItem_name);
+				pitem.setPrice(PerishableItem_price);
+				pitem.setAvailableOnline(PerishableItem_availableOnline);
+				pitem.setNumInStock(PerishableItem_numInStock);
+				pitem.setPointPerItem(PerishableItem_pointPerItem);
+				plist.add(pitem);
+
+				PerishableItem pitem2 = new PerishableItem();
+				pitem2.setItemID(2L);
+				pitem2.setProductName(PerishableItem_name);
+				pitem2.setPrice(PerishableItem_price);
+				pitem2.setAvailableOnline(PerishableItem_availableOnline);
+				pitem2.setNumInStock(PerishableItem_numInStock);
+				pitem2.setPointPerItem(PerishableItem_pointPerItem);
+				plist.add(pitem2);
+				return plist;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(nonPerishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(NonPerishableItem_ID)) {
+				NonPerishableItem npitem = new NonPerishableItem();
+				npitem.setItemID(NonPerishableItem_ID);
+				npitem.setProductName(NonPerishableItem_name);
+				npitem.setPrice(NonPerishableItem_price);
+				npitem.setAvailableOnline(NonPerishableItem_availableOnline);
+				npitem.setNumInStock(NonPerishableItem_numInStock);
+				npitem.setPointPerItem(NonPerishableItem_pointPerItem);
+				return npitem;
+			} else {
+				return null;
+			}
+		});
+		lenient().when(nonPerishableItemDao.findByProductName(anyString()))
+				.thenAnswer((InvocationOnMock invocation) -> {
+					if (invocation.getArgument(0).equals(NonPerishableItem_name)) {
+						List<NonPerishableItem> nplist = new ArrayList<NonPerishableItem>();
+						NonPerishableItem npitem = new NonPerishableItem();
+						npitem.setItemID(NonPerishableItem_ID);
+						npitem.setProductName(NonPerishableItem_name);
+						npitem.setPrice(NonPerishableItem_price);
+						npitem.setAvailableOnline(NonPerishableItem_availableOnline);
+						npitem.setNumInStock(NonPerishableItem_numInStock);
+						npitem.setPointPerItem(NonPerishableItem_pointPerItem);
+						nplist.add(npitem);
+						return nplist;
+					} else {
+						return null;
+					}
+				});
+
 	}
+
+
+
+
+
+	@Test
+	public void testCreatePerishableItemNullEverything() {
+		assertEquals(0, service.getAllPerishableItems().size());
+
+		String name = null;
+		Float price = null;
+		Boolean availableOnline = null;
+		Integer numInStock = null;
+		Integer pointPerItem = null;
+
+		PerishableItem pitem = null;
+		String error = null;
+
+		try {
+			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(pitem);
+		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
+				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
+	}
+
+	@Test
+	public void testCreateAddress() {
+		Account testAccount = new Account();
+		testAccount.setName(testName);
+		Address testAddress = null;
+		try {
+			testAddress = service.createAddress(address_buildingNo, street, town, testAccount);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(testAddress);
+		assertEquals(address_buildingNo, testAddress.getBuildingNo());
+		assertEquals(street, testAddress.getStreet());
+		assertEquals(town, testAddress.getTown());
+		assertEquals(testName, testAddress.getAccount().getName());
+	}
+
+	@Test
+	public void testNullAddress() {
+
+		String error = null;
+
+		Address testAddress = null;
+		try {
+			testAddress = service.createAddress(null, null, null, null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertNull(testAddress);
+		assertEquals("Invalid building number! Street cannot be empty! Town cannot be empty! Account cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testEmptyAddress() {
+
+		String error = null;
+
+		Address testAddress = null;
+		try {
+			testAddress = service.createAddress(-10, "", "", null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertNull(testAddress);
+		assertEquals("Invalid building number! Street cannot be empty! Town cannot be empty! Account cannot be empty!",
+				error);
+	}
+
 	//Test for account
 	@Test
 	public void testCreateAccount() {
 		assertEquals(0, service.getAllAccounts().size());
-
 		String name = "Lello";
 		Account account = null;
 		Customer customer = service.createCustomerRole();
@@ -1001,7 +1179,7 @@ public class testGroceryStoreService {
 	// WorkingHour Test
 	@Test
 	public void testCreateWorkingHour() {
-		assertEquals(0, service.getAllWorkingHourIDs().size());
+		assertEquals(0, service.getAllWorkingHours().size());
 		
 		WorkingHour workingHour = null;
 		
@@ -1055,7 +1233,7 @@ public class testGroceryStoreService {
 	}
 	@Test
 	public void testGetAllWorkingHours() {
-		assertNotNull(service.getAllWorkingHourIDs());
+		assertNotNull(service.getAllWorkingHours());
 	}
 	/*@Test
 	public void testGetExistingWorkingHours() {
@@ -1205,16 +1383,16 @@ public class testGroceryStoreService {
 		c.set(2001, Calendar.JULY, 17);
 		Date startDate = new Date(c.getTimeInMillis());
 		Date endDate = new Date(c.getTimeInMillis());
-		Float totalValue = (float) 200.0;
-		Set<Order> orders = null;
+
 		try {
-			report = service.createReport(startDate, endDate, totalValue, orders);
+			report = service.createReport(startDate, endDate);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			fail();
 		}	
 		assertNotNull(report);
-		assertEquals(totalValue, report.getTotalValue());
+		assertEquals(startDate,report.getStartDate());
+		assertEquals(endDate,report.getEndDate());
 	}
 	@Test
 	public void testCreateReportNullParameters() {
@@ -1223,10 +1401,9 @@ public class testGroceryStoreService {
 		String error = null;
 		Date startDate = null;
 		Date endDate = null;
-		Float totalValue = (float) 200.0;
-		Set<Order> orders = null;
+
 		try {
-			report = service.createReport(startDate, endDate, totalValue, orders);
+			report = service.createReport(startDate, endDate);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
@@ -1245,10 +1422,9 @@ public class testGroceryStoreService {
 		c2.set(2001, Calendar.JULY, 16);
 		Date startDate = new Date(c.getTimeInMillis());
 		Date endDate = new Date(c2.getTimeInMillis());
-		Float totalValue = (float) 200.0;
-		Set<Order> orders = null;
+
 		try {
-			report = service.createReport(startDate, endDate, totalValue, orders);
+			report = service.createReport(startDate, endDate);
 		} catch (IllegalArgumentException e) {
 			// Check that no error occurred
 			error = e.getMessage();
@@ -1294,4 +1470,5 @@ public class testGroceryStoreService {
 		assertNull(report);
 		assertEquals("Please enter legal id.", error);
 	}
+
 }

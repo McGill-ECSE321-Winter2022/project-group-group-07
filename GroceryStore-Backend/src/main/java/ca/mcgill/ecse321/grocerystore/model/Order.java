@@ -2,7 +2,8 @@ package ca.mcgill.ecse321.grocerystore.model;
 
 import java.sql.Date;
 import java.sql.Time;
-import javax.persistence.OneToMany;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-
-import java.util.Set;
+import javax.persistence.OneToMany;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -71,7 +71,7 @@ public abstract class Order {
 		this.account = account;
 	}
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany
 	public Set<Item> getItems() {
 		return this.items;
 	}
