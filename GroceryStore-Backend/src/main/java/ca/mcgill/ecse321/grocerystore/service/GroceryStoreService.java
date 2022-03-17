@@ -659,7 +659,6 @@ public class GroceryStoreService {
 		String listErrors = String.join(", ", errors);
 		if (errors.size() != 0)
 			throw new IllegalArgumentException(listErrors);
-
 		perishableItem.setProductName(name);
 		perishableItem.setPrice(price);
 		perishableItem.setAvailableOnline(availableOnline);
@@ -679,25 +678,55 @@ public class GroceryStoreService {
 
 	@Transactional
 	public PerishableItem getPerishableItemsByID(Long id) {
-
-		return perishableItemRepository.findByItemID(id);
+		PerishableItem pitem = perishableItemRepository.findByItemID(id);
+		
+		if (pitem == null) 
+			throw new IllegalArgumentException("No such perishable item. Please search by another ID.");
+		
+		return pitem;
 	}
 
 	@Transactional
-	public void deletePerishableItems(PerishableItem pitem) {
+	public PerishableItem deletePerishableItems(PerishableItem pitem) {
+		
+		if (pitem == null) throw new IllegalArgumentException("Please enter an item to delete.");
 		perishableItemRepository.delete(pitem);
-
+		return pitem;
 	}
 
 	@Transactional
 	public List<PerishableItem> getPerishableItemsByProductName(String name) {
-		return perishableItemRepository.findByProductName(name);
+		List<PerishableItem> pitem = perishableItemRepository.findByProductName(name);
+		if (pitem == null) 
+			throw new IllegalArgumentException("No such perishable items. Please search by another name.");
+		
+		return pitem;
 	}
 
 	@Transactional
-	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName, Float price,
-			Boolean availableOnline, Integer numInStock, Integer pointPerItem) {
-
+	public PerishableItem updatePerishableItem(PerishableItem pitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		if (pitem == null) throw new IllegalArgumentException("Please enter an item to update.");
+		
+		if (productName == null || productName.trim().length() == 0) {
+			errors.add("Item name is empty!");
+		}
+		if (price == null) {
+			errors.add("Price is empty!");
+		}
+		if (availableOnline == null) {
+			errors.add("Please state whether this item is available online!");
+		}
+		if (numInStock == null) {
+			errors.add("Please state the amount of stock!");
+		}
+		if (pointPerItem == null) {
+			errors.add("Please state the amount of point given per item!");
+		}
+		String listErrors = String.join(", ", errors);
+		if(errors.size() != 0) throw new IllegalArgumentException("Item unchanged. " + listErrors);
 		pitem.setProductName(productName);
 		pitem.setPrice(price);
 		pitem.setAvailableOnline(availableOnline);
@@ -731,7 +760,6 @@ public class GroceryStoreService {
 		String listErrors = String.join(", ", errors);
 		if (errors.size() != 0)
 			throw new IllegalArgumentException(listErrors);
-
 		nonPerishableItem.setProductName(name);
 		nonPerishableItem.setPrice(price);
 		nonPerishableItem.setAvailableOnline(availableOnline);
@@ -751,25 +779,54 @@ public class GroceryStoreService {
 
 	@Transactional
 	public NonPerishableItem getNonPerishableItemsByID(Long id) {
+		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
+		if (npitem == null) 
+			throw new IllegalArgumentException("No such non perishable item. Please search by another ID.");
 
 		return nonPerishableItemRepository.findByItemID(id);
 	}
 
 	@Transactional
 	public List<NonPerishableItem> getNonPerishableItemsByProductName(String name) {
-		return nonPerishableItemRepository.findByProductName(name);
+		
+		List<NonPerishableItem> npitem = nonPerishableItemRepository.findByProductName(name);
+		if (npitem == null) 
+			throw new IllegalArgumentException("No such non perishable items. Please search by another name.");
+		
+		return npitem;
 	}
 
 	@Transactional
-	public void deleteNonPerishableItems(NonPerishableItem npitem) {
-
+	public NonPerishableItem deleteNonPerishableItems(NonPerishableItem npitem) {
+		if (npitem == null) throw new IllegalArgumentException("Please enter an item to delete.");
 		nonPerishableItemRepository.delete(npitem);
+		return npitem;
 	}
 
 	@Transactional
-
-	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName, Float price,
-			Boolean availableOnline, Integer numInStock, Integer pointPerItem) {
+	public NonPerishableItem updateNonPerishableItem(NonPerishableItem npitem, String productName,Float price, Boolean availableOnline,Integer numInStock, Integer pointPerItem) {
+		
+ArrayList<String> errors = new ArrayList<String>();
+		
+		if (npitem == null) throw new IllegalArgumentException("Please enter an item to update.");
+		
+		if (productName == null || productName.trim().length() == 0) {
+			errors.add("Item name is empty!");
+		}
+		if (price == null) {
+			errors.add("Price is empty!");
+		}
+		if (availableOnline == null) {
+			errors.add("Please state whether this item is available online!");
+		}
+		if (numInStock == null) {
+			errors.add("Please state the amount of stock!");
+		}
+		if (pointPerItem == null) {
+			errors.add("Please state the amount of point given per item!");
+		}
+		String listErrors = String.join(", ", errors);
+		if(errors.size() != 0) throw new IllegalArgumentException("Item unchanged. " + listErrors);
 
 		npitem.setProductName(productName);
 		npitem.setPrice(price);
@@ -807,7 +864,23 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHour) {
+	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHours) {
+		
+		String error = "";
+		if (scheduleID == null) {
+			error = error + "Schedule id cannot be empty! ";
+		}
+		if (username == null) {
+			error = error + "Schedule employee cannot be empty! ";
+		}
+		if (workingHours == null) {
+			error = error + "Schedule working hours end time cannot be empty! ";
+		}
+		
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		Schedule schedule = new Schedule();
 		Employee employee = null;
@@ -818,7 +891,7 @@ public class GroceryStoreService {
 			throw new IllegalArgumentException("No employee found");
 		}
 		schedule.setEmployee(employee);
-		schedule.setWorkingHour(workingHour);
+		schedule.setWorkingHour(workingHours);
 
 		scheduleRepository.save(schedule);
 
@@ -972,6 +1045,25 @@ public class GroceryStoreService {
 
 	@Transactional
 	public WorkingHour createWorkingHour(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+		
+		String error = "";
+		if (dayOfWeek == null) {
+			error = error + "Working hour day of the week cannot be empty! ";
+		}
+		if (startTime == null) {
+			error = error + "Working hour start time cannot be empty! ";
+		}
+		if (endTime == null) {
+			error = error + "Working hour end time cannot be empty! ";
+		}
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			error = error + "Working hour end time cannot be before Working hour start time! ";
+		}
+		
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		WorkingHour workingHour = new WorkingHour();
 
@@ -985,7 +1077,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public WorkingHour getWorkingHourByID(Integer workingHourID) {
+	public WorkingHour getWorkingHourByID(Long workingHourID) {
 		for (WorkingHour workingHour : workingHourRepository.findAll()) {
 			if (workingHour.getWorkingHourID().equals(workingHourID)) {
 				return workingHour;
@@ -997,6 +1089,20 @@ public class GroceryStoreService {
 	@Transactional
 	public List<WorkingHour> getAllWorkingHourIDs() {
 		return toList(workingHourRepository.findAll());
+	}
+	
+	@Transactional
+	public WorkingHour getWorkingHourByDay(DayOfWeek dayOfWeek) {
+		if (dayOfWeek == null) {
+			throw new IllegalArgumentException("Day of week cannot be empty!");
+		}
+		for (WorkingHour wh : workingHourRepository.findAll()) {
+			if (wh.getDayOfWeek().equals(dayOfWeek)) {
+				return wh;
+			}
+		}
+
+		return null;
 	}
 
 	@Transactional
