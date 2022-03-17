@@ -785,10 +785,11 @@ public class testGroceryStoreService {
 	
 	@Test
 	public void testDeletePerishableItem() {
-		PerishableItem pitem = service.createPerishableItem(PerishableItem_ID, PerishableItem_name, PerishableItem_price, PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
+		PerishableItem pitem = service.createPerishableItem(PerishableItem_name, PerishableItem_price, PerishableItem_availableOnline, PerishableItem_numInStock, PerishableItem_pointPerItem);
+		Long id=pitem.getItemID();
 		PerishableItem deletedPitem = service.deletePerishableItems(pitem);
 		assertNotNull(deletedPitem);
-		assertEquals(PerishableItem_ID,deletedPitem.getItemID());
+		assertEquals(id,deletedPitem.getItemID());
 	}
 	
 	@Test
