@@ -845,7 +845,23 @@ ArrayList<String> errors = new ArrayList<String>();
 	}
 
 	@Transactional
-	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHour) {
+	public Schedule createSchedule(Integer scheduleID, String username, Set<WorkingHour> workingHours) {
+		
+		String error = "";
+		if (scheduleID == null) {
+			error = error + "Schedule id cannot be empty! ";
+		}
+		if (username == null) {
+			error = error + "Schedule employee cannot be empty! ";
+		}
+		if (workingHours == null) {
+			error = error + "Schedule working hours end time cannot be empty! ";
+		}
+		
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		Schedule schedule = new Schedule();
 		Employee employee = null;
@@ -856,7 +872,7 @@ ArrayList<String> errors = new ArrayList<String>();
 			throw new IllegalArgumentException("No employee found");
 		}
 		schedule.setEmployee(employee);
-		schedule.setWorkingHour(workingHour);
+		schedule.setWorkingHour(workingHours);
 
 		scheduleRepository.save(schedule);
 
@@ -1010,6 +1026,25 @@ ArrayList<String> errors = new ArrayList<String>();
 
 	@Transactional
 	public WorkingHour createWorkingHour(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+		
+		String error = "";
+		if (dayOfWeek == null) {
+			error = error + "Working hour day of the week cannot be empty! ";
+		}
+		if (startTime == null) {
+			error = error + "Working hour start time cannot be empty! ";
+		}
+		if (endTime == null) {
+			error = error + "Working hour end time cannot be empty! ";
+		}
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			error = error + "Working hour end time cannot be before Working hour start time! ";
+		}
+		
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 
 		WorkingHour workingHour = new WorkingHour();
 
@@ -1023,7 +1058,7 @@ ArrayList<String> errors = new ArrayList<String>();
 	}
 
 	@Transactional
-	public WorkingHour getWorkingHourByID(Integer workingHourID) {
+	public WorkingHour getWorkingHourByID(Long workingHourID) {
 		for (WorkingHour workingHour : workingHourRepository.findAll()) {
 			if (workingHour.getWorkingHourID().equals(workingHourID)) {
 				return workingHour;
@@ -1035,6 +1070,20 @@ ArrayList<String> errors = new ArrayList<String>();
 	@Transactional
 	public List<WorkingHour> getAllWorkingHourIDs() {
 		return toList(workingHourRepository.findAll());
+	}
+	
+	@Transactional
+	public WorkingHour getWorkingHourByDay(DayOfWeek dayOfWeek) {
+		if (dayOfWeek == null) {
+			throw new IllegalArgumentException("Day of week cannot be empty!");
+		}
+		for (WorkingHour wh : workingHourRepository.findAll()) {
+			if (wh.getDayOfWeek().equals(dayOfWeek)) {
+				return wh;
+			}
+		}
+
+		return null;
 	}
 
 	@Transactional
