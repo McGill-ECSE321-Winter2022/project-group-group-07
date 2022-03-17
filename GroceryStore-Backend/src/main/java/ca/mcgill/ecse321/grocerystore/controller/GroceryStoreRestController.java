@@ -480,6 +480,53 @@ public class GroceryStoreRestController {
 		Report report = service.createReport(startDate, endDate, totalValue, orders);
 		return convertToDto(report);
 	}
+	@GetMapping(value = {"/order/{username}","/order/{username}/"})
+	public List<OrderDto> getOrdersByAccount(@PathVariable("unsername") String username){
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for(Order order : service.getDeliveryOrdersByAccount(service.getAccount(username))) {
+			orders.add(convertToDto(order));
+		}
+		for(Order order : service.getInStoreOrdersByAccount(service.getAccount(username))) {
+			orders.add(convertToDto(order));
+		}
+		for(Order order : service.getPickUpOrdersByAccount(service.getAccount(username))) {
+			orders.add(convertToDto(order));
+		}
+		return orders;
+	}
+	@GetMapping(value = { "/order/{id}", "/order/{id}/" })
+	public OrderDto getOrderByID(@PathVariable("id") Long id){
+		Order order = service.getOrderById(id);
+		return convertToDto(order);
+	}
+	@PostMapping(value = {"/createInPersonOrder","/createInPersonOrder/"})
+	public InStoreOrderDto createInStoreOrder(@RequestParam Date date,@RequestParam Time purchaseTime,@RequestParam Set<Item> items) {
+		return (InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, items));
+	}
+	@PostMapping(value = {"/createInPersonOrder/{username}","/createInPersonOrder/{username}/"})
+	public InStoreOrderDto createInStoreOrder(@RequestParam Date date,@RequestParam Time purchaseTime,@RequestParam Set<Item> items,@PathVariable("username") String username) {
+		return (InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, items, service.getAccount(username)));
+	}
+	@PostMapping(value = {"/createDeliveryOrder/{username}","/createDeliveryOrder/{username}/"})
+	public DeliveryOrderDto createDeliveryOrder(@RequestParam Date date,@RequestParam Time purchaseTime,@RequestParam Set<Item> items,@RequestParam Date startDate,@RequestParam Date endDate,@RequestParam Time startTime,@RequestParam Time endTime,@PathVariable("username") String username) {
+		return (DeliveryOrderDto) convertToDto(service.createDeliveryOrder(date, purchaseTime, items,service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username)));
+	}
+	@PostMapping(value = {"/createPickUpOrder/{username}","/createPickUpOrder/{username}/"})
+	public PickUpOrderDto createPickUpOrder(@RequestParam Date date,@RequestParam Time purchaseTime,@RequestParam Set<Item> items,@RequestParam Date startDate,@RequestParam Date endDate,@RequestParam Time startTime,@RequestParam Time endTime,@PathVariable("username") String username) {
+		return (PickUpOrderDto) convertToDto(service.createPickUpOrder(date, purchaseTime, items,service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username)));
+	}
+	@PutMapping(value={"/deliveryUpdate/{id}","/deliveryUpdate/{id}/"})
+	public DeliveryOrderDto updateDeliveryStatus(@PathVariable("id") long id,@RequestParam String status) {
+		return (DeliveryOrderDto) convertToDto(service.updateDeliveryOrderStatus((DeliveryOrder) service.getOrderById(id),status));
+	}
+	@PutMapping(value={"/PickUpUpdate/{id}","/PickUpUpdate/{id}/"})
+	public PickUpOrderDto updatePickUpStatus(@PathVariable("id") long id,@RequestParam String status) {
+		return (PickUpOrderDto) convertToDto(service.updatePickUpOrderStatus((PickUpOrder) service.getOrderById(id),status));
+	}
+	@PostMapping(value={"/checkout/{username}","/checkout/{username}/"})
+	public OrderDto checkout(@PathVariable("username") String username) {
+		return convertToDto(service.checkout(service.getCartByAccount(service.getAccount(username))));
+	}
 	private StoreDto convertToDto(Store store) {
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(),
 				store.getEmployeeDiscountRate(), store.getPointToCashRatio());
