@@ -58,6 +58,8 @@ public class testGroceryStoreService {
 	private WorkingHourRepository workingHourDao;
 	@Mock
 	private ScheduleRepository scheduleDao;
+	@Mock
+	private CartRepository cartDao;
 
 	@InjectMocks
 	private GroceryStoreService service;
@@ -200,6 +202,14 @@ public class testGroceryStoreService {
 						return null;
 					}
 				});
+		lenient().when(cartDao.findByAccount(any(Account.class))).thenAnswer((InvocationOnMock invocation) -> {
+			if (((Account)invocation.getArgument(0)).getUsername().equals(Account_KEY)) {
+				Cart cart = new Cart();
+				return cart;
+			} else {
+				return null;
+			}
+		});
 		lenient().when(addressDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
 			Set<Address> addresses = new HashSet<Address>();
 			return addresses;
@@ -232,6 +242,7 @@ public class testGroceryStoreService {
 		lenient().when(addressDao.save(any(Address.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(cartDao.save(any(Cart.class))).thenAnswer(returnParameterAsAnswer);
 
 	}
 
@@ -315,7 +326,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNull(account);
-		assertEquals("Please enter a username", error);
+		assertEquals("Invalid username", error);
 	}
 
 	@Test
@@ -329,7 +340,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNull(account);
-		assertEquals("Please enter a username", error);
+		assertEquals("Invalid username", error);
 	}
 
 	@Test
@@ -552,6 +563,7 @@ public class testGroceryStoreService {
 		}
 		assertNotNull(customers);
 	}
+
 	@Test
 	public void testGetAllCashiers() {
 		List<Account> cashiers = new ArrayList<Account>();
@@ -595,7 +607,7 @@ public class testGroceryStoreService {
 		}
 		assertNotNull(accounts);
 	}
-	
+
 	@Test
 	public void testGetAllEmployees() {
 		List<Account> employees = new ArrayList<Account>();
@@ -606,7 +618,6 @@ public class testGroceryStoreService {
 		}
 		assertNotNull(employees);
 	}
-
 
 	// Test for Address
 
@@ -687,7 +698,7 @@ public class testGroceryStoreService {
 		}
 
 		assertNull(address);
-		assertEquals(error, "Please enter a username");
+		assertEquals(error, "Invalid username");
 
 	}
 
@@ -765,11 +776,11 @@ public class testGroceryStoreService {
 			error += e.getMessage();
 		}
 		assertNull(address);
-		assertEquals(error, "Please enter a username");
+		assertEquals(error, "Invalid username");
 	}
-	
+
 	// Test for Store
-	
+
 	@Test
 	public void testCreateStore() {
 		assertNull(service.getStore());
@@ -883,7 +894,7 @@ public class testGroceryStoreService {
 		assertNull(store);
 		assertEquals("Employee discount rate must be between 0 and 100!", error);
 	}
-	
+
 	@Test
 	public void testUpdateStore() {
 		Store store = new Store();
@@ -898,7 +909,7 @@ public class testGroceryStoreService {
 		Float pointToCashRatio = 5.5f;
 		String error = null;
 		Store testStore = null;
-		
+
 		try {
 			testStore = service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
@@ -913,7 +924,7 @@ public class testGroceryStoreService {
 		assertEquals(pointToCashRatio, testStore.getPointToCashRatio());
 		assertNull(error);
 	}
-	
+
 	@Test
 	public void testUpdateStoreWithInvalidInputs() {
 		Store store = new Store();
@@ -938,7 +949,7 @@ public class testGroceryStoreService {
 				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!",
 				error);
 	}
-	
+
 	@Test
 	public void testGetExistingStore() {
 		Store store = new Store();
@@ -952,119 +963,96 @@ public class testGroceryStoreService {
 	public void testGetNonExistingStore() {
 		assertNull(service.getStore());
 	}
-	
+
 	@Test
 	public void testDeleteStore() {
-		
+
 		Store store = new Store();
 		store.setStoreID(123L);
 		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
-		
+
 		assertNotNull(service.deleteStore());
 	}
-//
-//	@Test
-//	public void testCreatePerishableItemNullEverything() {
-//		assertEquals(0, service.getAllPerishableItems().size());
-//
-//		String name = null;
-//		Float price = null;
-//		Boolean availableOnline = null;
-//		Integer numInStock = null;
-//		Integer pointPerItem = null;
-//
-//		PerishableItem pitem = null;
-//		String error = null;
-//
-//		try {
-//			pitem = service.createPerishableItem(name, price, availableOnline, numInStock, pointPerItem);
-//		} catch (IllegalArgumentException e) {
-//			// Check that no error occurred
-//			error = e.getMessage();
-//		}
-//		assertNull(pitem);
-//		assertEquals("Item name is empty!, Price is empty!, Please state whether this item is available online!, "
-//				+ "Please state the amount of stock!, Please state the amount of point given per item!", error);
-//	}
-//
-//
-//
-//	// Business Hour test
-//	@Test
-//	public void testcreateBusinessHour() {
-//		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
-//		Time startTime = Time.valueOf("7:59:59");
-//		Time endTime = Time.valueOf("23:59:59");
-//		BusinessHour businessHour = null;
-//		String error = null;
-//		try {
-//			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNotNull(businessHour);
-//		assertEquals(dayOfWeek, businessHour.getDayOfWeek());
-//		assertEquals(startTime, businessHour.getStartTime());
-//		assertEquals(endTime, businessHour.getEndTime());
-//		assertNull(error);
-//	}
-//
-//	@Test
-//	public void testcreateBusinessHourNull() {
-//		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
-//		Time startTime = null;
-//		Time endTime = null;
-//		BusinessHour businessHour = null;
-//		String error = null;
-//		try {
-//			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(businessHour);
-//		assertEquals(
-//				"Business hour day of the week cannot be empty! Business hour start time cannot be empty! Business hour end time cannot be empty!",
-//				error);
-//	}
-//
-//	@Test
-//	public void testcreateBusinessHourEndTimeBeforeStartTime() {
-//		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
-//		Time startTime = Time.valueOf("17:59:59");
-//		Time endTime = Time.valueOf("3:59:59");
-//		BusinessHour businessHour = null;
-//		String error = null;
-//		try {
-//			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertNull(businessHour);
-//		assertEquals("Business hour end time cannot be before Business hour start time!", error);
-//	}
-//
-//	@Test
-//	public void testGetAllBusinessHours() {
-//		assertNotNull(service.getAllBusinessHours());
-//	}
-//
-//	@Test
-//	public void testGetExistingBusinessHours() {
-//		assertEquals(service.getBusinessHourByDay(GroceryStoreSoftwareSystem.DayOfWeek.Monday).getDayOfWeek(),
-//				GroceryStoreSoftwareSystem.DayOfWeek.Monday);
-//	}
-//
-//	@Test
-//	public void testGetBusinessHoursNull() {
-//		String error = null;
-//		try {
-//			service.getBusinessHourByDay(null);
-//		} catch (IllegalArgumentException e) {
-//			error = e.getMessage();
-//		}
-//		assertEquals("Day of week cannot be empty!", error);
-//	}
-//
+
+	// BusinessHour
+
+	@Test
+	public void testcreateBusinessHour() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
+		Time startTime = Time.valueOf("7:59:59");
+		Time endTime = Time.valueOf("23:59:59");
+		BusinessHour businessHour = null;
+		String error = null;
+		try {
+			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNotNull(businessHour);
+		assertEquals(dayOfWeek, businessHour.getDayOfWeek());
+		assertEquals(startTime, businessHour.getStartTime());
+		assertEquals(endTime, businessHour.getEndTime());
+		assertNull(error);
+	}
+
+	@Test
+	public void testcreateBusinessHourNull() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = null;
+		Time startTime = null;
+		Time endTime = null;
+		BusinessHour businessHour = null;
+		String error = null;
+		try {
+			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(businessHour);
+		assertEquals(
+				"Business hour day of the week cannot be empty! Business hour start time cannot be empty! Business hour end time cannot be empty!",
+				error);
+	}
+
+	@Test
+	public void testcreateBusinessHourEndTimeBeforeStartTime() {
+		GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek = GroceryStoreSoftwareSystem.DayOfWeek.Monday;
+		Time startTime = Time.valueOf("17:59:59");
+		Time endTime = Time.valueOf("3:59:59");
+		BusinessHour businessHour = null;
+		String error = null;
+		try {
+			businessHour = service.createBusinessHour(dayOfWeek, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(businessHour);
+		assertEquals("Business hour end time cannot be before Business hour start time!", error);
+	}
+
+	@Test
+	public void testGetAllBusinessHours() {
+		assertNotNull(service.getAllBusinessHours());
+	}
+
+	@Test
+	public void testGetExistingBusinessHours() {
+		assertEquals(service.getBusinessHourByDay(GroceryStoreSoftwareSystem.DayOfWeek.Monday).getDayOfWeek(),
+				GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+	}
+
+	@Test
+	public void testGetBusinessHoursNull() {
+		String error = null;
+		try {
+			service.getBusinessHourByDay(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertEquals("Day of week cannot be empty!", error);
+	}
+
+	// Items
+
 //	@Test
 //	public void testCreatePerishableItem() {
 //		assertEquals(0, service.getAllPerishableItems().size());
@@ -1616,5 +1604,61 @@ public class testGroceryStoreService {
 //
 //		assertEquals("Please enter an item to delete.", error);
 //	}
+
+	// Cart
+
+	@Test
+	public void testCreateCart() {
+		Cart cart = null;
+		try {
+			cart = service.createCart(Account_KEY);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+
+		assertNotNull(cart);
+		assertEquals(0, cart.getNumOfItems());
+		assertEquals(0f, cart.getTotalValue());
+		assertEquals(Account_KEY, cart.getaccount().getUsername());
+	}
+
+	@Test
+	public void testCreateCartWithInvalidAccount() {
+		Cart cart = null;
+		String error = "";
+		try {
+			cart = service.createCart("");
+		} catch (IllegalArgumentException e) {
+			error += e.getMessage();
+		}
+
+		assertNull(cart);
+		assertEquals("Invalid username", error);
+
+	}
+
+	@Test
+	public void testGetCartByAccount() {
+		Cart cart = null;
+		try {
+			cart = service.getCartByAccount(Account_KEY);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(cart);
+	}
+
+	@Test
+	public void testGetAllCarts() {
+		List<Cart> carts = null;
+
+		try {
+			carts = service.getAllCarts();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+
+		assertNotNull(carts);
+	}
 
 }

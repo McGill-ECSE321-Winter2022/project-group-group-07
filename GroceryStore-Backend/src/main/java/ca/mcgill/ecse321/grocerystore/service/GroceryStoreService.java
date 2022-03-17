@@ -275,7 +275,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Account getAccount(String username) {
 		if (username == null || username.trim().length() == 0) {
-			throw new IllegalArgumentException("Please enter a username"); 
+			throw new IllegalArgumentException("Invalid username"); 
 		}
 		Account account = accountRepository.findByUsername(username);
 		
