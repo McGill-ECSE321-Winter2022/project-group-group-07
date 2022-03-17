@@ -582,7 +582,7 @@ public class GroceryStoreRestController {
 
 	}
 
-	@DeleteMapping(value = { "/deleteTerminal/{id}", "/deleteteminal/{id}/" })
+	@DeleteMapping(value = { "/deleteTerminal/{id}", "/deleteTerminal/{id}/" })
 	public void deleteTerminalbyID(@PathVariable("id") Long terminalID) {
 
 		service.deleteTerminal(terminalID);
@@ -590,7 +590,7 @@ public class GroceryStoreRestController {
 
 	// TimerSlot Get and POST
 
-	@GetMapping(value = { "/timeSlot", "/timeSlots/" })
+	@GetMapping(value = { "/timeSlots", "/timeSlots/" })
 	public List<TimeSlotDto> getAllTimeSlots() {
 
 		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
@@ -612,7 +612,7 @@ public class GroceryStoreRestController {
 		return timeSlots;
 	}
 
-	@PostMapping(value = { "/createTimeSlot", "createTimeSlot/" })
+	@PostMapping(value = { "/createTimeSlot", "/createTimeSlot/" })
 	public TimeSlotDto createTimeSlot(@RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
