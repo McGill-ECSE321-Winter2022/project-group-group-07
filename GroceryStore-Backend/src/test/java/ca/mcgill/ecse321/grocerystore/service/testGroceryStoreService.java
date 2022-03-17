@@ -1,9 +1,6 @@
 package ca.mcgill.ecse321.grocerystore.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -73,6 +70,8 @@ public class testGroceryStoreService {
 	private PickUpOrderRepository PickUpOrderDao;
 	@Mock
 	private InStoreOrderRepository InStoreOrderDao;
+	@Mock
+	private TimeSlotRepository timeSlotDao;
 
 	@InjectMocks
 	private GroceryStoreService service;
@@ -342,6 +341,10 @@ public class testGroceryStoreService {
 			days.add(b2);
 			return days;
 		});
+		lenient().when(timeSlotDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			Set<TimeSlot> slots = new HashSet<TimeSlot>();
+			return slots;
+		});
 		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
@@ -355,6 +358,7 @@ public class testGroceryStoreService {
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(cartDao.save(any(Cart.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(timeSlotDao.save(any(TimeSlot.class))).thenAnswer(returnParameterAsAnswer);
 
 	}
 
@@ -1917,5 +1921,76 @@ public class testGroceryStoreService {
 		assertNull(report);
 		assertEquals("Please enter legal id.", error);
 	}
+	@Test
+	public void testCreateTimeSlot(){
+		Date startDate = Date.valueOf("2000-10-14");
+		Date endDate = Date.valueOf("2000-10-15");
+		Time startTime = Time.valueOf("1:00:00");
+		Time endTime = Time.valueOf("2:00:00");
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNotNull(slot);
+		assertEquals(startDate, slot.getStartDate());
+		assertEquals(endDate, slot.getEndDate());
+		assertEquals(startTime, slot.getStartTime());
+		assertEquals(endTime, slot.getEndTime());
+		assertNull(error);
+	}
+	@Test
+	public void testCreateTimeSlotNull(){
+		Date startDate = null;
+		Date endDate = null;
+		Time startTime = null;
+		Time endTime = null;
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(slot);
+		assertEquals("Start date name cannot be empty! End date time cannot be empty! Start time cannot be empty! End time cannot be empty!", error);
+	}
+	@Test
+	public void testCreateTimeSlotDateTImeEndBeforeStart(){
+		Date startDate = Date.valueOf("2000-10-16");
+		Date endDate = Date.valueOf("2000-10-15");
+		Time startTime = Time.valueOf("3:00:00");
+		Time endTime = Time.valueOf("2:00:00");
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(slot);
+		assertEquals("End time cannot be before start time! End date cannot be before start date!", error);
+	}
+	@Test
+	public void testGetAllTimeslot(){
+		assertNotNull(service.getAllTimeSlots());
+	}
+	@Test
+	public void testGetAllHolidays(){
+		Store store = new Store();
+		store.setHolidays(new HashSet<TimeSlot>());
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+		assertNotNull(service.getAllHolidays());
+	}
+	@Test
+	public void testGetAllHolidaysNull(){
+		Store store = new Store();
+
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+		assertNull(service.getAllHolidays());
+	}
 
 }
+
