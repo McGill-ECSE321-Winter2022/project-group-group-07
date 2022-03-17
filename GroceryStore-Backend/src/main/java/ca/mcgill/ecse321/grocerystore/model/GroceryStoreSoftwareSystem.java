@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
-import java.util.*;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
 
 @Entity
 public class GroceryStoreSoftwareSystem {

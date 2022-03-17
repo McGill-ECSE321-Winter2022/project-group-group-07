@@ -1,12 +1,11 @@
 package ca.mcgill.ecse321.grocerystore;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.grocerystore.model.Account;
-
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @SpringBootApplication

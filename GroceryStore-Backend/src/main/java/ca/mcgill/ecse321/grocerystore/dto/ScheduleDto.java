@@ -1,8 +1,9 @@
 package ca.mcgill.ecse321.grocerystore.dto;
 
-import ca.mcgill.ecse321.grocerystore.model.Employee;
 import java.util.Collections;
 import java.util.List;
+
+import ca.mcgill.ecse321.grocerystore.model.Employee;
 
 public class ScheduleDto {
 
