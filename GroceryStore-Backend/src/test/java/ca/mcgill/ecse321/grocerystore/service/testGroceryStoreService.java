@@ -43,6 +43,7 @@ import org.mockito.stubbing.Answer;
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.ReportRepository;
 import ca.mcgill.ecse321.grocerystore.dao.ScheduleRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
@@ -68,6 +69,9 @@ public class testGroceryStoreService {
 	private WorkingHourRepository workingHourDao;
 	@Mock
 	private ScheduleRepository scheduleDao;
+	@Mock
+	private ReportRepository reportDao;
+	
 	@InjectMocks
 	private GroceryStoreService service;
 	private static final String Account_KEY = "TestAccount";
@@ -85,7 +89,6 @@ public class testGroceryStoreService {
 	private static final Boolean NonPerishableItem_availableOnline = true;
 	private static final Integer NonPerishableItem_numInStock = 5;
 	private static final Integer NonPerishableItem_pointPerItem = 10;
-	
 
 	@BeforeEach
 	public void setMockOutput() {
@@ -129,6 +132,7 @@ public class testGroceryStoreService {
 		lenient().when(customerRoleDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(reportDao.save(any(Report.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer( (InvocationOnMock invocation) -> {
             if(invocation.getArgument(0).equals(PerishableItem_ID)) {
                 PerishableItem pitem = new PerishableItem ();
@@ -194,6 +198,22 @@ public class testGroceryStoreService {
                 npitem.setPointPerItem(NonPerishableItem_pointPerItem);
                 nplist.add(npitem);
                 return nplist;
+            } else {
+                return null;
+            }
+        });
+		lenient().when(reportDao.findByReportID(anyLong())).thenAnswer( (InvocationOnMock invocation) -> {
+            if(invocation.getArgument(0).equals(1L)) {
+            	Report report = new Report();
+            	Calendar c = Calendar.getInstance();
+        		c.set(2001, Calendar.JULY, 17);
+            	report.setOrders(null);
+            	Date startDate = new Date(c.getTimeInMillis());
+        		Date endDate = new Date(c.getTimeInMillis());
+        		report.setEndDate(endDate);
+        		report.setStartDate(startDate);
+        		report.setTotalValue((float) 200.0);
+                return report;
             } else {
                 return null;
             }
@@ -1172,10 +1192,106 @@ public class testGroceryStoreService {
 			// Check that no error occurred
 			error = e.getMessage();
 		}	
-		
+		assertNull(deletedNPitem);
 		assertEquals("Please enter an item to delete." , error);
 	}
 	
+	//Report Tests
+	@Test
+	public void testCreateReport() {
 
+		Report report = new Report();
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c.getTimeInMillis());
+		Float totalValue = (float) 200.0;
+		Set<Order> orders = null;
+		try {
+			report = service.createReport(startDate, endDate, totalValue, orders);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}	
+		assertNotNull(report);
+		assertEquals(totalValue, report.getTotalValue());
+	}
+	@Test
+	public void testCreateReportNullParameters() {
+
+		Report report = null;
+		String error = null;
+		Date startDate = null;
+		Date endDate = null;
+		Float totalValue = (float) 200.0;
+		Set<Order> orders = null;
+		try {
+			report = service.createReport(startDate, endDate, totalValue, orders);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}	
+		assertNull(report);
+		assertEquals("Time cannot be empty.", error);
+	}
+	@Test
+	public void testCreateReportEndBeforeStart() {
+
+		Report report = null;
+		String error = null;
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Calendar c2 = Calendar.getInstance();
+		c2.set(2001, Calendar.JULY, 16);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c2.getTimeInMillis());
+		Float totalValue = (float) 200.0;
+		Set<Order> orders = null;
+		try {
+			report = service.createReport(startDate, endDate, totalValue, orders);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}	
+		assertNull(report);
+		assertEquals("End time cannot be before start time!", error);
+	}
 	
+	@Test
+	public void testGetAllReports() {
+		assertNotNull(service.getAllReports());
+	}
+	@Test
+	public void testGetReportByID() {
+		Report report = null;
+		try {
+			report = service.getReportById(1L);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			fail();
+		}	
+		
+		Calendar c = Calendar.getInstance();
+		c.set(2001, Calendar.JULY, 17);
+		Date startDate = new Date(c.getTimeInMillis());
+		Date endDate = new Date(c.getTimeInMillis());
+		assertNotNull(report);
+		assertEquals(startDate,report.getStartDate());
+		assertEquals(endDate,report.getEndDate());
+		assertEquals((float) 200.0,report.getTotalValue());
+	}
+	@Test
+	public void testGetReportByIDNullParameter() {
+		Report report = null;
+		String error = null;
+		try {
+			report = service.getReportById(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		
+		assertNull(report);
+		assertEquals("Please enter legal id.", error);
+	}
 }

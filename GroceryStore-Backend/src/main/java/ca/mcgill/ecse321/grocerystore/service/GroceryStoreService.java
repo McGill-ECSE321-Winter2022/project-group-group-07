@@ -848,7 +848,13 @@ ArrayList<String> errors = new ArrayList<String>();
 
 	@Transactional
 	public Report createReport(Date startDate, Date endDate, Float totalValue, Set<Order> orders) {
-
+		
+		if(endDate == null || startDate == null) {
+			throw new IllegalArgumentException("Time cannot be empty.");
+		}
+		if (endDate != null && startDate != null && endDate.before(startDate)) {
+			throw new IllegalArgumentException("End time cannot be before start time!");
+		}
 		Report report = new Report();
 
 		report.setStartDate(startDate);
@@ -869,8 +875,11 @@ ArrayList<String> errors = new ArrayList<String>();
 
 	@Transactional
 	public Report getReportById(Long reportID) {
-
-		return reportRepository.findByReportID(reportID);
+		Report report = reportRepository.findByReportID(reportID);
+		if (report == null) {
+			throw new IllegalArgumentException("Please enter legal id.");
+		}
+		return report;
 	}
 
 	@Transactional
