@@ -10,8 +10,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.postgresql.shaded.com.ongres.scram.common.message.ServerFinalMessage.Error;
 
 import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
 import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
