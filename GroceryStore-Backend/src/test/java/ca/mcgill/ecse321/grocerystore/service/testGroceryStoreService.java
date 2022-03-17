@@ -25,27 +25,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
-import ca.mcgill.ecse321.grocerystore.dao.AccountRoleRepository;
-import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
-import ca.mcgill.ecse321.grocerystore.dao.BusinessHourRepository;
-import ca.mcgill.ecse321.grocerystore.dao.CashierRepository;
-import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
-import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
-import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
-import ca.mcgill.ecse321.grocerystore.dao.ScheduleRepository;
-import ca.mcgill.ecse321.grocerystore.dao.StoreRepository;
-import ca.mcgill.ecse321.grocerystore.dao.WorkingHourRepository;
-import ca.mcgill.ecse321.grocerystore.model.Account;
-import ca.mcgill.ecse321.grocerystore.model.Address;
-import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
-import ca.mcgill.ecse321.grocerystore.model.Customer;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
-import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
-import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
-import ca.mcgill.ecse321.grocerystore.model.Store;
-import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
+import ca.mcgill.ecse321.grocerystore.dao.*;
+import ca.mcgill.ecse321.grocerystore.model.*;
 
 @ExtendWith(MockitoExtension.class)
 public class testGroceryStoreService {
@@ -54,9 +35,15 @@ public class testGroceryStoreService {
 	@Mock
 	private AccountRoleRepository accountRoleDao;
 	@Mock
-	private CustomerRepository customerRoleDao;
+	private OwnerRepository ownerDao;
+	@Mock
+	private CustomerRepository customerDao;
 	@Mock
 	private CashierRepository cashierDao;
+	@Mock
+	private ClerkRepository clerkDao;
+	@Mock
+	private DeliveryPersonRepository deliveryPersonDao;
 	@Mock
 	private StoreRepository storeDao;
 	@Mock
@@ -111,20 +98,20 @@ public class testGroceryStoreService {
 			}
 		});
 		lenient().when(accountDao.findByUsernameAndPassword(anyString(), anyString()))
-		.thenAnswer((InvocationOnMock invocation) -> {
-			if (invocation.getArgument(0).equals("Testing") && invocation.getArgument(1).equals("Test")) {
-				Account account = new Account();
-				Customer customer = new Customer();
-				customer.setRoleID(1L);
-				account.setName(Account_KEY);
-				account.setUsername("Testing");
-				account.setPassword("Test");
-				account.setAccountRole(customer);
-				return account;
-			} else {
-				return null;
-			}
-		});
+				.thenAnswer((InvocationOnMock invocation) -> {
+					if (invocation.getArgument(0).equals("Testing") && invocation.getArgument(1).equals("Test")) {
+						Account account = new Account();
+						Customer customer = new Customer();
+						customer.setRoleID(1L);
+						account.setName(Account_KEY);
+						account.setUsername("Testing");
+						account.setPassword("Test");
+						account.setAccountRole(customer);
+						return account;
+					} else {
+						return null;
+					}
+				});
 		lenient().when(addressDao.findByAccount(any(Account.class))).thenAnswer((InvocationOnMock invocation) -> {
 			if (((Account) invocation.getArgument(0)).getUsername().equals(Account_KEY)) {
 				Address address = new Address();
@@ -143,10 +130,6 @@ public class testGroceryStoreService {
 				return null;
 			}
 		});
-		lenient().when(addressDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
-			Set<Address> addresses = new HashSet<Address>();
-			return addresses;
-		});
 		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
 			if (invocation.getArgument(0).equals(PerishableItem_ID)) {
 				PerishableItem pitem = new PerishableItem();
@@ -161,21 +144,6 @@ public class testGroceryStoreService {
 				return null;
 			}
 		});
-		lenient().when(businessHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
-			BusinessHour b1 = new BusinessHour();
-			BusinessHour b2 = new BusinessHour();
-			b1.setBusinessHourID(1L);
-			b1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
-			b2.setBusinessHourID(2L);
-			b2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
-			List<BusinessHour> days = new ArrayList<>();
-			days.add(b1);
-			days.add(b2);
-			return days;
-		});
-		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
-			return invocation.getArgument(0);
-		};
 		lenient().when(perishableItemDao.findByProductName(anyString())).thenAnswer((InvocationOnMock invocation) -> {
 			if (invocation.getArgument(0).equals(PerishableItem_name)) {
 				List<PerishableItem> plist = new ArrayList<PerishableItem>();
@@ -232,11 +200,38 @@ public class testGroceryStoreService {
 						return null;
 					}
 				});
+		lenient().when(addressDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			Set<Address> addresses = new HashSet<Address>();
+			return addresses;
+		});
+		lenient().when(accountDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			Set<Account> accounts = new HashSet<Account>();
+			return accounts;
+			});
+		lenient().when(businessHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			BusinessHour b1 = new BusinessHour();
+			BusinessHour b2 = new BusinessHour();
+			b1.setBusinessHourID(1L);
+			b1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+			b2.setBusinessHourID(2L);
+			b2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
+			List<BusinessHour> days = new ArrayList<>();
+			days.add(b1);
+			days.add(b2);
+			return days;
+		});
+		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
+			return invocation.getArgument(0);};
 		lenient().when(accountDao.save(any(Account.class))).thenAnswer(returnParameterAsAnswer);
-		lenient().when(customerRoleDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(customerDao.save(any(Customer.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(ownerDao.save(any(Owner.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(clerkDao.save(any(Clerk.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(cashierDao.save(any(Cashier.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(deliveryPersonDao.save(any(DeliveryPerson.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(addressDao.save(any(Address.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
+	
 	}
 
 	// Test for account
@@ -459,7 +454,6 @@ public class testGroceryStoreService {
 	}
 
 	@Test
-
 	public void testUpdateAccountNameWithNull() {
 		String error = "";
 		Customer customer = service.createCustomerRole();
@@ -476,7 +470,6 @@ public class testGroceryStoreService {
 	}
 
 	@Test
-
 	public void testUpdateAccountNameInvalidName() {
 		String error = "";
 		Customer customer = service.createCustomerRole();
@@ -493,7 +486,6 @@ public class testGroceryStoreService {
 	}
 
 	@Test
-
 	public void testUpdateAccountNameInvalidUsername() {
 		String error = "";
 		Customer customer = service.createCustomerRole();
@@ -508,6 +500,47 @@ public class testGroceryStoreService {
 		assertNull(updatedAccount);
 		assertEquals("Your name cannot be blank.", error);
 	}
+
+	@Test
+	public void testCreateOwnerRole() {
+		Owner owner = null;
+		owner = service.createOwnerRole();
+
+		assertNotNull(owner);
+	}
+
+	@Test
+	public void testCreateCashierRole() {
+		Cashier cashier = null;
+		cashier = service.createCashierRole();
+
+		assertNotNull(cashier);
+	}
+
+	@Test
+	public void testCreateClerkRole() {
+		Clerk clerk = null;
+		clerk = service.createClerkRole();
+
+		assertNotNull(clerk);
+	}
+
+	@Test
+	public void testCreateCustomerRole() {
+		Customer customer = null;
+		customer = service.createCustomerRole();
+
+		assertNotNull(customer);
+	}
+
+	@Test
+	public void testCreateDeliveryPersonRole() {
+		DeliveryPerson deliveryPerson = null;
+		deliveryPerson = service.createDeliveryPersonRole();
+
+		assertNotNull(deliveryPerson);
+	}
+	
 
 	// Test for Address
 
@@ -604,70 +637,69 @@ public class testGroceryStoreService {
 
 		assertNotNull(addresses);
 	}
-	
+
 	@Test
 	public void testUpdateAddress() {
 		Address address = null;
-		
+
 		Integer newBuildingNo = 200;
 		String newStreet = "newStreet";
-		String newTown= "newStreet";
-		
+		String newTown = "newStreet";
+
 		try {
 			address = service.updateAddress(Account_KEY, newBuildingNo, newStreet, newTown);
-		}catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			fail();
 		}
-		
+
 		assertNotNull(address);
-		assertEquals(newBuildingNo,address.getBuildingNo());
-		assertEquals(newStreet,address.getStreet());
-		assertEquals(newTown,address.getTown());
-		assertEquals(Account_KEY,address.getAccount().getUsername());
+		assertEquals(newBuildingNo, address.getBuildingNo());
+		assertEquals(newStreet, address.getStreet());
+		assertEquals(newTown, address.getTown());
+		assertEquals(Account_KEY, address.getAccount().getUsername());
 	}
-	
+
 	@Test
 	public void testUpdateAddressWithInvalidInputs() {
 		Address address = null;
-		String error =  "";
-		
+		String error = "";
+
 		Integer newBuildingNo = -10;
 		String newStreet = "";
-		String newTown= null;
-		
+		String newTown = null;
+
 		try {
 			address = service.updateAddress(Account_KEY, newBuildingNo, newStreet, newTown);
-		}catch(IllegalArgumentException e) {
-			error+= e.getMessage();
+		} catch (IllegalArgumentException e) {
+			error += e.getMessage();
 		}
-		assertNull(address);	
-		assertEquals("Invalid building number! Street cannot be empty! Town cannot be empty!",
-				error);
+		assertNull(address);
+		assertEquals("Invalid building number! Street cannot be empty! Town cannot be empty!", error);
 	}
-	
+
 	@Test
 	public void testDeleteAddressByAccount() {
 		Address address = null;
-		
+
 		try {
 			address = service.deleteAddressByAccount(Account_KEY);
-		}catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			fail();
 		}
 		assertNotNull(address);
 	}
-	
+
 	@Test
 	public void testDeleteAddressOfNonExistingAccount() {
 		Address address = null;
 		String error = "";
 		try {
 			address = service.deleteAddressByAccount("");
-		}catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			error += e.getMessage();
 		}
 		assertNull(address);
-		assertEquals(error,"Please enter a username");
+		assertEquals(error, "Please enter a username");
 	}
 //	
 //	// Test for Store
