@@ -1,9 +1,6 @@
 package ca.mcgill.ecse321.grocerystore.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -76,6 +73,10 @@ public class testGroceryStoreService {
 	private PickUpOrderRepository PickUpOrderDao;
 	@Mock
 	private InStoreOrderRepository InStoreOrderDao;
+	@Mock
+	private TimeSlotRepository timeSlotDao;
+	@Mock
+	private TerminalRepository terminalDao;
 
 	@InjectMocks
 	private GroceryStoreService service;
@@ -101,6 +102,8 @@ public class testGroceryStoreService {
 	private static final Integer address_buildingNo = 200;
 	private static final String street = "testStreet";
 	private static final String town = "testTown";
+	
+	private static final Long terminal_ID = 1L;
 
 	@BeforeEach
 	public void setMockOutput() {
@@ -387,6 +390,15 @@ public class testGroceryStoreService {
 			days.add(b2);
 			return days;
 		});
+		lenient().when(timeSlotDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			Set<TimeSlot> slots = new HashSet<TimeSlot>();
+			return slots;
+		});
+		lenient().when(terminalDao.findByTerminalID(terminal_ID)).thenAnswer((InvocationOnMock invocation) -> {
+			Terminal terminal = new Terminal();
+			terminal.setTerminalID(terminal_ID);
+			return terminal;
+		});
 		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
@@ -400,6 +412,8 @@ public class testGroceryStoreService {
 		lenient().when(perishableItemDao.save(any(PerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(cartDao.save(any(Cart.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(timeSlotDao.save(any(TimeSlot.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(terminalDao.save(any(Terminal.class))).thenAnswer(returnParameterAsAnswer);
 
 	}
 
@@ -674,8 +688,9 @@ public class testGroceryStoreService {
 	public void testCreateOwnerRole() {
 		Owner owner = null;
 		owner = service.createOwnerRole();
-
+		
 		assertNotNull(owner);
+		assertEquals("Owner",owner.toString());
 	}
 
 	@Test
@@ -684,6 +699,7 @@ public class testGroceryStoreService {
 		cashier = service.createCashierRole();
 
 		assertNotNull(cashier);
+		assertEquals("Cashier, Employment Date: " + cashier.getEmploymentDate(), cashier.toString());
 	}
 
 	@Test
@@ -692,6 +708,7 @@ public class testGroceryStoreService {
 		clerk = service.createClerkRole();
 
 		assertNotNull(clerk);
+		assertEquals("Clerk, Employment Date: " + clerk.getEmploymentDate(), clerk.toString());
 	}
 
 	@Test
@@ -700,6 +717,7 @@ public class testGroceryStoreService {
 		customer = service.createCustomerRole();
 
 		assertNotNull(customer);
+		assertEquals("Customer",customer.toString());
 	}
 
 	@Test
@@ -708,6 +726,7 @@ public class testGroceryStoreService {
 		deliveryPerson = service.createDeliveryPersonRole();
 
 		assertNotNull(deliveryPerson);
+		assertEquals("Delivery Person, Employment Date: " + deliveryPerson.getEmploymentDate(), deliveryPerson.toString());
 	}
 
 	@Test
@@ -2068,7 +2087,74 @@ public class testGroceryStoreService {
 		assertNull(report);
 		assertEquals("Please enter legal id.", error);
 	}
+	@Test
+	public void testCreateTimeSlot(){
+		Date startDate = Date.valueOf("2000-10-14");
+		Date endDate = Date.valueOf("2000-10-15");
+		Time startTime = Time.valueOf("1:00:00");
+		Time endTime = Time.valueOf("2:00:00");
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNotNull(slot);
+		assertEquals(startDate, slot.getStartDate());
+		assertEquals(endDate, slot.getEndDate());
+		assertEquals(startTime, slot.getStartTime());
+		assertEquals(endTime, slot.getEndTime());
+		assertNull(error);
+	}
+	@Test
+	public void testCreateTimeSlotNull(){
+		Date startDate = null;
+		Date endDate = null;
+		Time startTime = null;
+		Time endTime = null;
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(slot);
+		assertEquals("Start date name cannot be empty! End date time cannot be empty! Start time cannot be empty! End time cannot be empty!", error);
+	}
+	@Test
+	public void testCreateTimeSlotDateTImeEndBeforeStart(){
+		Date startDate = Date.valueOf("2000-10-16");
+		Date endDate = Date.valueOf("2000-10-15");
+		Time startTime = Time.valueOf("3:00:00");
+		Time endTime = Time.valueOf("2:00:00");
+		String error = null;
+		TimeSlot slot = null;
+		try {
+			slot = service.createTimeSlot(startDate, endDate, startTime, endTime);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(slot);
+		assertEquals("End time cannot be before start time! End date cannot be before start date!", error);
+	}
+	@Test
+	public void testGetAllTimeslot(){
+		assertNotNull(service.getAllTimeSlots());
+	}
+	@Test
+	public void testGetAllHolidays(){
+		Store store = new Store();
+		store.setHolidays(new HashSet<TimeSlot>());
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+		assertNotNull(service.getAllHolidays());
+	}
+	@Test
+	public void testGetAllHolidaysNull(){
+		Store store = new Store();
 
+<<<<<<< HEAD
 	private <T> List<T> toList(Iterable<T> iterable) {
 		List<T> resultList = new ArrayList<T>();
 		for (T t : iterable) {
@@ -2076,4 +2162,50 @@ public class testGroceryStoreService {
 		}
 		return resultList;
 	}
+=======
+		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
+		assertNull(service.getAllHolidays());
+	}
+	@Test
+	public void testCreateTerminal(){
+		Terminal terminal = null;
+		try {
+			terminal = service.createTerminal();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(terminal);
+	}
+	@Test
+	public void testDeleteTerminal() {
+		Terminal deletedTerminal = null;
+		try{ 
+			deletedTerminal = service.deleteTerminal(terminal_ID);}
+		catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(deletedTerminal);
+		assertEquals(terminal_ID, deletedTerminal.getTerminalID());
+	}
+	@Test
+	public void testDeleteTerminalNullParameter() {
+
+		Terminal deletedTerminal = null;
+		String error = null;
+		try {
+			deletedTerminal = service.deleteTerminal(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(deletedTerminal);
+		assertEquals("No terminal with this ID exists", error);
+	}
+	@Test
+	public void testGetAllTerminals(){		
+		assertNotNull(service.getAllTerminals());
+	}
+	
+>>>>>>> main
 }
+

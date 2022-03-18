@@ -1317,7 +1317,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteTerminal(Long terminalID) {
+	public Terminal deleteTerminal(Long terminalID) {
 
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
 		if (terminal != null) {
@@ -1325,7 +1325,7 @@ public class GroceryStoreService {
 		} else {
 			throw new IllegalArgumentException("No terminal with this ID exists");
 		}
-
+		return terminal;
 	}
 
 	@Transactional
@@ -1338,7 +1338,29 @@ public class GroceryStoreService {
 
 	@Transactional
 	public TimeSlot createTimeSlot(Date startDate, Date endDate, Time startTime, Time endTime) {
-
+		String error = "";
+		if (startDate == null) {
+			error = error + "Start date name cannot be empty! ";
+		}
+		if (endDate == null ) {
+			error = error + "End date time cannot be empty! ";
+		}
+		if (startTime == null ) {
+			error = error + "Start time cannot be empty! ";
+		}
+		if (endTime == null ) {
+			error = error + "End time cannot be empty! ";
+		}
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			error = error + "End time cannot be before start time! ";
+		}
+		if (endDate != null && startDate != null && endDate.before(startDate)) {
+			error = error + "End date cannot be before start date! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		TimeSlot timeSlot = new TimeSlot();
 
 		timeSlot.setStartDate(startDate);
@@ -1353,7 +1375,8 @@ public class GroceryStoreService {
 
 	@Transactional
 	public List<TimeSlot> getAllHolidays() {
-
+		if (getStore().getHolidays() == null)
+			return null;
 		return new ArrayList<TimeSlot>(getStore().getHolidays());
 	}
 
