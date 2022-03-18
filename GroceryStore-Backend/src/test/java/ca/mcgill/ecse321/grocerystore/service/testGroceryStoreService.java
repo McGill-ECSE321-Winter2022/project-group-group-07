@@ -1987,7 +1987,7 @@ public class testGroceryStoreService {
 	}
 
 	// Report
-
+	
 	@Test
 	public void testCreateReport() {
 
@@ -2154,15 +2154,6 @@ public class testGroceryStoreService {
 	public void testGetAllHolidaysNull(){
 		Store store = new Store();
 
-<<<<<<< HEAD
-	private <T> List<T> toList(Iterable<T> iterable) {
-		List<T> resultList = new ArrayList<T>();
-		for (T t : iterable) {
-			resultList.add(t);
-		}
-		return resultList;
-	}
-=======
 		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
 		assertNull(service.getAllHolidays());
 	}
@@ -2206,6 +2197,14 @@ public class testGroceryStoreService {
 		assertNotNull(service.getAllTerminals());
 	}
 	
->>>>>>> main
+
+	
+	private <T> List<T> toList(Iterable<T> iterable) {
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
+	}
 }
 

@@ -1342,13 +1342,13 @@ public class GroceryStoreService {
 		if (startDate == null) {
 			error = error + "Start date name cannot be empty! ";
 		}
-		if (endDate == null ) {
+		if (endDate == null) {
 			error = error + "End date time cannot be empty! ";
 		}
-		if (startTime == null ) {
+		if (startTime == null) {
 			error = error + "Start time cannot be empty! ";
 		}
-		if (endTime == null ) {
+		if (endTime == null) {
 			error = error + "End time cannot be empty! ";
 		}
 		if (endTime != null && startTime != null && endTime.before(startTime)) {
