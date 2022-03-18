@@ -335,7 +335,7 @@ public class GroceryStoreRestController {
 	public BusinessHourDto updateBusinessHour(@PathVariable("dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		BusinessHour bh = service.updateBusinessHourByDayOfWeek(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
+		BusinessHour bh = service.updateBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
 				Time.valueOf(endTime));
 		return convertToDto(bh);
 	}

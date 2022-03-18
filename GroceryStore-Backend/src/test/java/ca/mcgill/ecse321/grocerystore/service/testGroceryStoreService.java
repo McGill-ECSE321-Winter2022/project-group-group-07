@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.notNull;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.lenient;
 
 import java.sql.Date;
@@ -30,6 +32,7 @@ import org.mockito.stubbing.Answer;
 import ca.mcgill.ecse321.grocerystore.dao.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 
 @ExtendWith(MockitoExtension.class)
 public class testGroceryStoreService {
@@ -77,6 +80,8 @@ public class testGroceryStoreService {
 	@InjectMocks
 	private GroceryStoreService service;
 	private static final String Account_KEY = "TestAccount";
+	private static final String Account_Password = "123";
+	private static final String Account_Name = "MARK";
 
 	private static final Long PerishableItem_ID = 1L;
 	private static final String PerishableItem_name = "Apple";
@@ -102,15 +107,29 @@ public class testGroceryStoreService {
 		lenient().when(accountDao.findByUsername(anyString())).thenAnswer((InvocationOnMock invocation) -> {
 			if (invocation.getArgument(0).equals(Account_KEY)) {
 				Account account = new Account();
-				Customer customer = new Customer();
-				customer.setRoleID(1L);
-				account.setName(Account_KEY);
+				Employee employee = new Cashier();
+				employee.setRoleID(1L);
+				employee.setEmploymentDate(Date.valueOf("2020-2-2"));
+				account.setName(Account_Name);
 				account.setUsername(Account_KEY);
-				account.setAccountRole(customer);
+				account.setPassword(Account_Password);
+				account.setPointBalance(0);
+				account.setAccountRole(employee);
 				return account;
 			} else {
 				return null;
 			}
+		});
+		lenient().when(scheduleDao.findByEmployee(any(Employee.class))).thenAnswer((InvocationOnMock invocation) -> {
+			Schedule schedule = new Schedule();
+			schedule.setScheduleID(1L);
+			schedule.setEmployee(invocation.getArgument(0));
+			Set<WorkingHour> whs = new HashSet<WorkingHour>();
+			WorkingHour wh = new WorkingHour();
+			wh.setDayOfWeek(DayOfWeek.Monday);
+			whs.add(wh);
+			schedule.setWorkingHour(whs);
+			return schedule;
 		});
 		lenient().when(accountDao.findByUsernameAndPassword(anyString(), anyString()))
 				.thenAnswer((InvocationOnMock invocation) -> {
@@ -155,6 +174,18 @@ public class testGroceryStoreService {
 			List<BusinessHour> days = new ArrayList<>();
 			days.add(b1);
 			days.add(b2);
+			return days;
+		});
+		lenient().when(workingHourDao.findAll()).thenAnswer((InvocationOnMock invocation) -> {
+			WorkingHour wh1 = new WorkingHour();
+			WorkingHour wh2 = new WorkingHour();
+			wh1.setWorkingHourID(1L);
+			wh1.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+			wh2.setWorkingHourID(2L);
+			wh2.setDayOfWeek(GroceryStoreSoftwareSystem.DayOfWeek.Tuesday);
+			List<WorkingHour> days = new ArrayList<>();
+			days.add(wh1);
+			days.add(wh2);
 			return days;
 		});
 		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
@@ -317,6 +348,20 @@ public class testGroceryStoreService {
 		lenient().when(cartDao.findByAccount(any(Account.class))).thenAnswer((InvocationOnMock invocation) -> {
 			if (((Account) invocation.getArgument(0)).getUsername().equals(Account_KEY)) {
 				Cart cart = new Cart();
+				cart.setAccount(new Account());
+				cart.setCartID(1L);
+				cart.setItems(new HashSet<Item>());
+				cart.setTotalValue(0f);
+				cart.setNumOfItems(0);
+				cart.setOrderType(OrderType.Delivery);
+				cart.setTimeSlot(new TimeSlot());
+				cart.getaccount();
+				cart.getCartID();
+				cart.getItems();
+				cart.getTotalValue();
+				cart.getNumOfItems();
+				cart.getOrderType();
+				cart.getTimeSlot();
 				return cart;
 			} else {
 				return null;
@@ -424,7 +469,7 @@ public class testGroceryStoreService {
 			fail();
 		}
 		assertNotNull(account);
-		assertEquals(Account_KEY, account.getName());
+		assertEquals(Account_Name, account.getName());
 	}
 
 	@Test
@@ -1163,6 +1208,29 @@ public class testGroceryStoreService {
 		assertEquals("Day of week cannot be empty!", error);
 	}
 
+	@Test
+	public void testDeleteBusinessHourByDay() {
+		BusinessHour bh = null;
+		try {
+			bh = service.deleteBusinessHourByDay(DayOfWeek.Monday);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(bh);
+	}
+
+	@Test
+	public void testUpdateBusinessHourbyDay() {
+		BusinessHour bh = null;
+		try {
+			bh = service.updateBusinessHourByDay(DayOfWeek.Monday, Time.valueOf("10:00:00"), Time.valueOf("10:00:00"));
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+
+		assertNotNull(bh);
+		assertEquals(DayOfWeek.Monday, bh.getDayOfWeek());
+	}
 	// Items
 
 	@Test
@@ -1524,7 +1592,6 @@ public class testGroceryStoreService {
 	// WorkingHour Test
 	@Test
 	public void testCreateWorkingHour() {
-		assertEquals(0, service.getAllWorkingHours().size());
 
 		WorkingHour workingHour = null;
 
@@ -1584,59 +1651,115 @@ public class testGroceryStoreService {
 		assertNotNull(service.getAllWorkingHours());
 	}
 
-	/*
-	 * @Test public void testGetExistingWorkingHours() {
-	 * assertEquals(service.getWorkingHourByDay(GroceryStoreSoftwareSystem.DayOfWeek
-	 * .Monday).getDayOfWeek(), GroceryStoreSoftwareSystem.DayOfWeek.Monday); }
-	 */
+	@Test
+	public void testGetExistingWorkingHours() {
+		assertEquals(service.getWorkingHourByDay(GroceryStoreSoftwareSystem.DayOfWeek.Monday).getDayOfWeek(),
+				GroceryStoreSoftwareSystem.DayOfWeek.Monday);
+	}
+
 	@Test
 	public void testGetWorkingHoursNull() {
 		String error = null;
 		try {
 			service.getWorkingHourByDay(null);
+
 		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
 		assertEquals("Day of week cannot be empty!", error);
 	}
 
+	@Test
+	public void testGetWorkingHourByEmployeeAndDayOfWeek() {
+		WorkingHour wh = null;
+		String username = Account_KEY;
+
+		try {
+			wh = service.getWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.Monday);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(wh);
+		assertEquals(wh.getDayOfWeek(), DayOfWeek.Monday);
+	}
+
 	// Schedule Test
-	/*
-	 * @Test public void testCreateSchedule() { assertEquals(0,
-	 * service.getAllSchedules().size());
-	 * 
-	 * Schedule schedule = null; Integer scheduleID = 1; Cashier cashier =
-	 * service.createCashierRole(); Account employee = service.createAccount("Mark",
-	 * "123", "Mark", 0, cashier); WorkingHour workingHour =
-	 * service.createWorkingHour(DayOfWeek.Monday,
-	 * Time.valueOf("1:00:00"),Time.valueOf("2:00:00")); Set<WorkingHour>
-	 * workingHours = new HashSet<WorkingHour>(); workingHours.add(workingHour);
-	 * 
-	 * String error = null;
-	 * 
-	 * try { schedule = service.createSchedule(scheduleID, employee.getUsername(),
-	 * workingHours); } catch (IllegalArgumentException e) { error = e.getMessage();
-	 * }
-	 * 
-	 * assertNotNull(schedule); assertEquals(schedule, schedule.getScheduleID());
-	 * assertEquals(employee, schedule.getEmployee()); assertEquals(workingHours,
-	 * schedule.getWorkingHour()); }
-	 * 
-	 * @Test public void testcreateScheduleNull() { Integer scheduleID = null;
-	 * Account employee = null; Set<WorkingHour> workingHours = null;
-	 * 
-	 * Schedule schedule = null; String error = null; try { schedule =
-	 * service.createSchedule(scheduleID, employee.getUsername(), workingHours); }
-	 * catch (IllegalArgumentException e) { error = e.getMessage(); }
-	 * assertNull(schedule);
-	 * assertEquals("Schedule id cannot be empty! Schedule employee cannot be empty! Schedule working hours cannot be empty!"
-	 * , error); }
-	 */
+
+	@Test
+	public void testCreateSchedule() {
+		assertEquals(0, service.getAllSchedules().size());
+
+		Schedule schedule = null;
+		Cashier cashier = service.createCashierRole();
+		cashier.setRoleID(1L);
+		cashier.setEmploymentDate(Date.valueOf("2020-2-2"));
+		Account employee = service.createAccount(Account_KEY, Account_Password, Account_Name, 0, cashier);
+		WorkingHour workingHour = service.createWorkingHour(DayOfWeek.Monday, Time.valueOf("10:00:00"),
+				Time.valueOf("13:00:00"));
+		List<WorkingHour> workingHours = new ArrayList<WorkingHour>();
+		workingHours.add(workingHour);
+
+		String error = null;
+
+		try {
+			schedule = service.createSchedule(employee.getUsername());
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+
+		assertNotNull(schedule);
+		assertEquals(employee.getAccountRole().getRoleID(), schedule.getEmployee().getRoleID());
+		assertEquals(((Employee) employee.getAccountRole()).getEmploymentDate(),
+				schedule.getEmployee().getEmploymentDate());
+
+	}
+
+	@Test
+	public void testcreateScheduleNull() {
+		Schedule schedule = null;
+		String error = null;
+
+		try {
+			schedule = service.createSchedule(null);
+		} catch (IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		assertNull(schedule);
+		assertEquals("Schedule employee cannot be empty!", error);
+	}
 
 	@Test
 	public void testGetAllSchedules() {
 		assertNotNull(service.getAllSchedules());
 	}
+
+	@Test
+	public void testGetScheduleByEmployee() {
+		Schedule schedule = null;
+
+		Account account = accountDao.findByUsername(Account_KEY);
+
+		try {
+			schedule = service.getScheduleByEmployee(Account_KEY);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+
+		assertNotNull(schedule);
+		assertEquals(1L, schedule.getScheduleID());
+		assertEquals(account.getAccountRole().getRoleID(), schedule.getEmployee().getRoleID());
+		assertEquals(((Employee) account.getAccountRole()).getEmploymentDate(),
+				schedule.getEmployee().getEmploymentDate());
+		assertEquals(((Employee) account.getAccountRole()).getClass(), schedule.getEmployee().getClass());
+	}
+
+	@Test
+	public void testDeleteScheduleByEmployee() {
+
+		assertNotNull(service.deleteScheduleByEmployee(Account_KEY));
+	}
+
+	// Item
 
 	@Test
 	public void testUpdateNonPerishableItemInvalidParameters() {
@@ -1732,6 +1855,8 @@ public class testGroceryStoreService {
 		assertEquals(0, cart.getNumOfItems());
 		assertEquals(0f, cart.getTotalValue());
 		assertEquals(Account_KEY, cart.getaccount().getUsername());
+		assertNotNull(cart.getaccount());
+		assertNotNull(cart.getItems());
 	}
 
 	@Test
@@ -1816,6 +1941,32 @@ public class testGroceryStoreService {
 				error);
 	}
 
+	@Test
+	public void testAddToCart() {
+
+		Cart cart = null;
+
+		try {
+			cart = service.addToCart(NonPerishableItem_ID, Account_KEY);
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(cart);
+	}
+
+	@Test
+	public void testAddTimeSlotToCart() {
+
+		Cart cart = null;
+
+		try {
+			cart = service.addTimeSlotToCart(Account_KEY, new TimeSlot());
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(cart);
+	}
+
 	// Report
 
 	@Test
@@ -1898,7 +2049,7 @@ public class testGroceryStoreService {
 		Date startDate = new Date(c.getTimeInMillis());
 		Date endDate = new Date(c.getTimeInMillis());
 		assertNotNull(report);
-		assertEquals(startDate, report.getStartDate());
+		assertEquals(startDate.getTime(), report.getStartDate().getTime());
 		assertEquals(endDate, report.getEndDate());
 		assertEquals((float) 200.0, report.getTotalValue());
 	}
@@ -1918,4 +2069,11 @@ public class testGroceryStoreService {
 		assertEquals("Please enter legal id.", error);
 	}
 
+	private <T> List<T> toList(Iterable<T> iterable) {
+		List<T> resultList = new ArrayList<T>();
+		for (T t : iterable) {
+			resultList.add(t);
+		}
+		return resultList;
+	}
 }
