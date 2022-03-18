@@ -30,6 +30,8 @@ import ca.mcgill.ecse321.grocerystore.dao.*;
 import ca.mcgill.ecse321.grocerystore.model.*;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.ItemCategory;
+
 
 @ExtendWith(MockitoExtension.class)
 public class testGroceryStoreService {
@@ -262,10 +264,11 @@ public class testGroceryStoreService {
 					}
 				});
 		lenient().when(reportDao.findByReportID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
-			if (invocation.getArgument(0).equals(1L)) {
+			
 				Report report = new Report();
 				Calendar c = Calendar.getInstance();
 				c.set(2001, Calendar.JULY, 17);
+				report.setReportID(1L);
 				report.setOrders(null);
 				Date startDate = new Date(c.getTimeInMillis());
 				Date endDate = new Date(c.getTimeInMillis());
@@ -273,9 +276,7 @@ public class testGroceryStoreService {
 				report.setStartDate(startDate);
 				report.setTotalValue((float) 200.0);
 				return report;
-			} else {
-				return null;
-			}
+			
 		});
 
 		lenient().when(perishableItemDao.findByItemID(anyLong())).thenAnswer((InvocationOnMock invocation) -> {
@@ -342,6 +343,7 @@ public class testGroceryStoreService {
 						npitem.setAvailableOnline(NonPerishableItem_availableOnline);
 						npitem.setNumInStock(NonPerishableItem_numInStock);
 						npitem.setPointPerItem(NonPerishableItem_pointPerItem);
+						npitem.setCategory(ItemCategory.Furniture);
 						nplist.add(npitem);
 						return nplist;
 					} else {
@@ -1541,6 +1543,7 @@ public class testGroceryStoreService {
 		assertEquals(NonPerishableItem_price, getNPitem.getPrice());
 		assertEquals(NonPerishableItem_numInStock, getNPitem.getNumInStock());
 		assertEquals(NonPerishableItem_pointPerItem, getNPitem.getPointPerItem());
+	
 	}
 
 	@Test
@@ -1572,6 +1575,7 @@ public class testGroceryStoreService {
 			fail();
 		}
 		assertEquals(1, getNPitem.size());
+		assertEquals(ItemCategory.Furniture, getNPitem.get(0).getCategory());
 	}
 
 	@Test
@@ -2006,6 +2010,8 @@ public class testGroceryStoreService {
 		assertNotNull(report);
 		assertEquals(startDate, report.getStartDate());
 		assertEquals(endDate, report.getEndDate());
+		assertEquals(0L, report.getTotalValue());
+		assertEquals(0,report.getOrders().size());
 	}
 
 	@Test

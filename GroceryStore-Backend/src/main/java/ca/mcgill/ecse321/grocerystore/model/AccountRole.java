@@ -41,8 +41,8 @@ public abstract class AccountRole {
 			return "Delivery Person, Employment Date: " + ((DeliveryPerson) this).getEmploymentDate();
 		}
 		if (this instanceof Owner) {
-			return "Owner";
-		}
-		return null;
+            return "Owner";
+        }
+        return null;
 	}
 }
