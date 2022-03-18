@@ -32,9 +32,9 @@ Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 Sprint Report 2 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-2)
 | Name | Contribution | Hours |
 |------|--------------|-------|
-| Elias Abou Farah | Gradle build and CI (with its documentation) + Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan  | 47.5 |
-| Karim Moussa | Gradle build and CI (with its documentation) + Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Integration tests (and its documentation) + Software Quality Assurance Plan | 47.5 |
-| Adam Kazma | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods | 8 |
-| Jasmine Cheung | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan + RESTful Service documentation | 32.5 |
-| Ojetta Ye | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan + Minute Meeting | 19.5 |
-| Tran Tuan Khai Phan | Unit testing (Mockito & JUnits) + RESTful Services + Controller methods + Software Quality Assurance Plan | 12 |
+| Karim Moussa | Task issues, Heroku maintenance, Service Methods, Controller Methods, Mockito tests, JUnit Tests | 47.5 |
+| Elias Abou Farah | Heroku maintenance, Service Methods, Controller Methods, Mockito tests, JUnit Tests, Integration Tests | 47.5 |
+| Jasmine Cheung | Task issues, Service Methods, Controller Methods, Mockito tests, JUnit Tests, Documentation | 32.5 |
+| Ojetta Ye | Mockito tests, Service Methods, Controller Methods, JUnit Tests, Documentation | 17.5 |
+| Tran Tuan Khai Phan | Service Methods, Controller Methods, Mockito tests, JUnit Tests, Documentation | 17 |
+| Adam Kazma | Dto Methods, Controller Methods, Mockito Tests | 10 | 
