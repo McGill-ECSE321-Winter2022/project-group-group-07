@@ -55,7 +55,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "LocalHost:8080/customerAccount/bobTheBuilder?name=Bobby&password=123",
+					"raw": "LocalHost:8080/customerAccount/bobTheBuilder?name=Bobby&password=123456",
 					"host": [
 						"LocalHost"
 					],
@@ -71,7 +71,7 @@
 						},
 						{
 							"key": "password",
-							"value": "123"
+							"value": "123456"
 						}
 					]
 				}
@@ -176,9 +176,46 @@
 		},
 		{
 			"name": "Login Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login as customer\", () => {\r",
+							"  const responseJson = pm.response;\r",
+							"  pm.response.body=\"true\"\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/login?username=bobTheBuilder&password=123456",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "bobTheBuilder"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -321,10 +358,10 @@
 							"    \"examples\": [\r",
 							"        [\r",
 							"            {\r",
-							"                \"username\": \"emp\",\r",
-							"                \"name\": \"Robert\",\r",
+							"                \"username\": \"bobTheBuilder\",\r",
+							"                \"name\": \"Bobito\",\r",
 							"                \"pointBalance\": 0,\r",
-							"                \"role\": \"Clerk, Employment Date: 2022-03-17\"\r",
+							"                \"role\": \"Customer\"\r",
 							"            }\r",
 							"        ]\r",
 							"    ],\r",
@@ -428,9 +465,134 @@
 		},
 		{
 			"name": "Update Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let schema={\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"array\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": [],\r",
+							"    \"examples\": [\r",
+							"        [\r",
+							"            {\r",
+							"                \"username\": \"bobTheBuilder\",\r",
+							"                \"name\": \"Bobito\",\r",
+							"                \"pointBalance\": 0,\r",
+							"                \"role\": \"Customer\"\r",
+							"            }\r",
+							"        ]\r",
+							"    ],\r",
+							"    \"additionalItems\": true,\r",
+							"    \"items\": {\r",
+							"        \"$id\": \"#/items\",\r",
+							"        \"anyOf\": [\r",
+							"            {\r",
+							"                \"$id\": \"#/items/anyOf/0\",\r",
+							"                \"type\": \"object\",\r",
+							"                \"title\": \"The first anyOf schema\",\r",
+							"                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                \"default\": {},\r",
+							"                \"examples\": [\r",
+							"                    {\r",
+							"                        \"username\": \"bobTheBuilder\",\r",
+							"                        \"name\": \"Bobito\",\r",
+							"                        \"pointBalance\": 0,\r",
+							"                        \"role\": \"Customer\"\r",
+							"                    }\r",
+							"                ],\r",
+							"                \"required\": [\r",
+							"                    \"username\",\r",
+							"                    \"name\",\r",
+							"                    \"pointBalance\",\r",
+							"                    \"role\"\r",
+							"                ],\r",
+							"                \"properties\": {\r",
+							"                    \"username\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/username\",\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"title\": \"The username schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": \"\",\r",
+							"                        \"examples\": [\r",
+							"                            \"bobTheBuilder\"\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"name\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/name\",\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"title\": \"The name schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": \"\",\r",
+							"                        \"examples\": [\r",
+							"                            \"Bobito\"\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"pointBalance\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/pointBalance\",\r",
+							"                        \"type\": \"integer\",\r",
+							"                        \"title\": \"The pointBalance schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": 0,\r",
+							"                        \"examples\": [\r",
+							"                            0\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"role\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/role\",\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"title\": \"The role schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": \"\",\r",
+							"                        \"examples\": [\r",
+							"                            \"Customer\"\r",
+							"                        ]\r",
+							"                    }\r",
+							"                },\r",
+							"                \"additionalProperties\": true\r",
+							"            }\r",
+							"        ]\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"Bobito is a registered Customer.\", function () {\r",
+							" pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/updatePassword/bobTheBuilder?oldPassword=123456&newPassword=12345678",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"updatePassword",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "oldPassword",
+							"value": "123456"
+						},
+						{
+							"key": "newPassword",
+							"value": "12345678"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -441,7 +603,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test[\"Body is empty\"] = responseBody.length==0;\r",
+							"pm.test(\"Body is empty\", function () {\r",
+							"    responseBody.length==0;\r",
+							"});\r",
 							"pm.test(\"Status test\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});"
@@ -454,7 +618,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "LocalHost:8080/deleteAccount/bobTheBuilder?password=123456",
+					"raw": "LocalHost:8080/deleteAccount/bobTheBuilder?password=12345678",
 					"host": [
 						"LocalHost"
 					],
@@ -466,7 +630,7 @@
 					"query": [
 						{
 							"key": "password",
-							"value": "123456"
+							"value": "12345678"
 						}
 					]
 				}
