@@ -1288,6 +1288,7 @@ public class testGroceryStoreService {
 		assertNotNull(bh);
 		assertEquals(DayOfWeek.Monday, bh.getDayOfWeek());
 	}
+
 	// Items
 
 	@Test
@@ -2128,6 +2129,10 @@ public class testGroceryStoreService {
 		assertNull(report);
 		assertEquals("Please enter legal id.", error);
 	}
+	
+	
+	// TimeSlot
+	
 	@Test
 	public void testCreateTimeSlot(){
 		Date startDate = Date.valueOf("2000-10-14");
@@ -2198,6 +2203,10 @@ public class testGroceryStoreService {
 		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
 		assertNull(service.getAllHolidays());
 	}
+	
+	
+	// Terminal 
+	
 	@Test
 	public void testCreateTerminal(){
 		Terminal terminal = null;
