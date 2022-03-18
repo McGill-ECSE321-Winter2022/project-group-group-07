@@ -72,6 +72,8 @@ public class testGroceryStoreService {
 	private InStoreOrderRepository InStoreOrderDao;
 	@Mock
 	private TimeSlotRepository timeSlotDao;
+	@Mock
+	private TerminalRepository terminalDao;
 
 	@InjectMocks
 	private GroceryStoreService service;
@@ -95,6 +97,8 @@ public class testGroceryStoreService {
 	private static final Integer address_buildingNo = 200;
 	private static final String street = "testStreet";
 	private static final String town = "testTown";
+	
+	private static final Long terminal_ID = 1L;
 
 	@BeforeEach
 	public void setMockOutput() {
@@ -345,6 +349,11 @@ public class testGroceryStoreService {
 			Set<TimeSlot> slots = new HashSet<TimeSlot>();
 			return slots;
 		});
+		lenient().when(terminalDao.findByTerminalID(terminal_ID)).thenAnswer((InvocationOnMock invocation) -> {
+			Terminal terminal = new Terminal();
+			terminal.setTerminalID(terminal_ID);
+			return terminal;
+		});
 		Answer<?> returnParameterAsAnswer = (InvocationOnMock invocation) -> {
 			return invocation.getArgument(0);
 		};
@@ -359,6 +368,7 @@ public class testGroceryStoreService {
 		lenient().when(nonPerishableItemDao.save(any(NonPerishableItem.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(cartDao.save(any(Cart.class))).thenAnswer(returnParameterAsAnswer);
 		lenient().when(timeSlotDao.save(any(TimeSlot.class))).thenAnswer(returnParameterAsAnswer);
+		lenient().when(terminalDao.save(any(Terminal.class))).thenAnswer(returnParameterAsAnswer);
 
 	}
 
@@ -633,8 +643,9 @@ public class testGroceryStoreService {
 	public void testCreateOwnerRole() {
 		Owner owner = null;
 		owner = service.createOwnerRole();
-
+		
 		assertNotNull(owner);
+		assertEquals("Owner",owner.toString());
 	}
 
 	@Test
@@ -643,6 +654,7 @@ public class testGroceryStoreService {
 		cashier = service.createCashierRole();
 
 		assertNotNull(cashier);
+		assertEquals("Cashier, Employment Date: " + cashier.getEmploymentDate(), cashier.toString());
 	}
 
 	@Test
@@ -651,6 +663,7 @@ public class testGroceryStoreService {
 		clerk = service.createClerkRole();
 
 		assertNotNull(clerk);
+		assertEquals("Clerk, Employment Date: " + clerk.getEmploymentDate(), clerk.toString());
 	}
 
 	@Test
@@ -659,6 +672,7 @@ public class testGroceryStoreService {
 		customer = service.createCustomerRole();
 
 		assertNotNull(customer);
+		assertEquals("Customer",customer.toString());
 	}
 
 	@Test
@@ -667,6 +681,7 @@ public class testGroceryStoreService {
 		deliveryPerson = service.createDeliveryPersonRole();
 
 		assertNotNull(deliveryPerson);
+		assertEquals("Delivery Person, Employment Date: " + deliveryPerson.getEmploymentDate(), deliveryPerson.toString());
 	}
 
 	@Test
@@ -1991,6 +2006,45 @@ public class testGroceryStoreService {
 		lenient().when(storeDao.findAll()).thenReturn(Collections.singletonList(store));
 		assertNull(service.getAllHolidays());
 	}
+	@Test
+	public void testCreateTerminal(){
+		Terminal terminal = null;
+		try {
+			terminal = service.createTerminal();
+		} catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(terminal);
+	}
+	@Test
+	public void testDeleteTerminal() {
+		Terminal deletedTerminal = null;
+		try{ 
+			deletedTerminal = service.deleteTerminal(terminal_ID);}
+		catch (IllegalArgumentException e) {
+			fail();
+		}
+		assertNotNull(deletedTerminal);
+		assertEquals(terminal_ID, deletedTerminal.getTerminalID());
+	}
+	@Test
+	public void testDeleteTerminalNullParameter() {
 
+		Terminal deletedTerminal = null;
+		String error = null;
+		try {
+			deletedTerminal = service.deleteTerminal(null);
+		} catch (IllegalArgumentException e) {
+			// Check that no error occurred
+			error = e.getMessage();
+		}
+		assertNull(deletedTerminal);
+		assertEquals("No terminal with this ID exists", error);
+	}
+	@Test
+	public void testGetAllTerminals(){		
+		assertNotNull(service.getAllTerminals());
+	}
+	
 }
 

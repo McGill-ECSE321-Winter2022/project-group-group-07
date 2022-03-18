@@ -1324,7 +1324,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteTerminal(Long terminalID) {
+	public Terminal deleteTerminal(Long terminalID) {
 
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
 		if (terminal != null) {
@@ -1332,7 +1332,7 @@ public class GroceryStoreService {
 		} else {
 			throw new IllegalArgumentException("No terminal with this ID exists");
 		}
-
+		return terminal;
 	}
 
 	@Transactional
