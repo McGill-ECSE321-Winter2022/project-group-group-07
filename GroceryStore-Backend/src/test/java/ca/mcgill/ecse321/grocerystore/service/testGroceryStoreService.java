@@ -633,8 +633,9 @@ public class testGroceryStoreService {
 	public void testCreateOwnerRole() {
 		Owner owner = null;
 		owner = service.createOwnerRole();
-
+		
 		assertNotNull(owner);
+		assertEquals("Owner",owner.toString());
 	}
 
 	@Test
@@ -643,6 +644,7 @@ public class testGroceryStoreService {
 		cashier = service.createCashierRole();
 
 		assertNotNull(cashier);
+		assertEquals("Cashier, Employment Date: " + cashier.getEmploymentDate(), cashier.toString());
 	}
 
 	@Test
@@ -651,6 +653,7 @@ public class testGroceryStoreService {
 		clerk = service.createClerkRole();
 
 		assertNotNull(clerk);
+		assertEquals("Clerk, Employment Date: " + clerk.getEmploymentDate(), clerk.toString());
 	}
 
 	@Test
@@ -659,6 +662,7 @@ public class testGroceryStoreService {
 		customer = service.createCustomerRole();
 
 		assertNotNull(customer);
+		assertEquals("Customer",customer.toString());
 	}
 
 	@Test
@@ -667,6 +671,7 @@ public class testGroceryStoreService {
 		deliveryPerson = service.createDeliveryPersonRole();
 
 		assertNotNull(deliveryPerson);
+		assertEquals("Delivery Person, Employment Date: " + deliveryPerson.getEmploymentDate(), deliveryPerson.toString());
 	}
 
 	@Test
