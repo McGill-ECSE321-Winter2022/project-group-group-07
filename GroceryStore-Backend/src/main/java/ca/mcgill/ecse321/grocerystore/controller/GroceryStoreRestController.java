@@ -256,15 +256,6 @@ public class GroceryStoreRestController {
 		return service.getAllWorkingHours().stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
-//	@PostMapping(value = { "/workingHour", "/workingHour/" })
-//	public WorkingHourDto createWorkingHour(@RequestParam("dayOfWeek") String dayOfWeek,
-//			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
-//			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime)
-//			throws IllegalArgumentException {
-//		WorkingHour workingHour = service.createWorkingHour(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
-//				Time.valueOf(endTime));
-//		return convertToDto(workingHour);
-//	}
 
 	@PutMapping(value = { "/updateWorkingHour/{username}", "/updateWorkingHour/{username}/" })
 	public WorkingHourDto updateWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
@@ -585,7 +576,7 @@ public class GroceryStoreRestController {
 	public OrderDto checkout(@PathVariable("username") String username) {
 		return convertToDto(service.checkout(username));
 	}
-
+	
 	// Terminal Get, Post and Delete
 
 	@GetMapping(value = { "/terminals", "/terminals/" })

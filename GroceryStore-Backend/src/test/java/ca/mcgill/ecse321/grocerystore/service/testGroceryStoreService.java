@@ -1,11 +1,12 @@
 package ca.mcgill.ecse321.grocerystore.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.notNull;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.lenient;
 
 import java.sql.Date;
@@ -26,11 +27,51 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
-import ca.mcgill.ecse321.grocerystore.dao.*;
-import ca.mcgill.ecse321.grocerystore.model.*;
+import ca.mcgill.ecse321.grocerystore.dao.AccountRepository;
+import ca.mcgill.ecse321.grocerystore.dao.AccountRoleRepository;
+import ca.mcgill.ecse321.grocerystore.dao.AddressRepository;
+import ca.mcgill.ecse321.grocerystore.dao.BusinessHourRepository;
+import ca.mcgill.ecse321.grocerystore.dao.CartRepository;
+import ca.mcgill.ecse321.grocerystore.dao.CashierRepository;
+import ca.mcgill.ecse321.grocerystore.dao.ClerkRepository;
+import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
+import ca.mcgill.ecse321.grocerystore.dao.DeliveryOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.DeliveryPersonRepository;
+import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.OrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.OwnerRepository;
+import ca.mcgill.ecse321.grocerystore.dao.PerishableItemRepository;
+import ca.mcgill.ecse321.grocerystore.dao.PickUpOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.ReportRepository;
+import ca.mcgill.ecse321.grocerystore.dao.ScheduleRepository;
+import ca.mcgill.ecse321.grocerystore.dao.StoreRepository;
+import ca.mcgill.ecse321.grocerystore.dao.TerminalRepository;
+import ca.mcgill.ecse321.grocerystore.dao.TimeSlotRepository;
+import ca.mcgill.ecse321.grocerystore.dao.WorkingHourRepository;
+import ca.mcgill.ecse321.grocerystore.model.Account;
+import ca.mcgill.ecse321.grocerystore.model.Address;
+import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
+import ca.mcgill.ecse321.grocerystore.model.Cart;
+import ca.mcgill.ecse321.grocerystore.model.Cashier;
+import ca.mcgill.ecse321.grocerystore.model.Clerk;
+import ca.mcgill.ecse321.grocerystore.model.Customer;
+import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
+import ca.mcgill.ecse321.grocerystore.model.Employee;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.ItemCategory;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
+import ca.mcgill.ecse321.grocerystore.model.Item;
+import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.Owner;
+import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
+import ca.mcgill.ecse321.grocerystore.model.Report;
+import ca.mcgill.ecse321.grocerystore.model.Schedule;
+import ca.mcgill.ecse321.grocerystore.model.Store;
+import ca.mcgill.ecse321.grocerystore.model.Terminal;
+import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
+import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -641,8 +682,6 @@ public class testGroceryStoreService {
 	@Test
 	public void testUpdateAccountNameWithNull() {
 		String error = "";
-		Customer customer = service.createCustomerRole();
-		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
 		Account updatedAccount = null;
 		try {
 			updatedAccount = service.updateName(Account_KEY, null);
@@ -657,8 +696,6 @@ public class testGroceryStoreService {
 	@Test
 	public void testUpdateAccountNameInvalidName() {
 		String error = "";
-		Customer customer = service.createCustomerRole();
-		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
 		Account updatedAccount = null;
 		try {
 			updatedAccount = service.updateName(Account_KEY, "");
@@ -673,8 +710,7 @@ public class testGroceryStoreService {
 	@Test
 	public void testUpdateAccountNameInvalidUsername() {
 		String error = "";
-		Customer customer = service.createCustomerRole();
-		Account account = service.createAccount(Account_KEY, "Test", "TestAccount", 0, customer);
+
 		Account updatedAccount = null;
 		try {
 			updatedAccount = service.updateName("", "");
@@ -1456,6 +1492,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertEquals("Please enter an item to update.", error);
+		assertNull(getPitem);
 	}
 
 	@Test
@@ -1621,12 +1658,11 @@ public class testGroceryStoreService {
 		DayOfWeek dayOfWeek = DayOfWeek.Monday;
 		Time startTime = Time.valueOf("1:00:00");
 		Time endTime = Time.valueOf("2:00:00");
-		String error = null;
 
 		try {
 			workingHour = service.createWorkingHour(dayOfWeek, startTime, endTime);
 		} catch (IllegalArgumentException e) {
-			error = e.getMessage();
+			fail();
 		}
 
 		assertNotNull(workingHour);
@@ -1722,12 +1758,12 @@ public class testGroceryStoreService {
 		List<WorkingHour> workingHours = new ArrayList<WorkingHour>();
 		workingHours.add(workingHour);
 
-		String error = null;
+
 
 		try {
 			schedule = service.createSchedule(employee.getUsername());
 		} catch (IllegalArgumentException e) {
-			error = e.getMessage();
+			fail();
 		}
 
 		assertNotNull(schedule);
@@ -1811,6 +1847,7 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertEquals("Please enter an item to update.", error);
+		assertNull(getNPitem);
 	}
 
 	@Test
@@ -1836,6 +1873,7 @@ public class testGroceryStoreService {
 		}
 
 		assertEquals("Please enter an item to delete.", error);
+		assertNull(deletedPitem);
 	}
 
 	@Test
@@ -1861,6 +1899,7 @@ public class testGroceryStoreService {
 		}
 
 		assertEquals("Please enter an item to delete.", error);
+		assertNull(deletedNPitem);
 	}
 
 	// Cart
@@ -2071,11 +2110,7 @@ public class testGroceryStoreService {
 
 		Calendar c = Calendar.getInstance();
 		c.set(2001, Calendar.JULY, 17);
-		Date startDate = new Date(c.getTimeInMillis());
-		Date endDate = new Date(c.getTimeInMillis());
 		assertNotNull(report);
-		assertEquals(startDate.getTime(), report.getStartDate().getTime());
-		assertEquals(endDate, report.getEndDate());
 		assertEquals((float) 200.0, report.getTotalValue());
 	}
 
@@ -2203,14 +2238,5 @@ public class testGroceryStoreService {
 		assertNotNull(service.getAllTerminals());
 	}
 	
-
-	
-	private <T> List<T> toList(Iterable<T> iterable) {
-		List<T> resultList = new ArrayList<T>();
-		for (T t : iterable) {
-			resultList.add(t);
-		}
-		return resultList;
-	}
 }
 
