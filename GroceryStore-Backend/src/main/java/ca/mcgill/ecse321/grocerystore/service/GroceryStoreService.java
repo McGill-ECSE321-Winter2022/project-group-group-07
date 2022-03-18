@@ -291,6 +291,9 @@ public class GroceryStoreService {
 		Account account = accountRepository.findByUsernameAndPassword(username, password);
 
 		if (account != null) {
+			if (addressRepository.findByAccount(account)!=null) {
+				addressRepository.delete(addressRepository.findByAccount(account));
+			}
 			accountRepository.delete(account);
 			accountRoleRepository.delete(account.getAccountRole());
 			return account;
