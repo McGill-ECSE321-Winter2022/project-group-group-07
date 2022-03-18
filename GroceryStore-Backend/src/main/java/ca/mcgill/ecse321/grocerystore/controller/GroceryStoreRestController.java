@@ -304,7 +304,7 @@ public class GroceryStoreRestController {
 		return convertToDto(
 				service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
 	}
-
+	
 	@DeleteMapping(value = { "/deleteStore", "/deleteStore/" })
 	public void deleteStore() {
 		service.deleteStore();
