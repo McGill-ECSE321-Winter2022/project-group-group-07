@@ -9,7 +9,23 @@
   </div>
   <div><button>Button 4</button></div>
   </div>
-    <h1>Cashier Terminal</h1>
+  <h1 style="margin-top:1%;">Cashier Terminal</h1>
+  <div style="display:inline-flex; padding: 5%;">
+  <div style="display:table; padding: 5%;">
+  <label>Item ID:</label>
+  <input type="number" min="0" style="width:100%; text-align: center;"></input>
+  <button style="margin-top:1%;">Add Item</button>
+  </div>
+  <div style="display:table; padding: 5%;">
+  <label>Item Summary</label>
+  <select overflow="scroll" size="10" id="itemslists" style="width:100%; text-align: center;">
+  </select>
+  <button>Remove Item</button>
+  </div>
+  </div>
+  <div>
+  <button>Submit to Payment</button>
+  </div>
   </div>
 </template>
 
@@ -17,6 +33,9 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>
 <style>
 .navbar{
     height:  auto;
