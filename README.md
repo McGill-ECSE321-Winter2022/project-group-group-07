@@ -27,3 +27,14 @@ Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 | Jasmine Cheung | Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Persistence Test writing, Sprint documentation | 19.5 |
 | Ojetta Ye | Requirements, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing, Sprint Documentation, Persistence Test writing | 19.5 |
 | Tran Tuan Khai Phan | Requirements, Domain model class diagram, Use-Case Diagrams, Detailed Use-Case descriptions, Model code writing | 17.5 |
+
+## Deliverable 2
+Sprint Report 2 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-2)
+| Name | Contribution | Hours |
+|------|--------------|-------|
+| Karim Moussa | Task issues, Heroku maintenance, Service Methods, Controller Methods, Mockito tests, JUnit Tests | 47.5 |
+| Elias Abou Farah | Heroku maintenance, Service Methods, Controller Methods, Mockito tests, JUnit Tests, Integration Tests | 47.5 |
+| Jasmine Cheung | Task issues, Service Methods, Controller Methods, Mockito tests, JUnit Tests, Documentation | 32.5 |
+| Ojetta Ye | Mockito tests, Service Methods, Controller Methods, JUnit Tests, Documentation | 17.5 |
+| Tran Tuan Khai Phan | Service Methods, Controller Methods, Mockito tests, JUnit Tests, Documentation | 17 |
+| Adam Kazma | Dto Methods, Controller Methods, Mockito Tests | 10 | 

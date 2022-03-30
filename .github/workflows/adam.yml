@@ -3,8 +3,6 @@ name: Adam's Workflow
 on:
   push:
     branches: Adam's-Branch
-  pull_request:
-    branches: Adam's-Branch
 
 jobs:
   build:

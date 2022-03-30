@@ -1,0 +1,827 @@
+{
+	"info": {
+		"_postman_id": "54e380a0-fcdc-44ce-ab8b-5b1974269166",
+		"name": "Address",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Customer Acccount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/customerAccount/bobTheBuilder?name=Bobby&password=123456",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"customerAccount",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Bobby"
+						},
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set Address",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let schema={\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": {},\r",
+							"    \"examples\": [\r",
+							"        {\r",
+							"            \"buildingNo\": 650,\r",
+							"            \"street\": \"Rue Milton\",\r",
+							"            \"town\": \"Montreal\",\r",
+							"            \"username\": {\r",
+							"                \"username\": \"bobTheBuilder\",\r",
+							"                \"name\": \"Bobby\",\r",
+							"                \"pointBalance\": 0,\r",
+							"                \"role\": \"Customer\"\r",
+							"            }\r",
+							"        }\r",
+							"    ],\r",
+							"    \"required\": [\r",
+							"        \"buildingNo\",\r",
+							"        \"street\",\r",
+							"        \"town\",\r",
+							"        \"username\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"buildingNo\": {\r",
+							"            \"$id\": \"#/properties/buildingNo\",\r",
+							"            \"type\": \"integer\",\r",
+							"            \"title\": \"The buildingNo schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": 0,\r",
+							"            \"examples\": [\r",
+							"                650\r",
+							"            ]\r",
+							"        },\r",
+							"        \"street\": {\r",
+							"            \"$id\": \"#/properties/street\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The street schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Rue Milton\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"town\": {\r",
+							"            \"$id\": \"#/properties/town\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The town schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Montreal\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"username\": {\r",
+							"            \"$id\": \"#/properties/username\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"title\": \"The username schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": {},\r",
+							"            \"examples\": [\r",
+							"                {\r",
+							"                    \"username\": \"bobTheBuilder\",\r",
+							"                    \"name\": \"Bobby\",\r",
+							"                    \"pointBalance\": 0,\r",
+							"                    \"role\": \"Customer\"\r",
+							"                }\r",
+							"            ],\r",
+							"            \"required\": [\r",
+							"                \"username\",\r",
+							"                \"name\",\r",
+							"                \"pointBalance\",\r",
+							"                \"role\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"username\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/username\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The username schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"bobTheBuilder\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/name\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The name schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Bobby\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"pointBalance\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/pointBalance\",\r",
+							"                    \"type\": \"integer\",\r",
+							"                    \"title\": \"The pointBalance schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": 0,\r",
+							"                    \"examples\": [\r",
+							"                        0\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"role\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/role\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The role schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Customer\"\r",
+							"                    ]\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": true\r",
+							"}\r",
+							"pm.test(\"Bobito is a registered Customer.\", function () {\r",
+							" pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/address/bobTheBuilder?buildingNo=650&street=Rue Milton&town=Montreal",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"address",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "buildingNo",
+							"value": "650"
+						},
+						{
+							"key": "street",
+							"value": "Rue Milton"
+						},
+						{
+							"key": "town",
+							"value": "Montreal"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Addresses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let schema={\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"array\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": [],\r",
+							"    \"examples\": [\r",
+							"        [\r",
+							"            {\r",
+							"                \"buildingNo\": 650,\r",
+							"                \"street\": \"Rue Milton\",\r",
+							"                \"town\": \"Montreal\",\r",
+							"                \"username\": {\r",
+							"                    \"username\": \"bobTheBuilder\",\r",
+							"                    \"name\": \"Bobby\",\r",
+							"                    \"pointBalance\": 0,\r",
+							"                    \"role\": \"Customer\"\r",
+							"                }\r",
+							"            }\r",
+							"        ]\r",
+							"    ],\r",
+							"    \"additionalItems\": true,\r",
+							"    \"items\": {\r",
+							"        \"$id\": \"#/items\",\r",
+							"        \"anyOf\": [\r",
+							"            {\r",
+							"                \"$id\": \"#/items/anyOf/0\",\r",
+							"                \"type\": \"object\",\r",
+							"                \"title\": \"The first anyOf schema\",\r",
+							"                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                \"default\": {},\r",
+							"                \"examples\": [\r",
+							"                    {\r",
+							"                        \"buildingNo\": 650,\r",
+							"                        \"street\": \"Rue Milton\",\r",
+							"                        \"town\": \"Montreal\",\r",
+							"                        \"username\": {\r",
+							"                            \"username\": \"bobTheBuilder\",\r",
+							"                            \"name\": \"Bobby\",\r",
+							"                            \"pointBalance\": 0,\r",
+							"                            \"role\": \"Customer\"\r",
+							"                        }\r",
+							"                    }\r",
+							"                ],\r",
+							"                \"required\": [\r",
+							"                    \"buildingNo\",\r",
+							"                    \"street\",\r",
+							"                    \"town\",\r",
+							"                    \"username\"\r",
+							"                ],\r",
+							"                \"properties\": {\r",
+							"                    \"buildingNo\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/buildingNo\",\r",
+							"                        \"type\": \"integer\",\r",
+							"                        \"title\": \"The buildingNo schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": 0,\r",
+							"                        \"examples\": [\r",
+							"                            650\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"street\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/street\",\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"title\": \"The street schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": \"\",\r",
+							"                        \"examples\": [\r",
+							"                            \"Rue Milton\"\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"town\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/town\",\r",
+							"                        \"type\": \"string\",\r",
+							"                        \"title\": \"The town schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": \"\",\r",
+							"                        \"examples\": [\r",
+							"                            \"Montreal\"\r",
+							"                        ]\r",
+							"                    },\r",
+							"                    \"username\": {\r",
+							"                        \"$id\": \"#/items/anyOf/0/properties/username\",\r",
+							"                        \"type\": \"object\",\r",
+							"                        \"title\": \"The username schema\",\r",
+							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                        \"default\": {},\r",
+							"                        \"examples\": [\r",
+							"                            {\r",
+							"                                \"username\": \"bobTheBuilder\",\r",
+							"                                \"name\": \"Bobby\",\r",
+							"                                \"pointBalance\": 0,\r",
+							"                                \"role\": \"Customer\"\r",
+							"                            }\r",
+							"                        ],\r",
+							"                        \"required\": [\r",
+							"                            \"username\",\r",
+							"                            \"name\",\r",
+							"                            \"pointBalance\",\r",
+							"                            \"role\"\r",
+							"                        ],\r",
+							"                        \"properties\": {\r",
+							"                            \"username\": {\r",
+							"                                \"$id\": \"#/items/anyOf/0/properties/username/properties/username\",\r",
+							"                                \"type\": \"string\",\r",
+							"                                \"title\": \"The username schema\",\r",
+							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                                \"default\": \"\",\r",
+							"                                \"examples\": [\r",
+							"                                    \"bobTheBuilder\"\r",
+							"                                ]\r",
+							"                            },\r",
+							"                            \"name\": {\r",
+							"                                \"$id\": \"#/items/anyOf/0/properties/username/properties/name\",\r",
+							"                                \"type\": \"string\",\r",
+							"                                \"title\": \"The name schema\",\r",
+							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                                \"default\": \"\",\r",
+							"                                \"examples\": [\r",
+							"                                    \"Bobby\"\r",
+							"                                ]\r",
+							"                            },\r",
+							"                            \"pointBalance\": {\r",
+							"                                \"$id\": \"#/items/anyOf/0/properties/username/properties/pointBalance\",\r",
+							"                                \"type\": \"integer\",\r",
+							"                                \"title\": \"The pointBalance schema\",\r",
+							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                                \"default\": 0,\r",
+							"                                \"examples\": [\r",
+							"                                    0\r",
+							"                                ]\r",
+							"                            },\r",
+							"                            \"role\": {\r",
+							"                                \"$id\": \"#/items/anyOf/0/properties/username/properties/role\",\r",
+							"                                \"type\": \"string\",\r",
+							"                                \"title\": \"The role schema\",\r",
+							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                                \"default\": \"\",\r",
+							"                                \"examples\": [\r",
+							"                                    \"Customer\"\r",
+							"                                ]\r",
+							"                            }\r",
+							"                        },\r",
+							"                        \"additionalProperties\": true\r",
+							"                    }\r",
+							"                },\r",
+							"                \"additionalProperties\": true\r",
+							"            }\r",
+							"        ]\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"Get Addresses.\", function () {\r",
+							" pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/address",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Address By Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let schema={\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": {},\r",
+							"    \"examples\": [\r",
+							"        {\r",
+							"            \"buildingNo\": 650,\r",
+							"            \"street\": \"Rue Milton\",\r",
+							"            \"town\": \"Montreal\",\r",
+							"            \"username\": {\r",
+							"                \"username\": \"bobTheBuilder\",\r",
+							"                \"name\": \"Bobby\",\r",
+							"                \"pointBalance\": 0,\r",
+							"                \"role\": \"Customer\"\r",
+							"            }\r",
+							"        }\r",
+							"    ],\r",
+							"    \"required\": [\r",
+							"        \"buildingNo\",\r",
+							"        \"street\",\r",
+							"        \"town\",\r",
+							"        \"username\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"buildingNo\": {\r",
+							"            \"$id\": \"#/properties/buildingNo\",\r",
+							"            \"type\": \"integer\",\r",
+							"            \"title\": \"The buildingNo schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": 0,\r",
+							"            \"examples\": [\r",
+							"                650\r",
+							"            ]\r",
+							"        },\r",
+							"        \"street\": {\r",
+							"            \"$id\": \"#/properties/street\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The street schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Rue Milton\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"town\": {\r",
+							"            \"$id\": \"#/properties/town\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The town schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Montreal\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"username\": {\r",
+							"            \"$id\": \"#/properties/username\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"title\": \"The username schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": {},\r",
+							"            \"examples\": [\r",
+							"                {\r",
+							"                    \"username\": \"bobTheBuilder\",\r",
+							"                    \"name\": \"Bobby\",\r",
+							"                    \"pointBalance\": 0,\r",
+							"                    \"role\": \"Customer\"\r",
+							"                }\r",
+							"            ],\r",
+							"            \"required\": [\r",
+							"                \"username\",\r",
+							"                \"name\",\r",
+							"                \"pointBalance\",\r",
+							"                \"role\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"username\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/username\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The username schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"bobTheBuilder\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/name\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The name schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Bobby\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"pointBalance\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/pointBalance\",\r",
+							"                    \"type\": \"integer\",\r",
+							"                    \"title\": \"The pointBalance schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": 0,\r",
+							"                    \"examples\": [\r",
+							"                        0\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"role\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/role\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The role schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Customer\"\r",
+							"                    ]\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": true\r",
+							"}\r",
+							"pm.test(\"Get Address By Account.\", function () {\r",
+							" pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/address/bobTheBuilder",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"address",
+						"bobTheBuilder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let schema={\r",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
+							"    \"$id\": \"http://example.com/example.json\",\r",
+							"    \"type\": \"object\",\r",
+							"    \"title\": \"The root schema\",\r",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
+							"    \"default\": {},\r",
+							"    \"examples\": [\r",
+							"        {\r",
+							"            \"buildingNo\": 650,\r",
+							"            \"street\": \"Rue Milton\",\r",
+							"            \"town\": \"Montreal\",\r",
+							"            \"username\": {\r",
+							"                \"username\": \"bobTheBuilder\",\r",
+							"                \"name\": \"Bobby\",\r",
+							"                \"pointBalance\": 0,\r",
+							"                \"role\": \"Customer\"\r",
+							"            }\r",
+							"        }\r",
+							"    ],\r",
+							"    \"required\": [\r",
+							"        \"buildingNo\",\r",
+							"        \"street\",\r",
+							"        \"town\",\r",
+							"        \"username\"\r",
+							"    ],\r",
+							"    \"properties\": {\r",
+							"        \"buildingNo\": {\r",
+							"            \"$id\": \"#/properties/buildingNo\",\r",
+							"            \"type\": \"integer\",\r",
+							"            \"title\": \"The buildingNo schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": 0,\r",
+							"            \"examples\": [\r",
+							"                650\r",
+							"            ]\r",
+							"        },\r",
+							"        \"street\": {\r",
+							"            \"$id\": \"#/properties/street\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The street schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Rue Milton\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"town\": {\r",
+							"            \"$id\": \"#/properties/town\",\r",
+							"            \"type\": \"string\",\r",
+							"            \"title\": \"The town schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": \"\",\r",
+							"            \"examples\": [\r",
+							"                \"Montreal\"\r",
+							"            ]\r",
+							"        },\r",
+							"        \"username\": {\r",
+							"            \"$id\": \"#/properties/username\",\r",
+							"            \"type\": \"object\",\r",
+							"            \"title\": \"The username schema\",\r",
+							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"            \"default\": {},\r",
+							"            \"examples\": [\r",
+							"                {\r",
+							"                    \"username\": \"bobTheBuilder\",\r",
+							"                    \"name\": \"Bobby\",\r",
+							"                    \"pointBalance\": 0,\r",
+							"                    \"role\": \"Customer\"\r",
+							"                }\r",
+							"            ],\r",
+							"            \"required\": [\r",
+							"                \"username\",\r",
+							"                \"name\",\r",
+							"                \"pointBalance\",\r",
+							"                \"role\"\r",
+							"            ],\r",
+							"            \"properties\": {\r",
+							"                \"username\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/username\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The username schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"bobTheBuilder\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"name\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/name\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The name schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Bobby\"\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"pointBalance\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/pointBalance\",\r",
+							"                    \"type\": \"integer\",\r",
+							"                    \"title\": \"The pointBalance schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": 0,\r",
+							"                    \"examples\": [\r",
+							"                        0\r",
+							"                    ]\r",
+							"                },\r",
+							"                \"role\": {\r",
+							"                    \"$id\": \"#/properties/username/properties/role\",\r",
+							"                    \"type\": \"string\",\r",
+							"                    \"title\": \"The role schema\",\r",
+							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
+							"                    \"default\": \"\",\r",
+							"                    \"examples\": [\r",
+							"                        \"Customer\"\r",
+							"                    ]\r",
+							"                }\r",
+							"            },\r",
+							"            \"additionalProperties\": true\r",
+							"        }\r",
+							"    },\r",
+							"    \"additionalProperties\": true\r",
+							"}\r",
+							"pm.test(\"Update Address.\", function () {\r",
+							" pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/updateAddress/bobTheBuilder?buildingNo=500&street=Rue Peel&town=Montreal",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"updateAddress",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "buildingNo",
+							"value": "500"
+						},
+						{
+							"key": "street",
+							"value": "Rue Peel"
+						},
+						{
+							"key": "town",
+							"value": "Montreal"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete Address\", function () {\r",
+							"    responseBody.length==0;\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/deleteAddress/bobTheBuilder",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"deleteAddress",
+						"bobTheBuilder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Body is empty\", function () {\r",
+							"    responseBody.length==0;\r",
+							"});\r",
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "LocalHost:8080/deleteAccount/bobTheBuilder?password=123456",
+					"host": [
+						"LocalHost"
+					],
+					"port": "8080",
+					"path": [
+						"deleteAccount",
+						"bobTheBuilder"
+					],
+					"query": [
+						{
+							"key": "password",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

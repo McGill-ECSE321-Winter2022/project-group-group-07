@@ -3,8 +3,6 @@ name: Ojetta's Workflow
 on:
   push:
     branches: ojetta
-  pull_request:
-    branches: ojetta
 
 jobs:
   build:

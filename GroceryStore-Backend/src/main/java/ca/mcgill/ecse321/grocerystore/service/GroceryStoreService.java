@@ -109,7 +109,7 @@ public class GroceryStoreService {
 	private WorkingHourRepository workingHourRepository;
 	@Autowired
 	private AccountRoleRepository accountRoleRepository;
-	
+
 	// Account and Account Role
 
 	@Transactional
@@ -195,7 +195,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public List<Account> getAllDeliverPersons() {
+	public List<Account> getAllDeliveryPersons() {
 
 		List<Account> deliveryPersons = new ArrayList<Account>();
 
@@ -236,7 +236,7 @@ public class GroceryStoreService {
 		List<Account> accounts = new ArrayList<Account>();
 		accounts.addAll(getAllCashiers());
 		accounts.addAll(getAllClerks());
-		accounts.addAll(getAllDeliverPersons());
+		accounts.addAll(getAllDeliveryPersons());
 
 		return accounts;
 	};
@@ -275,12 +275,12 @@ public class GroceryStoreService {
 	@Transactional
 	public Account getAccount(String username) {
 		if (username == null || username.trim().length() == 0) {
-			throw new IllegalArgumentException("Please enter a username to search by."); 
+			throw new IllegalArgumentException("Invalid username");
 		}
 		Account account = accountRepository.findByUsername(username);
-		
+
 		if (account == null) {
-			throw new IllegalArgumentException("No such account to be found."); 
+			throw new IllegalArgumentException("No such account to be found.");
 		}
 		return accountRepository.findByUsername(username);
 	}
@@ -291,21 +291,25 @@ public class GroceryStoreService {
 		Account account = accountRepository.findByUsernameAndPassword(username, password);
 
 		if (account != null) {
+			if (addressRepository.findByAccount(account)!=null) {
+				addressRepository.delete(addressRepository.findByAccount(account));
+			}
 			accountRepository.delete(account);
 			accountRoleRepository.delete(account.getAccountRole());
 			return account;
-		} throw new IllegalArgumentException("No such account found. Cannot delete.");
+		}
+		throw new IllegalArgumentException("No such account found. Cannot delete.");
 
 	}
 
 	@Transactional
 	public Account updatePassword(String username, String oldPassword, String newPassword) {
 		if (newPassword == null || newPassword.trim().length() < 6) {
-			throw new IllegalArgumentException("Your password must at least be 6 characters long."); 
+			throw new IllegalArgumentException("Your password must at least be 6 characters long.");
 		}
 		Account account = accountRepository.findByUsernameAndPassword(username, oldPassword);
-		if (account == null ) {
-			throw new IllegalArgumentException("Wrong Username or Password."); 
+		if (account == null) {
+			throw new IllegalArgumentException("Wrong Username or Password.");
 		}
 
 		account.setPassword(newPassword);
@@ -318,11 +322,11 @@ public class GroceryStoreService {
 	@Transactional
 	public Account updateName(String username, String newName) {
 		if (newName == null || newName.trim().length() < 6) {
-			throw new IllegalArgumentException("Your name cannot be blank."); 
+			throw new IllegalArgumentException("Your name cannot be blank.");
 		}
 		Account account = accountRepository.findByUsername(username);
-		if (account == null ) {
-			throw new IllegalArgumentException("Wrong Username."); 
+		if (account == null) {
+			throw new IllegalArgumentException("Wrong Username.");
 		}
 		account.setName(newName);
 
@@ -345,6 +349,7 @@ public class GroceryStoreService {
 			return false;
 		}
 	}
+
 	// Address
 
 	@Transactional
@@ -382,15 +387,10 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Address getAddressByAccount(Account account) {
+	public Address getAddressByUsername(String username) {
 
-		for (Address a : addressRepository.findAll()) {
-			if (a.getAccount().equals(account)) {
-				return a;
-			}
-		}
-
-		return null;
+		Account account = getAccount(username);
+		return addressRepository.findByAccount(account);
 	}
 
 	@Transactional
@@ -402,7 +402,23 @@ public class GroceryStoreService {
 	@Transactional
 	public Address updateAddress(String username, Integer buildingNo, String street, String town) {
 
-		Account account = accountRepository.findByUsername(username);
+		String error = "";
+		if (buildingNo == null || buildingNo < 0) {
+			error = error + "Invalid building number! ";
+		}
+		if (street == null || street.trim().length() == 0) {
+			error = error + "Street cannot be empty! ";
+		}
+		if (town == null || town.trim().length() == 0) {
+			error = error + "Town cannot be empty! ";
+		}
+
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+
+		Account account = getAccount(username);
 
 		Address address = addressRepository.findByAccount(account);
 
@@ -416,11 +432,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteAddressByAccount(String username) {
+	public Address deleteAddressByAccount(String username) {
 
 		Account account = getAccount(username);
 		Address address = addressRepository.findByAccount(account);
 		addressRepository.delete(address);
+
+		return address;
 	}
 
 	// BusinessHour
@@ -479,7 +497,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public BusinessHour updateBusinessHourByDayOfWeek(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
+	public BusinessHour updateBusinessHourByDay(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
 
 		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
 
@@ -495,10 +513,12 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteBusinessHourByDay(DayOfWeek dayOfWeek) {
+	public BusinessHour deleteBusinessHourByDay(DayOfWeek dayOfWeek) {
 
 		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
 		businessHourRepository.delete(bh);
+
+		return bh;
 	}
 
 	// Cart
@@ -539,15 +559,18 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Cart addToCart(Long id, String username) {
-
+		Item item = null;
 		Cart cart = getCartByAccount(username);
-		Item item = getNonPerishableItemsByID(id);
-		if (item == null) {
-			item = getPerishableItemsByID(id);
-			if (item == null) {
+		try {
+			item = getNonPerishableItemsByID(id);
+		} catch (IllegalArgumentException e) {
+			try {
+				item = getPerishableItemsByID(id);
+			} catch (IllegalArgumentException e1) {
 				throw new IllegalArgumentException("Invalid Item ID");
 			}
 		}
+
 		cart.getItems().add(item);
 		cart.setNumOfItems(cart.getNumOfItems() + 1);
 		cart.setTotalValue(cart.getTotalValue() + item.getPrice());
@@ -648,17 +671,17 @@ public class GroceryStoreService {
 		}
 		return order;
 	}
-	
+
 	@Transactional
 	public void emptyCart(Cart cart) {
-		
+
 		cart.setTotalValue(0f);
 		cart.setNumOfItems(0);
 		cart.setOrderType(null);
 		Set<Item> items = cart.getItems();
 		items.clear();
 		cart.setItems(items);
-		
+
 		cartRepository.save(cart);
 	}
 
@@ -955,6 +978,13 @@ public class GroceryStoreService {
 	@Transactional
 	public Report createReport(Date startDate, Date endDate) {
 
+		if (endDate == null || startDate == null) {
+			throw new IllegalArgumentException("Time cannot be empty.");
+		}
+		if (endDate != null && startDate != null && endDate.before(startDate)) {
+			throw new IllegalArgumentException("End time cannot be before start time!");
+		}
+
 		Report report = new Report();
 
 		Float totalValue = 0f;
@@ -984,8 +1014,11 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Report getReportById(Long reportID) {
-
-		return reportRepository.findByReportID(reportID);
+		Report report = reportRepository.findByReportID(reportID);
+		if (report == null) {
+			throw new IllegalArgumentException("Please enter legal id.");
+		}
+		return report;
 	}
 
 	// Schedule and WorkingHour
@@ -994,7 +1027,7 @@ public class GroceryStoreService {
 	public Schedule createSchedule(String username) {
 
 		String error = "";
-		if (username == null) {
+		if (username == null || username.trim().length() == 0) {
 			error = error + "Schedule employee cannot be empty! ";
 		}
 		error = error.trim();
@@ -1033,7 +1066,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteScheduleByEmployee(String username) {
+	public Schedule deleteScheduleByEmployee(String username) {
 		Schedule schedule = null;
 		Account account = accountRepository.findByUsername(username);
 		if (account.getAccountRole() instanceof Employee) {
@@ -1041,7 +1074,7 @@ public class GroceryStoreService {
 			scheduleRepository.delete(schedule);
 		}
 
-		return;
+		return schedule;
 	}
 
 	@Transactional
@@ -1075,16 +1108,6 @@ public class GroceryStoreService {
 		workingHourRepository.save(workingHour);
 
 		return workingHour;
-	}
-
-	@Transactional
-	public WorkingHour getWorkingHourByID(Long workingHourID) {
-		for (WorkingHour workingHour : workingHourRepository.findAll()) {
-			if (workingHour.getWorkingHourID().equals(workingHourID)) {
-				return workingHour;
-			}
-		}
-		return null;
 	}
 
 	@Transactional
@@ -1223,6 +1246,32 @@ public class GroceryStoreService {
 	public Store updateStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
 
+		String error = "";
+		if (name == null || name.trim().length() == 0) {
+			error = error + "Store name cannot be empty! ";
+		}
+		if (address == null || address.trim().length() == 0) {
+			error = error + "Store address time cannot be empty! ";
+		}
+		if (phoneNumber == null || phoneNumber.trim().length() == 0) {
+			error = error + "Store phone number cannot be empty! ";
+		}
+		if (email == null || email.trim().length() == 0) {
+			error = error + "Store email cannot be empty! ";
+		}
+		if (employeeDiscountRate == null) {
+			error = error + "Employee discount rate cannot be empty! ";
+		} else if (employeeDiscountRate > 100 || employeeDiscountRate < 0) {
+			error = error + "Employee discount rate must be between 0 and 100! ";
+		}
+		if (pointToCashRatio == null) {
+			error = error + "Point to cash ratio cannot be empty! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
+
 		Store store = getStore();
 		store.setName(name);
 		store.setAddress(address);
@@ -1249,11 +1298,13 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteStore() {
+	public Store deleteStore() {
 
-		if (getStore() != null) {
-			storeRepository.delete(getStore());
+		Store store = getStore();
+		if (store != null) {
+			storeRepository.delete(store);
 		}
+		return store;
 	}
 
 	// Terminal
@@ -1269,7 +1320,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public void deleteTerminal(Long terminalID) {
+	public Terminal deleteTerminal(Long terminalID) {
 
 		Terminal terminal = terminalRepository.findByTerminalID(terminalID);
 		if (terminal != null) {
@@ -1277,7 +1328,7 @@ public class GroceryStoreService {
 		} else {
 			throw new IllegalArgumentException("No terminal with this ID exists");
 		}
-
+		return terminal;
 	}
 
 	@Transactional
@@ -1290,7 +1341,29 @@ public class GroceryStoreService {
 
 	@Transactional
 	public TimeSlot createTimeSlot(Date startDate, Date endDate, Time startTime, Time endTime) {
-
+		String error = "";
+		if (startDate == null) {
+			error = error + "Start date name cannot be empty! ";
+		}
+		if (endDate == null) {
+			error = error + "End date time cannot be empty! ";
+		}
+		if (startTime == null) {
+			error = error + "Start time cannot be empty! ";
+		}
+		if (endTime == null) {
+			error = error + "End time cannot be empty! ";
+		}
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			error = error + "End time cannot be before start time! ";
+		}
+		if (endDate != null && startDate != null && endDate.before(startDate)) {
+			error = error + "End date cannot be before start date! ";
+		}
+		error = error.trim();
+		if (error.length() > 0) {
+			throw new IllegalArgumentException(error);
+		}
 		TimeSlot timeSlot = new TimeSlot();
 
 		timeSlot.setStartDate(startDate);
@@ -1305,7 +1378,8 @@ public class GroceryStoreService {
 
 	@Transactional
 	public List<TimeSlot> getAllHolidays() {
-
+		if (getStore().getHolidays() == null)
+			return null;
 		return new ArrayList<TimeSlot>(getStore().getHolidays());
 	}
 

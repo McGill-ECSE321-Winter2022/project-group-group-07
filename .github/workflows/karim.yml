@@ -3,8 +3,6 @@ name: Karim's Workflow
 on:
   push:
     branches: karim
-  pull_request:
-    branches: karim
 
 jobs:
   build:
