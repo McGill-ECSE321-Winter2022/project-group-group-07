@@ -13,11 +13,14 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
-    "vue": "^2.5.2",
-    "vue-router": "^3.0.1",
+    "axios": "^0.26.1",
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "latest",
-    "popper.js": "^1.12.9"
+    "jquery": "^3.6.0",
+    "popper.js": "^1.12.9",
+    "save": "^2.4.0",
+    "vue": "^2.5.2",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
