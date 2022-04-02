@@ -36,9 +36,7 @@
 
 <script></script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
-<style>
+<style scoped>
 .navbar {
   height: auto;
   background-color: rgb(40, 50, 50);

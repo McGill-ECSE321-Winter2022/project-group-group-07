@@ -104,12 +104,8 @@
     <form>
       <div class="column2">
         <div style="margin-top:5em;">
-          <div><label >Day</label></div>
-          <select
-            name="days"
-            id="days"
-            style="width:200px; height:30px;"
-          >
+          <div><label>Day</label></div>
+          <select name="days" id="days" style="width:200px; height:30px;">
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>
@@ -155,8 +151,7 @@ export default {
   },
   data() {
     if (localStore.get() == customer) {
-
-    }else{
+    } else {
       this.router.push("/");
     }
     return {

@@ -1,12 +1,17 @@
 <template>
   <div>
     <div>
-    <label>
-     {{label}}
-    </label>
+      <label>
+        {{ label }}
+      </label>
     </div>
     <div>
-          <input :type="type" :pattern="pattern" v-model="inputValue" :placeholder="placeholder"/>
+      <input
+        :type="type"
+        :pattern="pattern"
+        v-model="inputValue"
+        :placeholder="placeholder"
+      />
     </div>
   </div>
 </template>
@@ -14,14 +19,14 @@
 <script>
 export default {
   name: "CustomInput",
-  props: ['label','value','type','pattern','placeholder'],
+  props: ["label", "value", "type", "pattern", "placeholder"],
   computed: {
     inputValue: {
       get() {
         return this.value;
       },
       set(v) {
-         this.$emit("change", v);
+        this.$emit("change", v);
       }
     }
   }

@@ -115,7 +115,9 @@
         </table>
       </div>
       <div class="column3">
-        <div><Button text="Fire Employee" color="red" style="float: right;"/></div>
+        <div>
+          <Button text="Fire Employee" color="red" style="float: right;" />
+        </div>
       </div>
     </div>
   </div>
