@@ -39,8 +39,6 @@
 </script>
 
 <style scoped>
-</style>
-<style>
 .navbar{
     height:  auto;
     background-color: rgb(40, 50, 50);

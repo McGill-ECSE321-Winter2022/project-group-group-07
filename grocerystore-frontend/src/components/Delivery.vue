@@ -3,9 +3,10 @@
     <div class = "navbar">
         <label>AppName</label>
         <div>
-            <button onclick="location.href = '/#/Tasks';">Tasks</button> 
-            <button onclick="location.href = '/#/Schedule';">Schedule</button>
-            <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
+            <button v-if="variable" onclick= "this.$router.push(/Tasks)">Pickup Orders</button> 
+            <button v-if="variable1" onclick="this.$router.push(/Tasks)">Delivery Orders</button> 
+            <button onclick="this.$router.push(/Schedule)">Schedule</button>
+            <button onclick="this.$router.push(/AccountInfoEmployee)">Account Information</button>
         </div>
         <div><button>Logout</button></div>
     </div>
@@ -16,7 +17,6 @@
     <div align='left'>
         <br>
         <label>Orders to be fullfilled by: </label>
-        <label id = "name" > {{customerName}} </label>
         <br>
     </div>
     <br>
@@ -25,9 +25,24 @@
 </template>
 
 
+<script>
+    export default{
+        name: "Delivery",
+        data(){
+        return {
+            variable: true,
+            variable1: false
+        }    
+    },
+        created: function() {
+            this.variable=false;
+            this.variable1=true;
+            console.log("Hello i am running");
+        }
+    }
+</script>
+
 <style scoped>
-</style>
-<style>
 .navbar{
     height:  auto;
     background-color: rgb(40, 50, 50);
