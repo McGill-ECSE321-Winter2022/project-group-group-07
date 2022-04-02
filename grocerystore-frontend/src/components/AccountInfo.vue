@@ -41,6 +41,8 @@
 </template>
 <script src="./AccountInfoScript.js">
 </script>
+<script src="./NavbarScript.js">
+</script>
 
 <style scoped>
 </style>

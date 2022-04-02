@@ -18,7 +18,7 @@ export default new Router({
       name: 'AccountInfo',
       component: AccountInfo
     },
-      path: '/Terminal',
+    { path: '/Terminal',
       name: 'Terminal',
       component: Terminal
     }
