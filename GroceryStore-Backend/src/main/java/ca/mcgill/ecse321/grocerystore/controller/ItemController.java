@@ -98,8 +98,16 @@ public class ItemController {
 	@GetMapping(value = { "/items/id:{id}", "/items/id:{id}/" })
 	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Long ID = Long.parseLong(id);
-		PerishableItem pitems = service.getPerishableItemsByID(ID);
-		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		PerishableItem pitems = null;
+		NonPerishableItem npitems = null;
+		try {
+			pitems = service.getPerishableItemsByID(ID);
+		} catch (Exception e) {
+		}
+		try {
+			npitems = service.getNonPerishableItemsByID(ID);
+		} catch (Exception e) {
+		}
 		ItemDto itemsDto = null;
 		if (pitems == null && npitems == null) {
 			throw new IllegalArgumentException("There is no such Item to get!");
