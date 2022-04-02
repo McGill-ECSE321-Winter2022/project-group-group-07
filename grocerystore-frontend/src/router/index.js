@@ -11,6 +11,7 @@ import Checkout from '@/views/Checkout'
 import ManageEmployees from '@/views/ManageEmployees'
 import StoreInfo from '@/views/StoreInfo'
 import Terminal from '@/views/Terminal'
+
 Vue.use(Router)
 
 export default new Router({
