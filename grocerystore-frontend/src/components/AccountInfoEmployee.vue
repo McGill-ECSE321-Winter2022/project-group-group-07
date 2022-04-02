@@ -1,10 +1,10 @@
 <template>
 <div class="AccountInfoEmployee">
-    <div class = "navbar">
+    <div class = "navbar">   
         <label>AppName</label>
         <div>
-            <button onclick="location.href = '/#/Tasks';">Tasks</button> 
-            <button onclick="location.href = '/#/Schedule';">Schedule</button>
+            <button v-if="variable1" onclick= "location.href = '/#/PickUp';">Pickup Orders</button> 
+            <button v-if="variable" onclick="location.href = '/#/Delivery';">Delivery Orders</button> 
             <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
         </div>
         <div><button>Logout</button></div>
@@ -35,7 +35,21 @@
 
 </div>
 </template>
-<script src="./AccountInfoScript.js">
+<script>
+ export default{
+        name: "PickUp",
+        data(){
+        return {
+            variable: true,
+            variable1: false
+        }    
+    },
+        created: function() {
+            this.variable=false;
+            this.variable1=true;
+            console.log("Hello i am running");
+        }
+    }
 </script>
 
 <style scoped>
@@ -73,12 +87,5 @@
     border-style:solid;
     border-color: azure;
     border-radius: 0.5em;
-}
-.center {
-    margin-left: auto;
-    margin-right: auto;
-}
-.margin-auto {
-    margin: 0 auto;
 }
 </style>

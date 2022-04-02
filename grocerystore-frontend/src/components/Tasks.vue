@@ -3,8 +3,6 @@
     <div class = "navbar">
         <label>AppName</label>
         <div>
-            <button onclick="location.href = '/#/Tasks';">Tasks</button> 
-            <button onclick="location.href = '/#/Schedule';">Schedule</button>
             <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
         </div>
         <div><button>Logout</button></div>

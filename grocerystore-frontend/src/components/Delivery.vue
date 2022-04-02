@@ -1,27 +1,19 @@
 <template>
-<div class="Delivery">
-    <div class = "navbar">
-        <label>AppName</label>
-        <div>
-            <button v-if="variable" onclick= "this.$router.push(/Tasks)">Pickup Orders</button> 
-            <button v-if="variable1" onclick="this.$router.push(/Tasks)">Delivery Orders</button> 
-            <button onclick="this.$router.push(/Schedule)">Schedule</button>
-            <button onclick="this.$router.push(/AccountInfoEmployee)">Account Information</button>
+    <div class="Delivery">
+        <div class = "navbar">
+            <label>AppName</label>
+            <div>
+                <button v-if="variable" onclick= "location.href = '/#/PickUp';">Pickup Orders</button> 
+                <button v-if="variable1" onclick="location.href = '/#/Delivery';">Delivery Orders</button> 
+                <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
+            </div>
+            <div><button>Logout</button></div>
         </div>
-        <div><button>Logout</button></div>
+
+        <h1 style="margin-top:1%">Delivery</h1>
+        <div align="left"><label>Orders to be fullfilled by: </label></div>
+ 
     </div>
-     <h1 style="margin-top:1%">Delivery</h1>
-
-    <br>
-
-    <div align='left'>
-        <br>
-        <label>Orders to be fullfilled by: </label>
-        <br>
-    </div>
-    <br>
-
-</div>
 </template>
 
 
