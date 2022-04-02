@@ -1,39 +1,37 @@
 <template>
-  <div class = "product">
+  <div class="product">
     <div class="product_image">
       <img
-        :src= "product.image"
+        :src="product.image"
         :alt="product.name"
         class="product_image"
         style="width: 150px; min-width: 150px;"
-      >
+      />
     </div>
     <div class="product_content">
       <div class="product_status">
         <h3 class="product_header">{{ product.name }}</h3>
         <p v-if="product.inStock" class="product_instock"><b> INSTOCK </b></p>
         <p v-else class="product_out_of_stock"><b> OUT OF STOCK </b></p>
-        <p v-if="!product.online & product.inStock" class="product_instore_only"><b> STORE PICKUP ONLY </b></p>
+        <p
+          v-if="!product.online & product.inStock"
+          class="product_instore_only"
+        >
+          <b> STORE PICKUP ONLY </b>
+        </p>
       </div>
       <div class="product_cart">
-        <p><b class = product_price>{{ product.price }} CAD</b></p>
-        <button
-          @click="updateCart( 'subtract')"
-          class="product_button"
-        >
+        <p>
+          <b class="product_price">{{ product.price }} CAD</b>
+        </p>
+        <button @click="updateCart('subtract')" class="product_button">
           -
         </button>
         <span class="cart_quantity">{{ product.quantity }}</span>
-        <button
-          @click="updateCart( 'add')"
-          class="product_button"
-        >
+        <button @click="updateCart('add')" class="product_button">
           +
         </button>
-        <button
-          @click="updateCart( 'remove')"
-          class="product_remove"
-        >
+        <button @click="updateCart('remove')" class="product_remove">
           x
         </button>
       </div>
@@ -44,62 +42,64 @@
 <script>
 export default {
   props: ["product"],
-  methods:{
-    updateCart(updateType){
+  methods: {
+    updateCart(updateType) {
       this.$emit(updateType);
     }
   }
-}
+};
 </script>
 <style scoped>
-.product{
+.product {
   display: flex;
+  flex-direction: row;
   background-color: whitesmoke;
   border-radius: 10px;
   padding: 5px;
   text-align: left;
 }
-.product_image{
+.product_image {
   text-align: center;
-  flex: 1
+  flex: 1;
 }
-.product_content{
-  flex: 9
+.product_content {
+  flex: 9;
+  display: flex;
+  flex-direction: row;
 }
-.product_cart{
-  padding-top: 30px;
+.product_cart {
+  padding-top: 50px;
   text-align: right;
-  font-size:large;
+  font-size: large;
+  margin-inline-start: auto;
 }
-.product_price{
+.product_price {
   padding-right: 30px;
   font-size: 20px;
   color: darkgreen;
 }
-.product_status{
+.product_status {
   padding-left: 15px;
 }
-.product_header{
-}
-.product_instock{
+.product_instock {
   background-color: green;
   width: 150px;
   text-align: center;
   color: white;
   font-size: 15px;
 }
-.product_out_of_stock{
+.product_out_of_stock {
   background-color: red;
   width: 150px;
   text-align: center;
   color: white;
   font-size: 15px;
 }
-.product_instore_only{
+.product_instore_only {
   font-size: 13px;
   color: red;
 }
-.product_button{
+.product_button {
   background-color: forestgreen;
   border: none;
   color: white;
@@ -112,7 +112,7 @@ export default {
   font-size: 20px;
   cursor: pointer;
 }
-.product_remove{
+.product_remove {
   background-color: transparent;
   border: transparent;
   color: red;
