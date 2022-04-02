@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import AccountInfo from '@/components/AccountInfo'
-import Terminal from '@/components/Terminal'
+import Hello from '@/views/Hello'
+import AccountInfo from '@/views/AccountInfo'
+import Cart from '@/views/Cart'
+import Checkout from '@/views/Checkout'
+import ManageEmployees from '@/views/ManageEmployees'
+import StoreInfo from '@/views/StoreInfo'
+import Terminal from '@/views/Terminal'
 import AccountInfoEmployee from '@/components/AccountInfoEmployee'
 import Delivery from '@/components/Delivery'
 import PickUp from '@/components/PickUp'
@@ -19,6 +23,26 @@ export default new Router({
       path: '/AccountInfo',
       name: 'AccountInfo',
       component: AccountInfo
+    },
+    {
+      path: '/Cart',
+      name: 'Cart',
+      component: Cart
+    },
+    {
+      path: '/Checkout',
+      name: 'Checkout',
+      component: Checkout
+    },
+    {
+      path: '/ManageEmployees',
+      name: 'ManageEmployees',
+      component: ManageEmployees
+    },
+    {
+      path: '/StoreInfo',
+      name: 'StoreInfo',
+      component: StoreInfo
     },
     {
       path: '/Terminal',
