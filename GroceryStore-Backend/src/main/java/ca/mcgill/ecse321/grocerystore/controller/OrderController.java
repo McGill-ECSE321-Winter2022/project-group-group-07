@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +38,6 @@ import ca.mcgill.ecse321.grocerystore.model.PickUpOrder;
 import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/order")
@@ -46,18 +47,22 @@ public class OrderController {
 	private GroceryStoreService service;
 
 	@GetMapping(value = { "/order/{username}", "/order/{username}/" })
-	public List<OrderDto> getOrdersByAccount(@PathVariable("username") String username) {
-		List<OrderDto> orders = new ArrayList<OrderDto>();
-		for (Order order : service.getDeliveryOrdersByAccount(service.getAccount(username))) {
-			orders.add(convertToDto(order));
+	public ResponseEntity<?> getOrdersByAccount(@PathVariable("username") String username) {
+		try {
+			List<OrderDto> orders = new ArrayList<OrderDto>();
+			for (Order order : service.getDeliveryOrdersByAccount(service.getAccount(username))) {
+				orders.add(convertToDto(order));
+			}
+			for (Order order : service.getInStoreOrdersByAccount(service.getAccount(username))) {
+				orders.add(convertToDto(order));
+			}
+			for (Order order : service.getPickUpOrdersByAccount(service.getAccount(username))) {
+				orders.add(convertToDto(order));
+			}
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		for (Order order : service.getInStoreOrdersByAccount(service.getAccount(username))) {
-			orders.add(convertToDto(order));
-		}
-		for (Order order : service.getPickUpOrdersByAccount(service.getAccount(username))) {
-			orders.add(convertToDto(order));
-		}
-		return orders;
 	}
 	@GetMapping(value = { "/pickUpOrders", "/pickUpOrders/" })
 	public List<OrderDto> getAllPickUpOrders() {
@@ -76,56 +81,71 @@ public class OrderController {
 		return orders;
 	}
 	@GetMapping(value = { "/order/{id}", "/order/{id}/" })
-	public OrderDto getOrderByID(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getOrderByID(@PathVariable("id") Long id) {
 		Order order = service.getOrderById(id);
-		return convertToDto(order);
+		return new ResponseEntity<>(order, HttpStatus.OK);
 	}
 
-	@PostMapping(value = { "/createInPersonOrder", "/createInPersonOrder/" })
-	public InStoreOrderDto createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
+	@PostMapping(value = { "/createInStoreOrder", "/createInStoreOrder/" })
+	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam Set<Item> items) {
-		return (InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, items));
+		return new ResponseEntity<>(
+				(InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, items)),
+				HttpStatus.CREATED);
 	}
 
-	@PostMapping(value = { "/createInPersonOrder/{username}", "/createInPersonOrder/{username}/" })
-	public InStoreOrderDto createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
+	@PostMapping(value = { "/createInStoreOrder/{username}", "/createInStoreOrderF/{username}/" })
+	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam Set<Item> items, @PathVariable("username") String username) {
-		return (InStoreOrderDto) convertToDto(
-				service.createInStoreOrder(date, purchaseTime, items, service.getAccount(username)));
+		return new ResponseEntity<>(
+				(InStoreOrderDto) convertToDto(
+						service.createInStoreOrder(date, purchaseTime, items, service.getAccount(username))),
+				HttpStatus.CREATED);
 	}
 
 	@PostMapping(value = { "/createDeliveryOrder/{username}", "/createDeliveryOrder/{username}/" })
-	public DeliveryOrderDto createDeliveryOrder(@PathVariable("username") String username, @RequestParam Date date,
+	public ResponseEntity<?> createDeliveryOrder(@PathVariable("username") String username, @RequestParam Date date,
 			@RequestParam Time purchaseTime, @RequestParam Set<Item> items, @RequestParam Date startDate,
 			@RequestParam Date endDate, @RequestParam Time startTime, @RequestParam Time endTime) {
-		return (DeliveryOrderDto) convertToDto(service.createDeliveryOrder(date, purchaseTime, items,
-				service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username)));
+		return new ResponseEntity<>(
+				(DeliveryOrderDto) convertToDto(service.createDeliveryOrder(date, purchaseTime, items,
+						service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username))),
+				HttpStatus.OK);
 	}
 
 	@PostMapping(value = { "/createPickUpOrder/{username}", "/createPickUpOrder/{username}/" })
-	public PickUpOrderDto createPickUpOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
+	public ResponseEntity<?> createPickUpOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam Set<Item> items, @RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam Time startTime, @RequestParam Time endTime, @PathVariable("username") String username) {
-		return (PickUpOrderDto) convertToDto(service.createPickUpOrder(date, purchaseTime, items,
-				service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username)));
+		return new ResponseEntity<>(
+				(PickUpOrderDto) convertToDto(service.createPickUpOrder(date, purchaseTime, items,
+						service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username))),
+				HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = { "/deliveryUpdate/{id}", "/deliveryUpdate/{id}/" })
-	public DeliveryOrderDto updateDeliveryStatus(@PathVariable("id") long id, @RequestParam String status) {
-		return (DeliveryOrderDto) convertToDto(
-				service.updateDeliveryOrderStatus((DeliveryOrder) service.getOrderById(id), status));
+	public ResponseEntity<?> updateDeliveryStatus(@PathVariable("id") long id, @RequestParam String status) {
+		return new ResponseEntity<>(
+				(DeliveryOrderDto) convertToDto(
+						service.updateDeliveryOrderStatus((DeliveryOrder) service.getOrderById(id), status)),
+				HttpStatus.OK);
 	}
 
 	@PutMapping(value = { "/PickUpUpdate/{id}", "/PickUpUpdate/{id}/" })
-	public PickUpOrderDto updatePickUpStatus(@PathVariable("id") long id, @RequestParam String status) {
-		return (PickUpOrderDto) convertToDto(
-				service.updatePickUpOrderStatus((PickUpOrder) service.getOrderById(id), status));
+	public ResponseEntity<?> updatePickUpStatus(@PathVariable("id") long id, @RequestParam String status) {
+		return new ResponseEntity<>(
+				(PickUpOrderDto) convertToDto(
+						service.updatePickUpOrderStatus((PickUpOrder) service.getOrderById(id), status)),
+				HttpStatus.OK);
 	}
 
 	@PostMapping(value = { "/checkout/{username}", "/checkout/{username}/" })
-	public OrderDto checkout(@PathVariable("username") String username) {
-		return convertToDto(service.checkout(username));
+	public ResponseEntity<?> checkout(@PathVariable("username") String username) {
+		return new ResponseEntity<>(convertToDto(service.checkout(username)), HttpStatus.OK);
 	}
+
+	// -----------------------------------------------------------------------------------------------------------------//
+	// ConvertToDto helper methods
 
 	private OrderDto convertToDto(Order order) {
 		Long orderID = order.getOrderID();
