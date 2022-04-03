@@ -12,7 +12,7 @@
         
         <h1 style="margin-top:1%">Pick Up</h1>
         
-        <div align="left"><label>Orders to be fullfilled</label></div>
+        <div align="left"><label>Orders to be fulfilled</label></div>
             <div class="one">
                 <section class="products" v-if="orders.length > 0">
                     <div v-for="order in orders" :key="order.ID" class="product">
@@ -31,7 +31,7 @@
 <script>
    import Order from "../components/Order.vue";
     export default{
-        name: "Delivery",
+        name: "PickUp",
         components: {
             Order
         },
