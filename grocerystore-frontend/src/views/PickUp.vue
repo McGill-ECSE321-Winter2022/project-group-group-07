@@ -39,41 +39,7 @@
             return {
                 variable: true,
                 variable1: false,
-                orders : [
-                    {
-                        id: 9,
-                        name: "Product 3",
-                        description: "This is an incredibly awesome product",
-                        quantity: 1,
-                        time: 50,
-                        inStock: true,
-                        online: true,
-                        inventory: 7,
-                        image: "https://via.placeholder.com/150"
-                    },
-                    {
-                        id: 7,
-                        name: "Product 1",
-                        description: "This is an incredibly awesome product",
-                        quantity: 1,
-                        time: 100,
-                        inStock: false,
-                        online: true,
-                        inventory: 7,
-                        image: "https://via.placeholder.com/150"
-                    },
-                    {
-                        id: 8,
-                        name: "Product 2",
-                        description: "This is an incredibly awesome product",
-                        quantity: 1,
-                        time: 10.8,
-                        inStock: false,
-                        online: false,
-                        inventory: 7,
-                        image: "https://via.placeholder.com/150"
-                    },
-                ]
+                orders : []
             }
         },
         created: function() {

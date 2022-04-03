@@ -39,7 +39,7 @@
             return {
                 variable: true,
                 variable1: false,
-                orders : jQuery.getJSON("https://grocerystore-backend-g7g.herokuapp.com/getAllDeliveryOrders")
+                orders : []
             }
         },
         created: function() {
