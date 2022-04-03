@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,17 +32,24 @@ public class AddressController {
 	private GroceryStoreService service;
 
 	@PostMapping(value = { "/address/{username}", "/address/{username}/" })
-	public AddressDto createAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
+	public ResponseEntity<?> createAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
 			@RequestParam String street, @RequestParam String town) {
 
-		Account account = service.getAccount(username);
-		Address address = service.createAddress(buildingNo, street, town, account);
+		try {
+			Account account = service.getAccount(username);
+			Address address = service.createAddress(buildingNo, street, town, account);
+			return new ResponseEntity<>(convertToDto(address, convertToDto(account, account.getAccountRole())),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
 
-		return convertToDto(address, convertToDto(account, account.getAccountRole()));
 	}
 
 	@GetMapping(value = { "/address", "/address/" })
-	public List<AddressDto> getAllAddresses() {
+	public ResponseEntity<?> getAllAddresses() {
 
 		List<AddressDto> addresses = new ArrayList<AddressDto>();
 
@@ -49,27 +58,36 @@ public class AddressController {
 				addresses.add(convertToDto(a, convertToDto(a.getAccount(), a.getAccount().getAccountRole())));
 			}
 		}
-		return addresses;
+		return new ResponseEntity<>(addresses, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/address/{username}", "/address/{username}/" })
-	public AddressDto getAddressByAccount(@PathVariable("username") String username) {
+	public ResponseEntity<?> getAddressByAccount(@PathVariable("username") String username) {
 
 		Account account = service.getAccount(username);
-		return convertToDto(service.getAddressByUsername(username), convertToDto(account, account.getAccountRole()));
+		return new ResponseEntity<>(
+				convertToDto(service.getAddressByUsername(username), convertToDto(account, account.getAccountRole())),
+				HttpStatus.OK);
 
 	}
 
 	@PutMapping(value = { "/updateAddress/{username}", "/updateAddress/{username}/" })
-	public AddressDto updateAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
+	public ResponseEntity<?> updateAddress(@PathVariable("username") String username, @RequestParam Integer buildingNo,
 			@RequestParam String street, @RequestParam String town) {
-
-		Address address = service.updateAddress(username, buildingNo, street, town);
-		return convertToDto(address, convertToDto(address.getAccount(), address.getAccount().getAccountRole()));
+		try {
+			Address address = service.updateAddress(username, buildingNo, street, town);
+			return new ResponseEntity<>(
+					convertToDto(address, convertToDto(address.getAccount(), address.getAccount().getAccountRole())),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@DeleteMapping(value = { "/deleteAddress/{username}", "/deleteAddress/{username}/" })
-	void deleteAddressByAccount(@PathVariable("username") String username) {
+	public void deleteAddressByAccount(@PathVariable("username") String username) {
 		service.deleteAddressByAccount(username);
 	}
 

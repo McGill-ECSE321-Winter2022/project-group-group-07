@@ -118,6 +118,42 @@
         <div>
           <Button text="Fire Employee" color="red" style="float: right;" />
         </div>
+        <form style="padding:10px; margin-top:2em;">
+          <div>
+            <div>
+              <div><label>Day</label></div>
+              <select name="days" id="days" style="width:200px; height:30px;">
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <CustomInput
+              label="Start Time"
+              type="time"
+              :value="startTime"
+              @change="v => (startTime = v)"
+              style="font-size: 20px"
+            />
+            <CustomInput
+              label="End Time"
+              type="time"
+              :value="endTime"
+              @change="v => (endTime = v)"
+              style="font-size: 20px;"
+            />
+          </div>
+          <div style="margin-top: 10px;">
+            <Button text="Add" color="black" />
+            <Button text="Update" color="black" />
+          </div>
+        </form>
       </div>
     </div>
   </div>
