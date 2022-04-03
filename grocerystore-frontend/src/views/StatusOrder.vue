@@ -30,6 +30,7 @@
                 <td style = "margin-left: 18px">{{ pickup.orderID }}     {{ pickup.status }}</td>
             </tr>
         </table>
+         <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
     </div>
 
 </div>
@@ -52,26 +53,32 @@ export default {
     data () {
         return {
             deliveries: [],
-            pickups: []
+            pickups: [],
+            erorrName: ''
         }
       },
 
       created: function () {
+        var username = localStorage.getItem('token')
         //not yet written --> get deliveries of one customer
-        AXIOS.get('/api/...')
+        AXIOS.get('/api/order/deliveryOrders'.concat(username))
         .then(response => {
-
+            this.deliveries.push(response.data)
         })
         .catch(e => {
-          
+           var errorMsg = e.response.data.message
+           console.log(errorMsg)
+           this.errorName = errorMsg
         }),
          //not yet written --> get pickup of one customer
-        AXIOS.get('/api/...')
+        AXIOS.get('/api/order/pickupOrders'.concat(username))
         .then(response => {
-
+            this.pickups.push(response.data)
         })
         .catch(e => {
-          
+            var errorMsg = e.response.data.message
+            console.log(errorMsg)
+            this.errorName = errorMsg
         })
       },
     
