@@ -10,6 +10,8 @@ import Checkout from '@/views/Checkout'
 import ManageEmployees from '@/views/ManageEmployees'
 import StoreInfo from '@/views/StoreInfo'
 import Terminal from '@/views/Terminal'
+import StatusOrder from '@/views/StatusOrder'
+
 
 Vue.use(Router)
 
@@ -50,6 +52,7 @@ export default new Router({
       name: 'Terminal',
       component: Terminal
     },
+<<<<<<< HEAD
     {
       path: '/AccountInfoEmployee',
       name: 'AccountInfoEmployee',
@@ -64,6 +67,11 @@ export default new Router({
       path: '/PickUp',
       name: 'PickUp',
       component: PickUp
+=======
+    { path: '/StatusOrder',
+      name: 'StatusOrder',
+      component: StatusOrder
+>>>>>>> main
     }
     
   ]
