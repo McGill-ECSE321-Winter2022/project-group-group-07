@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-import Hello from '@/views/Hello'
-import AccountInfo from '@/views/AccountInfo'
 import Hello from '@/views/Hello'
 import AccountInfo from '@/views/AccountInfo'
 import AccountInfoEmployee from '@/views/AccountInfoEmployee'
