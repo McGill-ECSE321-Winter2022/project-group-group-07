@@ -8,7 +8,7 @@
         <button>Order Status</button>
         <button>Account Information</button>
       </div>
-      <div><button>Logout</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <h1 style="margin-top:1%;">Account Informations</h1>
 
@@ -37,7 +37,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 var config = require('../../config')
