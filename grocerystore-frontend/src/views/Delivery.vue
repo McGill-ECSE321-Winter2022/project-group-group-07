@@ -72,7 +72,7 @@
                 window.alert("Update successful.");
               })
               .catch((e) => {
-                window.alert(e.response.data);
+                window.alert("Failed to update.");
                 return;
               })
             }

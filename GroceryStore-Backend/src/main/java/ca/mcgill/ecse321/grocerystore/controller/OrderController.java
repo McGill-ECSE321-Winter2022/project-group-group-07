@@ -65,12 +65,12 @@ public class OrderController {
 		}
 	}
 	@GetMapping(value = { "/pickUpOrders", "/pickUpOrders/" })
-	public List<OrderDto> getAllPickUpOrders() {
+	public ResponseEntity<?> getAllPickUpOrders() {
 		List<OrderDto> orders = new ArrayList<OrderDto>();
 		for (Order order : service.getAllPickUpOrders()) {
 			orders.add(convertToDto(order));
 		}
-		return orders;
+		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 	@GetMapping(value = { "/deliveryOrders", "/deliveryOrders/" })
 	public ResponseEntity<?> getAllDeliveryOrders() {
