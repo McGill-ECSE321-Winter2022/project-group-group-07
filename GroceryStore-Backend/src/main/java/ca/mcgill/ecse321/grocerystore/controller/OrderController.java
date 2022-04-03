@@ -59,7 +59,22 @@ public class OrderController {
 		}
 		return orders;
 	}
-
+	@GetMapping(value = { "/pickUpOrders", "/pickUpOrders/" })
+	public List<OrderDto> getAllPickUpOrders() {
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for (Order order : service.getAllPickUpOrders()) {
+			orders.add(convertToDto(order));
+		}
+		return orders;
+	}
+	@GetMapping(value = { "/deliveryOrders", "/deliveryOrders/" })
+	public List<OrderDto> getAllDeliveryOrders() {
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for (Order order : service.getAllDeliveryOrders()) {
+			orders.add(convertToDto(order));
+		}
+		return orders;
+	}
 	@GetMapping(value = { "/order/{id}", "/order/{id}/" })
 	public OrderDto getOrderByID(@PathVariable("id") Long id) {
 		Order order = service.getOrderById(id);

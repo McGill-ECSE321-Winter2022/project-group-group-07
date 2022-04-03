@@ -5,7 +5,7 @@
       <label>AppName</label>
       <div>
         <button>Catalog</button>
-        <button onclick="location.href='http://127.0.0.1:8087/#/Cart'">
+        <button onclick="location.href='/#/Cart'">
           Cart/Checkout
         </button>
         <button>Order Status</button>
