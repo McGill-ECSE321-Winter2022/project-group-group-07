@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,27 +28,31 @@ public class TerminalController {
 	private GroceryStoreService service;
 
 	@GetMapping(value = { "/terminals", "/terminals/" })
-	public List<TerminalDto> getAllTerminals() {
+	public ResponseEntity<?> getAllTerminals() {
 
 		List<TerminalDto> terminals = new ArrayList<TerminalDto>();
 		for (Terminal t : service.getAllTerminals()) {
 			terminals.add(convertToDto(t));
 		}
 
-		return terminals;
+		return new ResponseEntity<>(terminals, HttpStatus.OK);
 
 	}
 
 	@PostMapping(value = { "/terminal", "/terminal/" })
-	public TerminalDto createTerminal() {
+	public ResponseEntity<?> createTerminal() {
 
-		return convertToDto(service.createTerminal());
+		return new ResponseEntity<>(convertToDto(service.createTerminal()), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = { "/deleteTerminal/{id}", "/deleteTerminal/{id}/" })
-	public void deleteTerminalbyID(@PathVariable("id") Long terminalID) {
-
-		service.deleteTerminal(terminalID);
+	public ResponseEntity<?> deleteTerminalbyID(@PathVariable("id") Long terminalID) {
+		try {
+			service.deleteTerminal(terminalID);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 

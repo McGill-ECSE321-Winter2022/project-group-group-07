@@ -1059,8 +1059,9 @@ public class GroceryStoreService {
 	public Schedule getScheduleByEmployee(String username) {
 
 		Employee employee = null;
-		if (accountRepository.findByUsername(username).getAccountRole() instanceof Employee) {
-			employee = (Employee) accountRepository.findByUsername(username).getAccountRole();
+		Account acc = getAccount(username);
+		if (acc.getAccountRole() instanceof Employee) {
+			employee = (Employee) acc.getAccountRole();
 		}
 		return scheduleRepository.findByEmployee(employee);
 	}
@@ -1068,7 +1069,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Schedule deleteScheduleByEmployee(String username) {
 		Schedule schedule = null;
-		Account account = accountRepository.findByUsername(username);
+		Account account = getAccount(username);
 		if (account.getAccountRole() instanceof Employee) {
 			schedule = scheduleRepository.findByEmployee((Employee) account.getAccountRole());
 			scheduleRepository.delete(schedule);

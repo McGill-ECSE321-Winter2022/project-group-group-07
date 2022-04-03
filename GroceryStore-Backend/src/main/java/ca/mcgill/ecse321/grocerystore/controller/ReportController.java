@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,25 +47,35 @@ public class ReportController {
 	private GroceryStoreService service;
 
 	@GetMapping(value = { "/reports", "/reports/" })
-	public List<ReportDto> getAllReports() {
+	public ResponseEntity<?> getAllReports() {
 		List<ReportDto> reports = new ArrayList<ReportDto>();
 		for (Report report : service.getAllReports()) {
 			reports.add(convertToDto(report));
 		}
-		return reports;
+		return new ResponseEntity<>(reports, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/report/{id}", "/report/{id}/" })
-	public ReportDto getReportByID(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getReportByID(@PathVariable("id") Long id) {
 		Report report = service.getReportById(id);
-		return convertToDto(report);
+		if(report == null) {
+			return new ResponseEntity<>("There is no report with the given ID.", HttpStatus.BAD_REQUEST);
+		}
+		else{
+			return new ResponseEntity<>(convertToDto(report), HttpStatus.OK);
+		}
 	}
 
 	@PostMapping(value = { "/report", "/report/" })
-	public ReportDto createReport(@RequestParam Date startDate, @RequestParam Date endDate)
-			throws IllegalArgumentException {
-		Report report = service.createReport(startDate, endDate);
-		return convertToDto(report);
+	public ResponseEntity<?> createReport(@RequestParam Date startDate, @RequestParam Date endDate){
+		Report report;
+		try {
+			report = service.createReport(startDate, endDate);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(report), HttpStatus.OK);
 	}
 
 	private ReportDto convertToDto(Report report) {

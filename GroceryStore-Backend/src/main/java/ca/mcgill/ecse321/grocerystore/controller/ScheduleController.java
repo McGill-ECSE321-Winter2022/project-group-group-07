@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,61 +37,115 @@ public class ScheduleController {
 	// Schedule
 
 	@GetMapping(value = { "/schedule/{username}", "/schedule/{username}/" })
-	public ScheduleDto getScheduleByEmployee(@PathVariable("username") String username) {
-
-		return convertToDto(service.getScheduleByEmployee(username));
+	public ResponseEntity<?> getScheduleByEmployee(@PathVariable("username") String username) {
+		Schedule sch = null;
+		try {
+			sch = service.getScheduleByEmployee(username);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		if(sch == null) {
+			return new ResponseEntity<>("There is no employee account with that username.", HttpStatus.BAD_REQUEST);
+		}
+		else {
+			return new ResponseEntity<>(convertToDto(sch), HttpStatus.OK);
+		}
 	}
 
 	@GetMapping(value = { "/allSchedules", "/allSchedules/" })
-	public List<ScheduleDto> getAllSchedules() {
-		return service.getAllSchedules().stream().map(this::convertToDto).collect(Collectors.toList());
+	public ResponseEntity<?> getAllSchedules() {
+		return new ResponseEntity<>(service.getAllSchedules().stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@PostMapping(value = { "/schedule", "/schedules/" })
-	public ScheduleDto createScheduleForEmployee(@RequestParam String username) throws IllegalArgumentException {
-		Schedule schedule = service.createSchedule(username);
-		return convertToDto(schedule);
+	public ResponseEntity<?> createScheduleForEmployee(@RequestParam String username) throws IllegalArgumentException {
+		Schedule schedule = null;
+		try {
+			schedule = service.createSchedule(username);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(schedule), HttpStatus.OK);
 	}
 
 	@PutMapping(value = { "/updateSchedule", "/updateSchedule/" })
-	public ScheduleDto addWorkingHourToScheduleOfEmployee(@RequestParam String username, @RequestParam String dayOfWeek,
+	public ResponseEntity<?> addWorkingHourToScheduleOfEmployee(@RequestParam String username, @RequestParam String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		return convertToDto(service.addWorkingHourToScheduleOfEmployee(username, DayOfWeek.valueOf(dayOfWeek),
-				Time.valueOf(startTime), Time.valueOf(endTime)));
+		Schedule sch = null;
+		try {
+			sch = service.addWorkingHourToScheduleOfEmployee(username, DayOfWeek.valueOf(dayOfWeek),
+					Time.valueOf(startTime), Time.valueOf(endTime));
+		} catch (Exception e) {
+			return new ResponseEntity<>("There is no employee with this username.", HttpStatus.BAD_REQUEST);
+		}
+		if(sch == null) {
+			return new ResponseEntity<>("Invalid Input.", HttpStatus.BAD_REQUEST);
+		}
+		else {
+			return new ResponseEntity<>(convertToDto(sch), HttpStatus.OK);
+		}
 	}
 
 	@DeleteMapping(value = { "/deleteSchedule/{username}", "/deleteSchedule/{username}" })
-	public void deleteScheduleByEmployee(@PathVariable("username") String username) {
-		service.deleteScheduleByEmployee(username);
+	public ResponseEntity<?> deleteScheduleByEmployee(@PathVariable("username") String username) {
+		try {
+			service.deleteScheduleByEmployee(username);
+		} catch (Exception e) {
+			return new ResponseEntity<>("There is no employee with this username.", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// WorkingHours
 
 	@GetMapping(value = { "/workingHour/{username}", "/workingHour/{username}/" })
-	public WorkingHourDto getWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
+	public ResponseEntity<?> getWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
 			String dayOfWeek) {
-		return convertToDto(service.getWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek)));
+		WorkingHour wh = null;
+		try {
+			wh = service.getWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+		}
+		if(wh == null) {
+			return new ResponseEntity<>("Invalid input" , HttpStatus.BAD_REQUEST);
+		}
+		else{
+			return new ResponseEntity<>(convertToDto(wh), HttpStatus.OK);
+		}
 	}
 
 	@GetMapping(value = { "/allWorkingHours", "/allWorkingHours/" })
-	public List<WorkingHourDto> getAllWorkingHours() {
-		return service.getAllWorkingHours().stream().map(this::convertToDto).collect(Collectors.toList());
+	public ResponseEntity<?> getAllWorkingHours() {
+		return new ResponseEntity<>(service.getAllWorkingHours().stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@PutMapping(value = { "/updateWorkingHour/{username}", "/updateWorkingHour/{username}/" })
-	public WorkingHourDto updateWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
+	public ResponseEntity<?> updateWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
 			@RequestParam String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		return convertToDto(service.updateWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek),
-				Time.valueOf(startTime), Time.valueOf(endTime)));
+		WorkingHour wHour = null;
+		try {
+			wHour = service.updateWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek),
+					Time.valueOf(startTime), Time.valueOf(endTime));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(wHour), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = { "/deleteWorkingHour/{username}", "/deleteWorkingHour/{username}/" })
-	public void deleteWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
+	public ResponseEntity<?> deleteWorkingHourByEmployeeAndDayOfWeek(@PathVariable("username") String username,
 			@RequestParam String dayOfWeek) {
-		service.deleteWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek));
+		try {
+			service.deleteWorkingHourByEmployeeAndDayOfWeek(username, DayOfWeek.valueOf(dayOfWeek));
+		} catch (Exception e) {
+			return new ResponseEntity<>("There is no employee with this username." , HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	private WorkingHourDto convertToDto(WorkingHour workingHour) {

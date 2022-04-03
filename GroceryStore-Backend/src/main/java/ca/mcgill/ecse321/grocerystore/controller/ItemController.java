@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,7 +98,7 @@ public class ItemController {
 	}
 
 	@GetMapping(value = { "/items/id:{id}", "/items/id:{id}/" })
-	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+	public ResponseEntity<?> getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Long ID = Long.parseLong(id);
 		PerishableItem pitems = null;
 		NonPerishableItem npitems = null;
@@ -110,14 +112,14 @@ public class ItemController {
 		}
 		ItemDto itemsDto = null;
 		if (pitems == null && npitems == null) {
-			throw new IllegalArgumentException("There is no such Item to get!");
+			return new ResponseEntity<>("There is no item with the given ID.", HttpStatus.BAD_REQUEST);
 		} else if (pitems != null) {
 			itemsDto = convertToDto(pitems);
 		} else {
 			itemsDto = convertToDto(npitems);
 		}
 
-		return itemsDto;
+		return new ResponseEntity<>(itemsDto, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/items/name:{name}", "/items/name:{name}/" })
