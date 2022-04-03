@@ -1,0 +1,247 @@
+<template>
+  <div>
+    <div class="navbar">
+      <label>AppName</label>
+      <div>
+        <button>Button 1</button>
+        <button>Button 2</button>
+        <button>Button 3</button>
+      </div>
+      <div><button>Button 4</button></div>
+    </div>
+    <div class="column1">
+      <form style="margin-top:20px; margin-left:40px;">
+        <label style="font-size: 24px">Add New Item To Shop</label>
+        <CustomInput
+          label="name"
+          type="text"
+          :value="name"
+          @change="v => (name = v)"
+        />
+        <CustomInput
+          label="price"
+          type="number"
+          step="0.01"
+          :value="price"
+          @change="v => (password = v)"
+        />
+        <div>
+          <div><label style="margin-top: 10px;">Availabe Online</label></div>
+          <select
+            name="AvailabeOnline"
+            id="AvailabeOnline"
+            style="width:200px; height:30px;  margin-bottom:10px;"
+          >
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <CustomInput
+          label="Point Per Item"
+          type="number"
+          :value="pointPerItem"
+          @change="v => (pointPerItem = v)"
+        />
+        <CustomInput
+          label="Image Link"
+          type="text"
+          :value="imageLink"
+          @change="v => (imageLink = v)"
+        />
+        <div><label style="margin-top: 10px;">Category</label></div>
+        <select
+          name="ItemCategory"
+          id="ItemCategory"
+          style="width:200px; height:30px;"
+        >
+          <option value="BakedGoods">BakedGoods</option>
+          <option value="FruitsAndVegetables">FruitsAndVegetables</option>
+          <option value="Toiletries">Toiletries</option>
+          <option value="Pantry">Pantry</option>
+          <option value="MeatsAndFish">MeatsAndFish</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Others">Others</option>
+        </select>
+        <Button
+          text="Add"
+          color="black"
+          style="margin-top:10px; width:203px;"
+        />
+      </form>
+    </div>
+    <div class="vl"></div>
+    <form>
+      <div class="column2">
+        <label style="font-size: 24px; margin-top: 20px;"
+          >Manage Inventory</label
+        >
+        <select name="Items" ref="itemDisplay" size="20" style="width:100%">
+        </select>
+      </div>
+      <div>
+        <CustomInput
+          label="Quantity"
+          type="number"
+          :value="quantity"
+          @change="v => (quantity = v)"
+          style="float: left; margin-left:10px;"
+        />
+        <div>
+          <Button
+            text="Restock"
+            color="black"
+            style="margin-top:15px; width:203px;"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+<script>
+import CustomInput from "../components/CustomInput.vue";
+import Button from "../components/Button.vue";
+import axios from "axios";
+import { ListGroupPlugin } from "bootstrap-vue";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+
+export default {
+  name: "ManageInventory",
+  components: {
+    CustomInput,
+    Button
+  },
+  data() {
+    return {
+      name: "",
+      price: null,
+      pointPerItem: null,
+      imageLink: "",
+      quantity: null,
+    };
+  },
+  created: function() {
+    var lst = this.$refs.itemDisplay;
+    AXIOS.get("/api/item/items/")
+      .then(response => {
+        for (var i = 0; i < response.data.length; i++) {
+          var itm = response.data[i];
+          const opt = document.createElement("option");
+          opt.textContent =
+            "Name:" +
+            itm.productName +
+            ", ID: " +
+            itm.itemID +
+            ", " +
+            itm.price +
+            " CAD, Category: " +
+            itm.category;
+          lst.appendChild(opt);
+        }
+      })
+      .catch(e => {
+        window.alert(e.response.data);
+        return;
+      });
+  },
+  method: {}
+};
+</script>
+
+<style scoped>
+.navbar {
+  height: auto;
+  background-color: rgb(40, 50, 50);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: azure;
+  display: inline-flex;
+  width: 100%;
+}
+.navbar div {
+  display: inline-block;
+}
+.navbar div button {
+  background-color: rgba(0, 0, 0, 0);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  color: azure;
+  border-style: none;
+  height: 2em;
+  padding-top: 0;
+  margin-left: 2em;
+  margin-top: 0px;
+}
+.navbar label {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  padding-top: 0;
+  margin-top: 0px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+.navbar button:hover {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  border-style: solid;
+  border-color: azure;
+  border-radius: 0.5em;
+}
+.column1 {
+  float: left;
+  width: 30%;
+  padding: 10px;
+  text-align: left;
+}
+.column2 {
+  float: left;
+  width: 70%;
+  padding: 10px;
+  text-align: left;
+}
+.column3 {
+  float: left;
+  width: 50%;
+  text-align: left;
+  margin-top: 20px;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
+}
+.vl {
+  border-left: 2px solid black;
+  height: 100%;
+  position: absolute;
+  left: 30%;
+  margin-top: 52px;
+  top: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: left;
+}
+</style>

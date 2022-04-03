@@ -11,6 +11,7 @@ import ManageEmployees from '@/views/ManageEmployees'
 import StoreInfo from '@/views/StoreInfo'
 import Terminal from '@/views/Terminal'
 import StatusOrder from '@/views/StatusOrder'
+import ManageInventory from '@/views/ManageInventory'
 
 
 Vue.use(Router)
@@ -70,7 +71,12 @@ export default new Router({
     { path: '/StatusOrder',
       name: 'StatusOrder',
       component: StatusOrder
-    }
+    },
+    {
+      path: '/ManageInventory',
+      name: 'ManageInventory',
+      component: ManageInventory
+    },
     
   ]
 })
