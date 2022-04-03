@@ -64,6 +64,33 @@ public class OrderController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping(value = { "/deliveryOrders/{username}", "/deliveryOrders/{username}/" })
+	public ResponseEntity<?> getDeliveriesByAccount(@PathVariable("username") String username) {
+		try {
+			List<OrderDto> orders = new ArrayList<OrderDto>();
+			for (Order order : service.getDeliveryOrdersByAccount(service.getAccount(username))) {
+				orders.add(convertToDto(order));
+			}
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(value = { "/pickupOrders/{username}", "/pickupOrders/{username}/" })
+	public ResponseEntity<?> getPickupByAccount(@PathVariable("username") String username) {
+		try {
+			List<OrderDto> orders = new ArrayList<OrderDto>();
+			for (Order order : service.getPickUpOrdersByAccount(service.getAccount(username))) {
+				orders.add(convertToDto(order));
+			}
+			return new ResponseEntity<>(orders, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(value = { "/pickUpOrders", "/pickUpOrders/" })
 	public List<OrderDto> getAllPickUpOrders() {
 		List<OrderDto> orders = new ArrayList<OrderDto>();
