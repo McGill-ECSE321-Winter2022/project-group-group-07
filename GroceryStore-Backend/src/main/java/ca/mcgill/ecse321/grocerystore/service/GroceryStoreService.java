@@ -909,7 +909,7 @@ public class GroceryStoreService {
 
 		return toList(nonPerishableItemRepository.findAll());
 	}
-
+	
 	@Transactional
 	public NonPerishableItem getNonPerishableItemsByID(Long id) {
 		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
@@ -1387,7 +1387,12 @@ public class GroceryStoreService {
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
 	}
-
+	public List<PickUpOrder> getAllPickUpOrders() {
+		return toList(pickUpOrderRepository.findAll());
+	}
+	public List<DeliveryOrder> getAllDeliveryOrders() {
+		return toList(deliveryOrderRepository.findAll());
+	}
 	// ---------------------------------------------------------------------------------------------------------------------------------//
 	// Helper Methods
 
@@ -1412,5 +1417,7 @@ public class GroceryStoreService {
 	private boolean paymentSimulator() {
 		return true;
 	}
+
+	
 
 }
