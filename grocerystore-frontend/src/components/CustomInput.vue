@@ -11,6 +11,7 @@
         :pattern="pattern"
         v-model="inputValue"
         :placeholder="placeholder"
+        :step="step"
       />
     </div>
   </div>
@@ -19,7 +20,7 @@
 <script>
 export default {
   name: "CustomInput",
-  props: ["label", "value", "type", "pattern", "placeholder"],
+  props: ["label", "value", "type", "pattern", "placeholder","step"],
   computed: {
     inputValue: {
       get() {
