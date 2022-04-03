@@ -18,7 +18,7 @@
                     <div v-for="order in orders" :key="order.id" class="product">
                         <Order
                             :order="order"
-                            @remove="updateCart(order, 'remove')"
+                            @remove="updateCart(order)"
                         />
                     </div>
                 </section>
@@ -38,7 +38,7 @@
 
     var AXIOS = axios.create({
         baseURL: backendUrl,
-      headers: { 'Access-Control-Allow-Origin': frontendUrl }
+        headers: { 'Access-Control-Allow-Origin': frontendUrl }
     })
     export default{
         name: "Delivery",
@@ -57,25 +57,33 @@
             this.variable1=true;
         },
         methods: {
-            updateCart(order) {
+            async updateOrders(){
+                          AXIOS.get('/api/order/pendingDeliveryOrders')
+                          .then(response => {
+                            this.orders = response.data;
+                          })
+                          .catch((e) => {
+                            window.alert("Failed to update.");
+                            return;
+                          })
+                        },
+            async updateCart(order) {
                 for (let i = 0; i < this.orders.length; i++) {
-                    if (this.orders[i].id === order.id) {
+                    if (this.orders[i].orderID === order.orderID) {
+                        console.log(this.orders[i].orderID);
+                        AXIOS.put('/api/order/deliveryUpdate/'+this.orders[i].orderID+"?status=Delivered")
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
                         this.orders.splice(i, 1);
                     }
                     break;
                 }
             },
-            async updateOrders(){
-              AXIOS.get('/api/order/deliveryOrders')
-              .then(response => {
-                this.orders = response.data;
-                window.alert("Update successful.");
-              })
-              .catch((e) => {
-                window.alert("Failed to update.");
-                return;
-              })
-            }
+            
         },
         
         

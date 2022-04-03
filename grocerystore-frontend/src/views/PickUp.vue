@@ -11,7 +11,7 @@
         </div>
         
         <h1 style="margin-top:1%">Pick Up</h1>
-        
+        <button @click="updateOrders()" style="margin-top:1%;">Update Orders</button>
         <div align="left"><label>Orders to be fulfilled</label></div>
             <div class="one">
                 <section class="products" v-if="orders.length > 0">
@@ -38,7 +38,7 @@
 
     var AXIOS = axios.create({
         baseURL: backendUrl,
-      headers: { 'Access-Control-Allow-Origin': frontendUrl }
+        headers: { 'Access-Control-Allow-Origin': frontendUrl }
     })
     export default{
         name: "Delivery",
@@ -57,22 +57,30 @@
             this.variable1=true;
         },
         methods: {
-            updateCart(order) {
+
+            async updateCart(order) {
                 for (let i = 0; i < this.orders.length; i++) {
-                    if (this.orders[i].id === order.id) {
+                    if (this.orders[i].orderID === order.orderID) {
+                        console.log(this.orders[i].orderID);
+                        AXIOS.put('/api/order/PickUpUpdate/'+this.orders[i].orderID+"?status=Ready")
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
                         this.orders.splice(i, 1);
                     }
                     break;
                 }
             },
             async updateOrders(){
-              AXIOS.get('/api/order/pickUpOrders')
+              AXIOS.get('/api/order/pendingPickUpOrders')
               .then(response => {
                 this.orders = response.data;
-                window.alert("Update successful.");
               })
               .catch((e) => {
-                window.alert(e.response.data);
+                window.alert("Update Failed.");
                 return;
               })
             }

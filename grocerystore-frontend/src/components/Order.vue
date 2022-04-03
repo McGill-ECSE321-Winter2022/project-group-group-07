@@ -6,8 +6,9 @@
         <h3>
           <b class="order_price">{{ order.timeSlot.startDate}}: {{ order.timeSlot.startTime  }}</b>
         </h3>
+        <h3 class="order_header">Contents: {{ order.items }}</h3>
         <button @click="updateCart('remove')" class="order_remove">
-          Order Has Been Completed
+          Mark Order As Completed
         </button>
       </div>
     </div>
