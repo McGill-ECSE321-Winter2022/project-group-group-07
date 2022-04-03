@@ -1,13 +1,10 @@
 <template>
   <div class="order">
     <div class="order_content">
-      <div class="order_status">
-        <h3 class="order_header">{{ order.ID }}</h3>
-      </div>
       <div class="order_cart">
-           <h3 class="order_header">Order {{ order.id }}</h3>
+           <h3 class="order_header">Order {{ order.orderID }}</h3>
         <h3>
-          <b class="order_price">{{ order.time }}</b>
+          <b class="order_price">{{ order.timeSlot.startDate}}: {{ order.timeSlot.startTime  }}</b>
         </h3>
         <button @click="updateCart('remove')" class="order_remove">
           Order Has Been Completed
@@ -32,12 +29,12 @@ export default {
   display: flex;
   flex-direction: row;
   background-color: whitesmoke;
-  border-radius: 100px;
+  border-radius: 0px;
   padding: 0px;
   text-align: left;
 }
 .order_header {
-    padding-left: 0px;
+    padding-top: 3px;
     font-size: 15px;
     color: black;
 }
