@@ -8,7 +8,7 @@ import Checkout from '@/views/Checkout'
 import ManageEmployees from '@/views/ManageEmployees'
 import StoreInfo from '@/views/StoreInfo'
 import Terminal from '@/views/Terminal'
-
+import StatusOrder from '@/views/StatusOrder'
 
 Vue.use(Router)
 
@@ -48,6 +48,10 @@ export default new Router({
       path: '/Terminal',
       name: 'Terminal',
       component: Terminal
+    },
+    { path: '/StatusOrder',
+      name: 'StatusOrder',
+      component: StatusOrder
     }
   ]
 })
