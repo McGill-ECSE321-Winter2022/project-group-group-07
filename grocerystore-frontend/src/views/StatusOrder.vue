@@ -57,7 +57,15 @@ export default {
       },
 
       created: function () {
-        //not yet written
+        //not yet written --> get deliveries of one customer
+        AXIOS.get('/api/...')
+        .then(response => {
+
+        })
+        .catch(e => {
+          
+        }),
+         //not yet written --> get pickup of one customer
         AXIOS.get('/api/...')
         .then(response => {
 
