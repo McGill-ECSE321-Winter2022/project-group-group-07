@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 import Hello from '@/views/Hello'
 import AccountInfo from '@/views/AccountInfo'
+import AccountInfoEmployee from '@/views/AccountInfoEmployee'
+import Delivery from '@/views/Delivery'
+import PickUp from '@/views/PickUp'
 import Cart from '@/views/Cart'
 import Checkout from '@/views/Checkout'
 import ManageEmployees from '@/views/ManageEmployees'
 import StoreInfo from '@/views/StoreInfo'
 import Terminal from '@/views/Terminal'
 import StatusOrder from '@/views/StatusOrder'
+
 
 Vue.use(Router)
 
@@ -49,9 +52,25 @@ export default new Router({
       name: 'Terminal',
       component: Terminal
     },
+    {
+      path: '/AccountInfoEmployee',
+      name: 'AccountInfoEmployee',
+      component: AccountInfoEmployee
+    },
+    {
+      path: '/Delivery',
+      name: 'Delivery',
+      component: Delivery
+    },
+    {
+      path: '/PickUp',
+      name: 'PickUp',
+      component: PickUp
+     },
     { path: '/StatusOrder',
       name: 'StatusOrder',
       component: StatusOrder
     }
+    
   ]
 })

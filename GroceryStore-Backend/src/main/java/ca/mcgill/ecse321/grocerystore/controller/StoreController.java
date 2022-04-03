@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,65 +38,106 @@ public class StoreController {
 	// Store 
 
 	@GetMapping(value = { "/store", "/store/" })
-	public StoreDto getStoreInfo() {
-		return convertToDto(service.getStore());
+	public ResponseEntity<?> getStoreInfo() {
+		Store store = service.getStore();
+		if(store == null) {
+			return new ResponseEntity<>("There is no Store assigned to the System.", HttpStatus.BAD_REQUEST);
+		}
+		else {
+			return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
+		}
 	}
 
 	@PostMapping(value = { "/setStoreInfo", "/setStoreInfo/" })
-	public StoreDto createStore(@RequestParam String name, @RequestParam String address,
+	public ResponseEntity<?> createStore(@RequestParam String name, @RequestParam String address,
 			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
 			@RequestParam Float pointToCashRatio) {
-
-		return convertToDto(
-				service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
+		Store store = null;
+		try {
+			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
 	}
 
 	@PutMapping(value = { "/updateStore", "/updateStore/" })
-	public StoreDto updateStore(@RequestParam String name, @RequestParam String address,
+	public ResponseEntity<?> updateStore(@RequestParam String name, @RequestParam String address,
 			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
 			@RequestParam Float pointToCashRatio) {
-		return convertToDto(
-				service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio));
+		Store store = null;
+		try {
+			store = service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = { "/deleteStore", "/deleteStore/" })
-	public void deleteStore() {
+	public ResponseEntity<?> deleteStore() {
 		service.deleteStore();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// BusinessHours 
 
 	@PostMapping(value = { "/businessHours", "/businessHours/" })
-	public BusinessHourDto createBusinessHours(
+	public ResponseEntity<?> createBusinessHours(
 			@RequestParam(name = "dayOfWeek") GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		BusinessHour b = service.createBusinessHour(dayOfWeek, Time.valueOf(startTime), Time.valueOf(endTime));
-		return convertToDto(b);
+		BusinessHour b = null;
+		try {
+			b = service.createBusinessHour(dayOfWeek, Time.valueOf(startTime), Time.valueOf(endTime));
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(b), HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/businessHours", "/businessHours/" })
-	public List<BusinessHourDto> getBusinessHours() {
-		return service.getAllBusinessHours().stream().map(this::convertToDto).collect(Collectors.toList());
+	public ResponseEntity<?> getBusinessHours() {
+		return new ResponseEntity<>(service.getAllBusinessHours().stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}/" })
-	public BusinessHourDto getBusinessHourByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
-		return convertToDto(service.getBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek)));
+	public ResponseEntity<?> getBusinessHourByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
+		BusinessHour b = null;
+		try {
+			b = service.getBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(b), HttpStatus.OK);
 	}
 
 	@PutMapping(value = { "/updateBusinessHour/{dayOfWeek}", "/updateBusinessHour/{dayOfWeek}/" })
-	public BusinessHourDto updateBusinessHour(@PathVariable("dayOfWeek") String dayOfWeek,
+	public ResponseEntity<?> updateBusinessHour(@PathVariable("dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		BusinessHour bh = service.updateBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
-				Time.valueOf(endTime));
-		return convertToDto(bh);
+		BusinessHour bh = null;
+		try {
+			bh = service.updateBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
+					Time.valueOf(endTime));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(bh), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}" })
-	public void deleteBusinessHourByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
-		service.deleteBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek));
+	public ResponseEntity<?> deleteBusinessHourByDay(@PathVariable("dayOfWeek") String dayOfWeek) {
+		BusinessHour bh = null;
+		try {
+			bh = service.deleteBusinessHourByDay(DayOfWeek.valueOf(dayOfWeek));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(bh), HttpStatus.OK);
 	}
 
 	private StoreDto convertToDto(Store store) {
