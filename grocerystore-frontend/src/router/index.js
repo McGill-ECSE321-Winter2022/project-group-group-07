@@ -52,7 +52,6 @@ export default new Router({
       name: 'Terminal',
       component: Terminal
     },
-<<<<<<< HEAD
     {
       path: '/AccountInfoEmployee',
       name: 'AccountInfoEmployee',
@@ -67,11 +66,10 @@ export default new Router({
       path: '/PickUp',
       name: 'PickUp',
       component: PickUp
-=======
+     },
     { path: '/StatusOrder',
       name: 'StatusOrder',
       component: StatusOrder
->>>>>>> main
     }
     
   ]
