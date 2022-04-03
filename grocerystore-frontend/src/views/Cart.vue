@@ -4,7 +4,7 @@
       <label>AppName</label>
       <div>
         <button>Catalog</button>
-        <button onclick="location.href='http://127.0.0.1:8087/#/Cart'">
+        <button onclick="location.href='/#/Cart'">
           Cart/Checkout
         </button>
         <button>Order Status</button>
@@ -41,7 +41,7 @@
           <checkout username="matt" />
           <button
             class="checkout_buttons"
-            onclick="location.href='http://127.0.0.1:8087/#/Checkout'"
+            onclick="location.href='/#/Checkout'"
           >
             Proceed to checkout
           </button>

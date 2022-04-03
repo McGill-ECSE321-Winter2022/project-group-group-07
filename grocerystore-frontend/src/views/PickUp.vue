@@ -9,28 +9,90 @@
             </div>
             <div><button>Logout</button></div>
         </div>
-
+        
         <h1 style="margin-top:1%">Pick Up</h1>
-        <div align="left"><label>Orders to be fullfilled by: </label></div>
- 
+        
+        <div align="left"><label>Orders to be fullfilled</label></div>
+            <div class="one">
+                <section class="products" v-if="orders.length > 0">
+                    <div v-for="order in orders" :key="order.ID" class="product">
+                        <Order
+                            :order="order"
+                            @remove="updateCart(order, 'remove')"
+                        />
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 </template>
 
 
 <script>
+   import Order from "../components/Order.vue";
     export default{
-        name: "PickUp",
+        name: "Delivery",
+        components: {
+            Order
+        },
         data(){
-        return {
-            variable: true,
-            variable1: false
-        }    
-    },
+            return {
+                variable: true,
+                variable1: false,
+                orders : [
+                    {
+                        id: 9,
+                        name: "Product 3",
+                        description: "This is an incredibly awesome product",
+                        quantity: 1,
+                        time: 50,
+                        inStock: true,
+                        online: true,
+                        inventory: 7,
+                        image: "https://via.placeholder.com/150"
+                    },
+                    {
+                        id: 7,
+                        name: "Product 1",
+                        description: "This is an incredibly awesome product",
+                        quantity: 1,
+                        time: 100,
+                        inStock: false,
+                        online: true,
+                        inventory: 7,
+                        image: "https://via.placeholder.com/150"
+                    },
+                    {
+                        id: 8,
+                        name: "Product 2",
+                        description: "This is an incredibly awesome product",
+                        quantity: 1,
+                        time: 10.8,
+                        inStock: false,
+                        online: false,
+                        inventory: 7,
+                        image: "https://via.placeholder.com/150"
+                    },
+                ]
+            }
+        },
         created: function() {
             this.variable=false;
             this.variable1=true;
             console.log("Hello i am running");
-        }
+        },
+        methods: {
+            updateCart(order) {
+                for (let i = 0; i < this.orders.length; i++) {
+                    if (this.orders[i].id === order.id) {
+                        this.orders.splice(i, 1);
+                    }
+                    break;
+                }
+            }
+        },
+        
+        
     }
 </script>
 
@@ -71,4 +133,93 @@
     border-radius: 0.5em;
 }
 
+h1,
+h2 {
+  font-weight: normal;
+}
+
+.checkout_label {
+  background-color: rgb(40, 50, 50);
+  color: white;
+}
+.order_label {
+  background-color: whitesmoke;
+  border-top: 5px solid rgb(40, 50, 50);
+  border-bottom: 5px solid rgb(40, 50, 50);
+}
+.column {
+  padding: 10px;
+  display: flex;
+}
+.one {
+  background-color: white;
+  flex: 2;
+  border-right: 5px solid rgb(40, 50, 50);
+}
+.two {
+  background-color: white;
+  flex: 1;
+  display: flex;
+  height: 30%;
+  flex-direction: column;
+  gap: 10px;
+}
+.orderSummary {
+  background-color: whitesmoke;
+  height: 150px;
+  flex: 1;
+  padding: 10px;
+}
+.products {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 10px;
+}
+.navbar div {
+  display: inline-block;
+}
+
+.navbar div button {
+  background-color: rgba(0, 0, 0, 0);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  color: azure;
+  border-style: none;
+  height: 2em;
+  padding-top: 0;
+  margin-left: 2em;
+  margin-top: 0px;
+}
+.navbar label {
+  font-size: large;
+  padding-top: 0;
+  margin-top: 0px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+.navbar button:hover {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  border-style: solid;
+  border-color: azure;
+  border-radius: 0.5em;
+}
+.navbar {
+  height: auto;
+  background-color: rgb(40, 50, 50);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: azure;
+  display: inline-flex;
+  width: 100%;
+}
+.checkout_buttons {
+  border-radius: 8px;
+  background-color: darkgreen;
+  border: darkgreen;
+  color: white;
+  height: 40px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+}
 </style>
