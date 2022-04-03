@@ -11,7 +11,7 @@
         </div>
         
         <h1 style="margin-top:1%">Pick Up</h1>
-        
+        <button @click="updateOrders()" style="margin-top:1%;">Update Orders</button>
         <div align="left"><label>Orders to be fulfilled</label></div>
             <div class="one">
                 <section class="products" v-if="orders.length > 0">
@@ -29,9 +29,19 @@
 
 
 <script>
-   import Order from "../components/Order.vue";
+  import Order from "../components/Order.vue";
+    import axios from 'axios'
+    import { ListGroupPlugin } from 'bootstrap-vue'
+    var config = require('../../config')
+    var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+    var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+    var AXIOS = axios.create({
+        baseURL: backendUrl,
+        headers: { 'Access-Control-Allow-Origin': frontendUrl }
+    })
     export default{
-        name: "PickUp",
+        name: "Delivery",
         components: {
             Order
         },
@@ -45,16 +55,34 @@
         created: function() {
             this.variable=false;
             this.variable1=true;
-            console.log("Hello i am running");
         },
         methods: {
-            updateCart(order) {
+
+            async updateCart(order) {
                 for (let i = 0; i < this.orders.length; i++) {
-                    if (this.orders[i].id === order.id) {
+                    if (this.orders[i].orderID === order.orderID) {
+                        console.log(this.orders[i].orderID);
+                        AXIOS.put('/api/order/PickUpUpdate/'+this.orders[i].orderID+"?status=Ready")
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
                         this.orders.splice(i, 1);
                     }
                     break;
                 }
+            },
+            async updateOrders(){
+              AXIOS.get('/api/order/pendingPickUpOrders')
+              .then(response => {
+                this.orders = response.data;
+              })
+              .catch((e) => {
+                window.alert("Update Failed.");
+                return;
+              })
             }
         },
         
@@ -98,7 +126,10 @@
     border-color: azure;
     border-radius: 0.5em;
 }
-
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
 h1,
 h2 {
   font-weight: normal;

@@ -78,20 +78,97 @@
 </div>
 </template>
 <script>
+import axios from 'axios'
+var config = require('../../config')
+
+var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
  export default{
         name: "PickUp",
-        data(){
+      data () {
         return {
             variable: true,
-            variable1: false
-        }    
-    },
-        created: function() {
-            this.variable=false;
-            this.variable1=true;
-            console.log("Hello i am running");
+            variable1: false,
+            customerAccount: '',
+            errorName: '',
+            customerUsername: '',
+            customerAddress: '',
+            customerPoints: '',
+            store: '',
+            schedule: '',
+        }
+      },
+
+      created: function () {
+        var username = localStorage.getItem('token')
+        this.customerUsername=username
+        AXIOS.get('/api/account/'.concat(username))
+        .then(response => {
+            this.customerAccount = response.data
+        })
+        .catch(e => {
+            var errorMsg = e.response.data.message
+            console.log(errorMsg)
+            this.errorName = errorMsg
+        }),
+        AXIOS.get('/api/address/'.concat(username))
+        .then(response => {
+            this.customerAddress = response.data
+        })
+        .catch(e => {
+            var errorMsg = e.response.data.message
+            console.log(errorMsg)
+            this.errorName = errorMsg
+        }),
+        AXIOS.get('/api/store/')
+        .then(response => {
+            this.store = response.data
+        })
+        .catch(e => {
+            var errorMsg = e.response.data.message
+            console.log(errorMsg)
+            this.errorName = errorMsg
+        })
+      },
+    
+    methods: {
+        changePassword: function(){
+            let username = prompt("Please enter your current Username", "Enter username");
+            let oldPassword = prompt("Please enter your old password", "Enter old password");
+            let newPassword = prompt("Please enter your new password", "Enter new password");
+             AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('?newPassword=').concat(newPassword))
+            .then(response => {
+                window.alert(response.data)
+            })
+            .catch(e => {
+                var errorMsg = e.response.data.message
+                console.log(errorMsg)
+                this.errorName = errorMsg
+            })
+        },
+        changeAddress: function(){
+          let username = prompt("Please enter your current Username", "Enter username");
+          let buildingNo = prompt("Please enter your new Building Number", "Enter building number");
+          let street = prompt("Please enter your new street name", "Enter street name");
+          let town = prompt("Please enter your new town name", "Enter town name");
+             AXIOS.put('/api/address/'.concat(username).concat('?buildingNo=').concat(buildingNo).concat('?street=').concat(street).concat('?town=').concat(town))
+            .then(response => {
+                this.errorName = ''
+            })
+            .catch(e => {
+                var errorMsg = e.response.data.message
+                console.log(errorMsg)
+                this.errorName = errorMsg
+            })
         }
     }
+}
+
 </script>
 
 <style scoped>

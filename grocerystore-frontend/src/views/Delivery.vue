@@ -11,14 +11,14 @@
         </div>
 
         <h1 style="margin-top:1%">Delivery</h1>
-        
+        <button @click="updateOrders()" style="margin-top:1%;">Update Orders</button>
         <div align="left"><label>Orders to be fulfilled</label></div>
             <div class="one">
                 <section class="products" v-if="orders.length > 0">
-                    <div v-for="order in orders" :key="order.ID" class="product">
+                    <div v-for="order in orders" :key="order.id" class="product">
                         <Order
                             :order="order"
-                            @remove="updateCart(order, 'remove')"
+                            @remove="updateCart(order)"
                         />
                     </div>
                 </section>
@@ -30,6 +30,16 @@
 
 <script>
     import Order from "../components/Order.vue";
+    import axios from 'axios'
+    import { ListGroupPlugin } from 'bootstrap-vue'
+    var config = require('../../config')
+    var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
+    var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+    var AXIOS = axios.create({
+        baseURL: backendUrl,
+        headers: { 'Access-Control-Allow-Origin': frontendUrl }
+    })
     export default{
         name: "Delivery",
         components: {
@@ -45,17 +55,35 @@
         created: function() {
             this.variable=false;
             this.variable1=true;
-            console.log("Hello i am running");
         },
         methods: {
-            updateCart(order) {
+            async updateOrders(){
+                          AXIOS.get('/api/order/pendingDeliveryOrders')
+                          .then(response => {
+                            this.orders = response.data;
+                          })
+                          .catch((e) => {
+                            window.alert("Failed to update.");
+                            return;
+                          })
+                        },
+            async updateCart(order) {
                 for (let i = 0; i < this.orders.length; i++) {
-                    if (this.orders[i].id === order.id) {
+                    if (this.orders[i].orderID === order.orderID) {
+                        console.log(this.orders[i].orderID);
+                        AXIOS.put('/api/order/deliveryUpdate/'+this.orders[i].orderID+"?status=Delivered")
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
                         this.orders.splice(i, 1);
                     }
                     break;
                 }
-            }
+            },
+            
         },
         
         
