@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,33 +30,38 @@ public class TimeSlotController {
 	private GroceryStoreService service;
 
 	@GetMapping(value = { "/timeSlots", "/timeSlots/" })
-	public List<TimeSlotDto> getAllTimeSlots() {
+	public ResponseEntity<?> getAllTimeSlots() {
 
 		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
 		for (TimeSlot t : service.getAllTimeSlots()) {
 			timeSlots.add(convertToDto(t));
 		}
 
-		return timeSlots;
+		return new ResponseEntity<>(timeSlots, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/holidays", "/holidays/" })
-	public List<TimeSlotDto> getAllHolidays() {
+	public ResponseEntity<?> getAllHolidays() {
 
 		List<TimeSlotDto> timeSlots = new ArrayList<TimeSlotDto>();
 		for (TimeSlot t : service.getAllHolidays()) {
 			timeSlots.add(convertToDto(t));
 		}
 
-		return timeSlots;
+		return new ResponseEntity<>(timeSlots, HttpStatus.OK);
 	}
 
 	@PostMapping(value = { "/createTimeSlot", "/createTimeSlot/" })
-	public TimeSlotDto createTimeSlot(@RequestParam Date startDate, @RequestParam Date endDate,
+	public ResponseEntity<?> createTimeSlot(@RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-
-		return convertToDto(service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)));
+		TimeSlot tm = null;
+		try {
+			tm = service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(convertToDto(tm), HttpStatus.OK);
 	}
 
 

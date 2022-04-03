@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,33 +44,56 @@ public class CartController {
 	private GroceryStoreService service;
 
 	@GetMapping(value = { "/cart/{username}", "/cart/{username}/" })
-	public CartDto getCartByAccount(@PathVariable("username") String username) {
-		return convertToDto(service.getCartByAccount(username));
+	public ResponseEntity<?> getCartByAccount(@PathVariable("username") String username) {
+		try {
+			return new ResponseEntity<>(convertToDto(service.getCartByAccount(username)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping(value = { "/cart/{username}", "/cart/{username}/" })
-	public CartDto createCart(@PathVariable("username") String username) {
-		return convertToDto(service.createCart(username));
+	public ResponseEntity<?> createCart(@PathVariable("username") String username) {
+		try {
+			return new ResponseEntity<>(convertToDto(service.createCart(username)), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PutMapping(value = { "/addToCart/{id}", "/addToCart/{id}/" })
-	public CartDto addToCart(@PathVariable("id") Long id, String username) {
-
-		return convertToDto(service.addToCart(id, username));
+	public ResponseEntity<?> addToCart(@PathVariable("id") Long id, String username) {
+		try {
+			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PutMapping(value = { "/pickTimeSlot/{username}", "/pickTimeSlot/{username}/" })
-	public CartDto addTimeSlotToCart(@PathVariable("username") String username, @RequestParam Date startDate,
+	public ResponseEntity<?> addTimeSlotToCart(@PathVariable("username") String username, @RequestParam Date startDate,
 			@RequestParam Date endDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
-		return convertToDto(service.addTimeSlotToCart(username,
-				service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime))));
+		try {
+			return new ResponseEntity<>(convertToDto(service.addTimeSlotToCart(username,
+					service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)))),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+		}
 	}
 
 	@PutMapping(value = { "/chooseOrderType/{username}", "/chooseOrderType/{username}/" })
-	public CartDto chooseOrderTypeForCart(@PathVariable("username") String username, @RequestParam String orderType) {
-		return convertToDto(service.chooseOrderTypeForCart(username, OrderType.valueOf(orderType)));
+	public ResponseEntity<?> chooseOrderTypeForCart(@PathVariable("username") String username,
+			@RequestParam String orderType) {
+		try {
+			return new ResponseEntity<>(
+					convertToDto(service.chooseOrderTypeForCart(username, OrderType.valueOf(orderType))),
+					HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	private CartDto convertToDto(Cart cart) {

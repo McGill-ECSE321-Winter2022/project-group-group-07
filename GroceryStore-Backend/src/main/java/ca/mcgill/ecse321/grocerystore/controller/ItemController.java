@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.grocerystore.dto.ItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.NonPerishableItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.PerishableItemDto;
+import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
@@ -26,35 +29,41 @@ import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 @RequestMapping("/api/item")
 public class ItemController {
 
-
 	@Autowired
 	private GroceryStoreService service;
 
-
 	@PostMapping(value = { "/perishable/", "/perishable" })
-	public PerishableItemDto createPerishableItem(@RequestParam String productName, @RequestParam Float price,
+	public ResponseEntity<?> createPerishableItem(@RequestParam String productName, @RequestParam Float price,
 			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem)
 			throws IllegalArgumentException {
-
-		PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline, numInStock,
-				pointPerItem);
-
-		return convertToDto(perishableItem);
+		try {
+			PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline,
+					numInStock, pointPerItem);
+			return new ResponseEntity<>(convertToDto(perishableItem), HttpStatus.OK);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping(value = { "/nonperishable", "/nonperishable/" })
-	public NonPerishableItemDto createNonPerishableItem(@RequestParam String productName, @RequestParam Float price,
+	public ResponseEntity<?> createNonPerishableItem(@RequestParam String productName, @RequestParam Float price,
 			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem)
 			throws IllegalArgumentException {
-
-		NonPerishableItem nonPerishableItem = service.createNonPerishableItem(productName, price, availableOnline,
-				numInStock, pointPerItem);
-
-		return convertToDto(nonPerishableItem);
+		try {
+			NonPerishableItem nonPerishableItem = service.createNonPerishableItem(productName, price, availableOnline,
+					numInStock, pointPerItem);
+			return new ResponseEntity<>(convertToDto(nonPerishableItem), HttpStatus.OK);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(value = { "/items", "/items/" })
-	public List<ItemDto> getAllItems() {
+	public ResponseEntity<?> getAllItems() {
 		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		for (PerishableItem i : service.getAllPerishableItems()) {
@@ -67,12 +76,12 @@ public class ItemController {
 				items.add(convertToDto(i));
 			}
 		}
-		return items;
+		return new ResponseEntity<>(items, HttpStatus.OK);
 
 	}
 
 	@GetMapping(value = { "/perishableitems", "/perishableitems/" })
-	public List<ItemDto> getAllPerishableItems() {
+	public ResponseEntity<?> getAllPerishableItems() {
 		List<ItemDto> items = new ArrayList<ItemDto>();
 
 		for (PerishableItem i : service.getAllPerishableItems()) {
@@ -80,11 +89,11 @@ public class ItemController {
 				items.add(convertToDto(i));
 			}
 		}
-		return items;
+		return new ResponseEntity<>(items, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/nonperishableitems", "/nonperishableitems/" })
-	public List<ItemDto> getAllNonPerishableItems() {
+	public ResponseEntity<?> getAllNonPerishableItems() {
 
 		List<ItemDto> items = new ArrayList<ItemDto>();
 		for (NonPerishableItem i : service.getAllNonPerishableItems()) {
@@ -92,91 +101,117 @@ public class ItemController {
 				items.add(convertToDto(i));
 			}
 		}
-		return items;
+		return new ResponseEntity<>(items, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/items/id:{id}", "/items/id:{id}/" })
-	public ItemDto getItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+
+	public ResponseEntity<?> getItemByID(@PathVariable("id") String id) {
 		Long ID = Long.parseLong(id);
-		PerishableItem pitems = service.getPerishableItemsByID(ID);
-		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		PerishableItem pitems = null;
+		NonPerishableItem npitems = null;
+		try {
+
+			pitems = service.getPerishableItemByID(ID);
+		} catch (Exception e) {
+		}
+		try {
+			npitems = service.getNonPerishableItemByID(ID);
+		} catch (Exception e) {
+		}
 		ItemDto itemsDto = null;
 		if (pitems == null && npitems == null) {
-			throw new IllegalArgumentException("There is no such Item to get!");
+			return new ResponseEntity<>("There is no item with the given ID.", HttpStatus.BAD_REQUEST);
 		} else if (pitems != null) {
 			itemsDto = convertToDto(pitems);
 		} else {
 			itemsDto = convertToDto(npitems);
 		}
 
-		return itemsDto;
+		return new ResponseEntity<>(itemsDto, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/items/name:{name}", "/items/name:{name}/" })
-	public List<ItemDto> getItemsByName(@PathVariable("name") String name) throws IllegalArgumentException {
-		List<PerishableItem> pitems = service.getPerishableItemsByProductName(name);
-		List<NonPerishableItem> npitems = service.getNonPerishableItemsByProductName(name);
+	public ResponseEntity<?> getItemsByName(@PathVariable("name") String name) throws IllegalArgumentException {
+		List<PerishableItem> pitems = null;
+		List<NonPerishableItem> npitems = null;
+		try {
+			pitems = service.getPerishableItemsByProductName(name);
+		} catch (Exception e) {
+		}
+		try {
+			npitems = service.getNonPerishableItemsByProductName(name);
+		} catch (Exception e) {
+		}
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		if (pitems == null && npitems == null) {
-			throw new IllegalArgumentException("There is no such Item to get!");
-		} else if (pitems != null) {
+		if (pitems != null) {
 			for (PerishableItem p : pitems) {
 				items.add(convertToDto(p));
-
-			}
-		} else {
-			for (NonPerishableItem p : npitems) {
-				items.add(convertToDto(p));
-
 			}
 		}
-
-		return items;
+		if (npitems != null) {
+			for (NonPerishableItem p : npitems) {
+				items.add(convertToDto(p));
+			}
+		}
+		return new ResponseEntity<>(items, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = { "/deleteItems/{id}", "/deleteItems/{id}/" })
-	public ItemDto deleteItemsByID(@PathVariable("id") String id) throws IllegalArgumentException {
+	public void deleteItemByID(@PathVariable("id") String id) throws IllegalArgumentException {
 		Long ID = Long.parseLong(id);
+		PerishableItem pitem = null;
+		NonPerishableItem npitem = null;
+		try {
+			pitem = service.getPerishableItemByID(ID);
+		} catch (Exception e) {
 
-		PerishableItem pitems = service.getPerishableItemsByID(ID);
-		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		}
+		try {
+			npitem = service.getNonPerishableItemByID(ID);
+		} catch (Exception e) {
 
-		if (pitems == null && npitems == null) {
-			throw new IllegalArgumentException("There is no such Item to delete!");
-		} else if (pitems != null) {
-			PerishableItem deletedPitems = service.deletePerishableItems(pitems);
-			return convertToDto(deletedPitems);
+		}
+		if (pitem != null) {
+			service.deletePerishableItem(pitem);
+
 		} else {
-			NonPerishableItem deletedNPitems = service.deleteNonPerishableItems(npitems);
-			return convertToDto(deletedNPitems);
+			service.deleteNonPerishableItem(npitem);
 		}
 	}
 
 	@PutMapping(value = { "/items/{id}", "/items/{id}/" })
-	public ItemDto updateItem(@PathVariable String id, @RequestParam String productName, @RequestParam Float price,
-			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock,
+	public ResponseEntity<?> updateItem(@PathVariable String id, @RequestParam String productName,
+			@RequestParam Float price, @RequestParam Boolean availableOnline, @RequestParam Integer numInStock,
 			@RequestParam Integer pointPerItem) {
 		Long ID = Long.parseLong(id);
-		PerishableItem pitems = service.getPerishableItemsByID(ID);
-		NonPerishableItem npitems = service.getNonPerishableItemsByID(ID);
+		PerishableItem pitems = null;
+		NonPerishableItem npitems = null;
+		try {
+			pitems = service.getPerishableItemByID(ID);
+		} catch (Exception e) {
+		}
+		try {
+			npitems = service.getNonPerishableItemByID(ID);
+		} catch (Exception e) {
+		}
 		if (pitems == null && npitems == null) {
 			throw new IllegalArgumentException("There is no such Item!");
 		} else if (pitems != null) {
-			PerishableItem perishableItemToUpdate = service.getPerishableItemsByID(ID);
+			PerishableItem perishableItemToUpdate = service.getPerishableItemByID(ID);
 			perishableItemToUpdate = service.updatePerishableItem(perishableItemToUpdate, productName, price,
 					availableOnline, numInStock, pointPerItem);
 			PerishableItemDto updatedPerishableItem = convertToDto(perishableItemToUpdate);
-			return updatedPerishableItem;
+			return new ResponseEntity<>(updatedPerishableItem, HttpStatus.OK);
 		} else {
-			NonPerishableItem nonPerishableItemToUpdate = service.getNonPerishableItemsByID(ID);
+			NonPerishableItem nonPerishableItemToUpdate = service.getNonPerishableItemByID(ID);
 			nonPerishableItemToUpdate = service.updateNonPerishableItem(nonPerishableItemToUpdate, productName, price,
 					availableOnline, numInStock, pointPerItem);
 			NonPerishableItemDto nonUpdatedPerishableItem = convertToDto(nonPerishableItemToUpdate);
-			return nonUpdatedPerishableItem;
+			return new ResponseEntity<>(nonUpdatedPerishableItem, HttpStatus.OK);
 		}
 
 	}
-
 
 	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
@@ -189,6 +224,5 @@ public class ItemController {
 				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
 				nonPerishableItem.getPointPerItem());
 	}
-
 
 }

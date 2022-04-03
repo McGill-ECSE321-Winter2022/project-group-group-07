@@ -259,6 +259,9 @@ public class GroceryStoreService {
 		if (error.length() > 0) {
 			throw new IllegalArgumentException(error);
 		}
+		if (accountRepository.findByUsername(username) != null) {
+			throw new IllegalArgumentException("Username is taken! ");
+		}
 
 		Account account = new Account();
 		account.setUsername(username);
@@ -275,31 +278,28 @@ public class GroceryStoreService {
 	@Transactional
 	public Account getAccount(String username) {
 		if (username == null || username.trim().length() == 0) {
-			throw new IllegalArgumentException("Invalid username");
+			throw new IllegalArgumentException("Invalid username! ");
 		}
 		Account account = accountRepository.findByUsername(username);
 
 		if (account == null) {
-			throw new IllegalArgumentException("No such account to be found.");
+			throw new IllegalArgumentException("No such account to be found! ");
 		}
 		return accountRepository.findByUsername(username);
 	}
 
 	@Transactional
-	public Account deleteAccount(String username, String password) {
+	public void deleteAccount(String username, String password) {
 
 		Account account = accountRepository.findByUsernameAndPassword(username, password);
 
 		if (account != null) {
-			if (addressRepository.findByAccount(account)!=null) {
+			if (addressRepository.findByAccount(account) != null) {
 				addressRepository.delete(addressRepository.findByAccount(account));
 			}
 			accountRepository.delete(account);
 			accountRoleRepository.delete(account.getAccountRole());
-			return account;
 		}
-		throw new IllegalArgumentException("No such account found. Cannot delete.");
-
 	}
 
 	@Transactional
@@ -341,12 +341,16 @@ public class GroceryStoreService {
 		return toList(accountRepository.findAll());
 	}
 
-	public Boolean login(String username, String password) {
-		Account account = getAccount(username);
-		if (account.getPassword().equals(password)) {
-			return true;
-		} else {
-			return false;
+	public Account login(String username, String password) {
+		try {
+			Account account = getAccount(username);
+			if (account.getPassword().equals(password)) {
+				return account;
+			} else {
+				throw new IllegalArgumentException("Username or Password is wrong! ");
+			}
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Username or Password is wrong! ");
 		}
 	}
 
@@ -553,7 +557,7 @@ public class GroceryStoreService {
 		if (cart != null) {
 			return cart;
 		} else {
-			throw new IllegalArgumentException("User does not have a cart");
+			throw new IllegalArgumentException("User does not have a cart! ");
 		}
 	}
 
@@ -562,12 +566,12 @@ public class GroceryStoreService {
 		Item item = null;
 		Cart cart = getCartByAccount(username);
 		try {
-			item = getNonPerishableItemsByID(id);
+			item = getNonPerishableItemByID(id);
 		} catch (IllegalArgumentException e) {
 			try {
-				item = getPerishableItemsByID(id);
+				item = getPerishableItemByID(id);
 			} catch (IllegalArgumentException e1) {
-				throw new IllegalArgumentException("Invalid Item ID");
+				throw new IllegalArgumentException("Invalid Item ID! ");
 			}
 		}
 
@@ -806,7 +810,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PerishableItem getPerishableItemsByID(Long id) {
+	public PerishableItem getPerishableItemByID(Long id) {
 		PerishableItem pitem = perishableItemRepository.findByItemID(id);
 
 		if (pitem == null)
@@ -815,8 +819,9 @@ public class GroceryStoreService {
 		return pitem;
 	}
 
+
 	@Transactional
-	public PerishableItem deletePerishableItems(PerishableItem pitem) {
+	public PerishableItem deletePerishableItem(PerishableItem pitem) {
 
 		if (pitem == null)
 			throw new IllegalArgumentException("Please enter an item to delete.");
@@ -909,14 +914,14 @@ public class GroceryStoreService {
 
 		return toList(nonPerishableItemRepository.findAll());
 	}
-
+	
 	@Transactional
-	public NonPerishableItem getNonPerishableItemsByID(Long id) {
+	public NonPerishableItem getNonPerishableItemByID(Long id) {
 		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
 		if (npitem == null)
-			throw new IllegalArgumentException("No such non perishable item. Please search by another ID.");
+			throw new IllegalArgumentException("No such non perishable item. Please search by another ID! ");
 
-		return nonPerishableItemRepository.findByItemID(id);
+		return npitem;
 	}
 
 	@Transactional
@@ -924,15 +929,15 @@ public class GroceryStoreService {
 
 		List<NonPerishableItem> npitem = nonPerishableItemRepository.findByProductName(name);
 		if (npitem == null)
-			throw new IllegalArgumentException("No such non perishable items. Please search by another name.");
+			throw new IllegalArgumentException("No such non perishable items. Please search by another name! ");
 
 		return npitem;
 	}
 
 	@Transactional
-	public NonPerishableItem deleteNonPerishableItems(NonPerishableItem npitem) {
+	public NonPerishableItem deleteNonPerishableItem(NonPerishableItem npitem) {
 		if (npitem == null)
-			throw new IllegalArgumentException("Please enter an item to delete.");
+			throw new IllegalArgumentException("Please enter an item to delete! ");
 		nonPerishableItemRepository.delete(npitem);
 		return npitem;
 	}
@@ -944,7 +949,7 @@ public class GroceryStoreService {
 		ArrayList<String> errors = new ArrayList<String>();
 
 		if (npitem == null)
-			throw new IllegalArgumentException("Please enter an item to update.");
+			throw new IllegalArgumentException("Please enter an item to update! ");
 
 		if (productName == null || productName.trim().length() == 0) {
 			errors.add("Item name is empty!");
@@ -1059,8 +1064,9 @@ public class GroceryStoreService {
 	public Schedule getScheduleByEmployee(String username) {
 
 		Employee employee = null;
-		if (accountRepository.findByUsername(username).getAccountRole() instanceof Employee) {
-			employee = (Employee) accountRepository.findByUsername(username).getAccountRole();
+		Account acc = getAccount(username);
+		if (acc.getAccountRole() instanceof Employee) {
+			employee = (Employee) acc.getAccountRole();
 		}
 		return scheduleRepository.findByEmployee(employee);
 	}
@@ -1068,7 +1074,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Schedule deleteScheduleByEmployee(String username) {
 		Schedule schedule = null;
-		Account account = accountRepository.findByUsername(username);
+		Account account = getAccount(username);
 		if (account.getAccountRole() instanceof Employee) {
 			schedule = scheduleRepository.findByEmployee((Employee) account.getAccountRole());
 			scheduleRepository.delete(schedule);
@@ -1387,7 +1393,12 @@ public class GroceryStoreService {
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
 	}
-
+	public List<PickUpOrder> getAllPickUpOrders() {
+		return toList(pickUpOrderRepository.findAll());
+	}
+	public List<DeliveryOrder> getAllDeliveryOrders() {
+		return toList(deliveryOrderRepository.findAll());
+	}
 	// ---------------------------------------------------------------------------------------------------------------------------------//
 	// Helper Methods
 
@@ -1412,5 +1423,7 @@ public class GroceryStoreService {
 	private boolean paymentSimulator() {
 		return true;
 	}
+
+	
 
 }

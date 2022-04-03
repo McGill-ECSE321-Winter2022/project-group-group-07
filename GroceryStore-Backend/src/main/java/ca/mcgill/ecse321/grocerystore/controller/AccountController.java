@@ -3,6 +3,9 @@ package ca.mcgill.ecse321.grocerystore.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,27 +27,39 @@ import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-
+	
+	@Autowired
 	private GroceryStoreService service;
 
-
-	@PostMapping(value = {"/login","/login/"})
-	public Boolean login(@RequestParam String username, @RequestParam String password) {
-		return service.login(username,password);
+	@PostMapping(value = { "/login", "/login/" })
+	public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+		try {
+			Account account = service.login(username, password);
+			return new ResponseEntity<>(convertToDto(account, account.getAccountRole()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
-	
+
 	@PostMapping(value = { "/customerAccount/{username}", "/customerAccount/{username}/" })
-	public AccountDto createCustomerAccount(@PathVariable("username") String username, @RequestParam String name,
+	public ResponseEntity<?> createCustomerAccount(@PathVariable("username") String username, @RequestParam String name,
 			@RequestParam String password) {
 
-		Customer role = service.createCustomerRole();
-		Account account = service.createAccount(username, password, name, 0, role);
+		try {
+			AccountRole role = service.createCustomerRole();
+			Account account = service.createAccount(username, password, name, 0, role);
 
-		return convertToDto(account, role);
+			return new ResponseEntity<>(convertToDto(account, role), HttpStatus.CREATED);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 	@PostMapping(value = { "/employeeAccount/{username}", "/employeeAccount/{username}/" })
-	public AccountDto createEmployeeAccount(@PathVariable("username") String username, @RequestParam String name,
+	public ResponseEntity<?> createEmployeeAccount(@PathVariable("username") String username, @RequestParam String name,
 			@RequestParam String password, @RequestParam String role) {
 
 		Employee employeeRole = null;
@@ -58,16 +73,22 @@ public class AccountController {
 		} else if (role.contains("Owner")) {
 			employeeRole = service.createOwnerRole();
 		} else {
-			throw new IllegalArgumentException("No such employee role exists");
+			return new ResponseEntity<>("No such role exists", HttpStatus.BAD_REQUEST);
 		}
 
-		Account account = service.createAccount(username, password, name, 0, employeeRole);
+		try {
+			Account account = service.createAccount(username, password, name, 0, employeeRole);
+			return new ResponseEntity<>(convertToDto(account, employeeRole), HttpStatus.CREATED);
+		} catch (Exception e) {
+			String message = e.getMessage();
+			String[] array = message.split("!");
+			return new ResponseEntity<>(array[0], HttpStatus.BAD_REQUEST);
+		}
 
-		return convertToDto(account, employeeRole);
 	}
 
 	@GetMapping(value = { "/accounts", "/accounts/" })
-	public List<AccountDto> getAllAccounts() {
+	public ResponseEntity<?> getAllAccounts() {
 
 		List<AccountDto> accounts = new ArrayList<AccountDto>();
 
@@ -76,11 +97,11 @@ public class AccountController {
 				accounts.add(convertToDto(a, a.getAccountRole()));
 			}
 		}
-		return accounts;
+		return new ResponseEntity<>(accounts, HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/customerAccounts", "/customerAccounts/" })
-	public List<AccountDto> getAllCustomerAccounts() {
+	public ResponseEntity<?> getAllCustomerAccounts() {
 
 		List<AccountDto> accounts = new ArrayList<AccountDto>();
 
@@ -89,18 +110,28 @@ public class AccountController {
 				accounts.add(convertToDto(a, a.getAccountRole()));
 			}
 		}
-		return accounts;
+		return new ResponseEntity<>(accounts, HttpStatus.OK);
+	}
+	@GetMapping(value = { "/{username}", "/{username}/" })
+	public ResponseEntity<?> getAccount(@PathVariable("username") String username) {
+
+		try {
+			Account account = service.getAccount(username);
+			return new ResponseEntity<>(convertToDto(account,account.getAccountRole()),HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(value = { "/employeeAccounts", "/employeeAccounts/" })
-	public List<AccountDto> getAllEmployeeAccounts() {
+	public ResponseEntity<?> getAllEmployeeAccounts() {
 
 		List<AccountDto> accounts = new ArrayList<AccountDto>();
 
 		for (Account a : service.getAllEmployees()) {
 			accounts.add(convertToDto(a, a.getAccountRole()));
 		}
-		return accounts;
+		return new ResponseEntity<>(accounts, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = { "/deleteAccount/{username}", "/deleteAccount/{username}/" })
@@ -109,27 +140,29 @@ public class AccountController {
 	}
 
 	@PutMapping(value = { "/updatePassword/{username}", "/updatePassword/{username}/" })
-	public AccountDto updatePassword(@PathVariable("username") String username, @RequestParam String oldPassword,
+	public ResponseEntity<?> updatePassword(@PathVariable("username") String username, @RequestParam String oldPassword,
 			@RequestParam String newPassword) {
-
-		Account account = service.updatePassword(username, oldPassword, newPassword);
-
-		return convertToDto(account, account.getAccountRole());
+		try {
+			Account account = service.updatePassword(username, oldPassword, newPassword);
+			return new ResponseEntity<>(convertToDto(account, account.getAccountRole()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PutMapping(value = { "/updateName/{username}", "/updateName/{username}/" })
-	public AccountDto updateName(@PathVariable("username") String username, @RequestParam String newName) {
-
-		Account account = service.updateName(username, newName);
-
-		return convertToDto(account, account.getAccountRole());
+	public ResponseEntity<?> updateName(@PathVariable("username") String username, @RequestParam String newName) {
+		try {
+			Account account = service.updateName(username, newName);
+			return new ResponseEntity<>(convertToDto(account, account.getAccountRole()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
-
 
 	private AccountDto convertToDto(Account account, AccountRole role) {
 
 		return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
 	}
 
-	
 }
