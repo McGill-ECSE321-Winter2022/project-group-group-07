@@ -31,7 +31,7 @@ public class InStoreOrderDto extends OrderDto {
 	public InStoreOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items) {
 		super(orderID, totalValue, date, purchaseTime, items);
 	}
-
+	
 	/**
 	 * @param orderID
 	 * @param totalValue

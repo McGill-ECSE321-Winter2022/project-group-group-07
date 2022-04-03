@@ -9,6 +9,23 @@ import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 
 public class PickUpOrderDto extends OrderDto {
 
+	/**
+	 * @param orderID
+	 * @param totalValue
+	 * @param date
+	 * @param purchaseTime
+	 * @param account
+	 * @param items
+	 * @param timeSlot
+	 * @param status
+	 */
+	public PickUpOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
+			List<ItemDto> items, TimeSlot timeSlot, PickUpOrderStatus status) {
+		super(orderID, totalValue, date, purchaseTime, account, items);
+		this.timeSlot = timeSlot;
+		this.status = status;
+	}
+
 	private TimeSlot timeSlot;
 	private PickUpOrderStatus status;
 
@@ -53,6 +70,39 @@ public class PickUpOrderDto extends OrderDto {
 			TimeSlot timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, items);
 		this.timeSlot = timeSlot;
+	}
+
+	
+	/**
+	 * @param orderID
+	 * @param totalValue
+	 * @param date
+	 * @param purchaseTime
+	 * @param account
+	 * @param timeSlot
+	 * @param status
+	 */
+	public PickUpOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
+			TimeSlot timeSlot, PickUpOrderStatus status) {
+		super(orderID, totalValue, date, purchaseTime, account);
+		this.timeSlot = timeSlot;
+		this.status = status;
+	}
+
+	/**
+	 * @param orderID
+	 * @param totalValue
+	 * @param date
+	 * @param purchaseTime
+	 * @param items
+	 * @param timeSlot
+	 * @param status
+	 */
+	public PickUpOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items,
+			TimeSlot timeSlot, PickUpOrderStatus status) {
+		super(orderID, totalValue, date, purchaseTime, items);
+		this.timeSlot = timeSlot;
+		this.status = status;
 	}
 
 	/**
