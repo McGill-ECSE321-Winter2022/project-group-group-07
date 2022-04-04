@@ -53,8 +53,8 @@
             }
         },
         created: function() {
-            this.variable=false;
-            this.variable1=true;
+            this.variable=localStorage.getItem('role').localeCompare('Clerk')==0;
+            this.variable1=localStorage.getItem('role').localeCompare('DeliveryPerson')==0;
         },
         methods: {
             async updateOrders(){

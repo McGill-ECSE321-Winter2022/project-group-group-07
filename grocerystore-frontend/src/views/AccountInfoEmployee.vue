@@ -14,19 +14,7 @@
     <br>
 
     <div align="left">
-        <label>UserName: </label>
-        <label id = "username" > {{customerUsername}} </label>
-        <br>
-        <label>Name: </label>
-        <label id = "name" > {{customerName}} </label>
-        <button @click="changePassword()" class="block magenta margin-auto"> Change Password </button>
-        
-        <span v-if="errorName" style="color:red">Error: {{errorName}} </span>
-        <br>
-        
-        <label>Address: </label>
-        <label id = "address" > {{customerAddress}} </label>
-        <button @click="changeAddress()"> Change Address </button><br>
+        <a href="/#/EditProfile"><button>Edit Account Informations</button></a><br />
 
         <br>
 
@@ -105,67 +93,12 @@ var AXIOS = axios.create({
       },
 
       created: function () {
-        var username = localStorage.getItem('token')
-        this.customerUsername=username
-        AXIOS.get('/api/account/'.concat(username))
-        .then(response => {
-            this.customerAccount = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data.message
-            console.log(errorMsg)
-            this.errorName = errorMsg
-        }),
-        AXIOS.get('/api/address/'.concat(username))
-        .then(response => {
-            this.customerAddress = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data.message
-            console.log(errorMsg)
-            this.errorName = errorMsg
-        }),
-        AXIOS.get('/api/store/')
-        .then(response => {
-            this.store = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data.message
-            console.log(errorMsg)
-            this.errorName = errorMsg
-        })
+            this.variable=localStorage.getItem('role').localeCompare('Clerk')==0;
+            this.variable1=localStorage.getItem('role').localeCompare('DeliveryPerson')==0;
       },
     
     methods: {
-        changePassword: function(){
-            let username = prompt("Please enter your current Username", "Enter username");
-            let oldPassword = prompt("Please enter your old password", "Enter old password");
-            let newPassword = prompt("Please enter your new password", "Enter new password");
-             AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('?newPassword=').concat(newPassword))
-            .then(response => {
-                window.alert(response.data)
-            })
-            .catch(e => {
-                var errorMsg = e.response.data.message
-                console.log(errorMsg)
-                this.errorName = errorMsg
-            })
-        },
-        changeAddress: function(){
-          let username = prompt("Please enter your current Username", "Enter username");
-          let buildingNo = prompt("Please enter your new Building Number", "Enter building number");
-          let street = prompt("Please enter your new street name", "Enter street name");
-          let town = prompt("Please enter your new town name", "Enter town name");
-             AXIOS.put('/api/address/'.concat(username).concat('?buildingNo=').concat(buildingNo).concat('?street=').concat(street).concat('?town=').concat(town))
-            .then(response => {
-                this.errorName = ''
-            })
-            .catch(e => {
-                var errorMsg = e.response.data.message
-                console.log(errorMsg)
-                this.errorName = errorMsg
-            })
-        }
+        
     }
 }
 

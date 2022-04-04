@@ -3,8 +3,8 @@
         <div class = "navbar">
             <label>AppName</label>
             <div>
-                <button v-if="variable1" onclick= "location.href = '/#/PickUp';">Pickup Orders</button> 
-                <button v-if="variable" onclick="location.href = '/#/Delivery';">Delivery Orders</button> 
+                <button v-if="variable" onclick= "location.href = '/#/PickUp';">Pickup Orders</button> 
+                <button v-if="variable1" onclick="location.href = '/#/Delivery';">Delivery Orders</button> 
                 <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
             </div>
             <div><button>Logout</button></div>
@@ -53,8 +53,8 @@
             }
         },
         created: function() {
-            this.variable=false;
-            this.variable1=true;
+            this.variable=localStorage.getItem('role').localeCompare('Clerk')==0;
+            this.variable1=localStorage.getItem('role').localeCompare('DeliveryPerson')==0;
         },
         methods: {
 
