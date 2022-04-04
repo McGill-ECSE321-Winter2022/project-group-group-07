@@ -25,38 +25,38 @@
         </tr>
         <tr>
           <td>Monday</td>
-          <td>{{ MondayST }}</td>
-          <td>{{ MondayET }}</td>
+          <td>{{ MondayBH.startTime }}</td>
+          <td>{{ MondayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Tuesday</td>
-          <td>{{ TuesdayST }}</td>
-          <td>{{ TuesdayET }}</td>
+          <td>{{ TuesdayBH.startTime }}</td>
+          <td>{{ TuesdayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Wednesday</td>
-          <td>{{ WednesdayST }}</td>
-          <td>{{ WednesdayET }}</td>
+          <td>{{ WednesdayBH.startTime }}</td>
+          <td>{{ WednesdayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Thursday</td>
-          <td>{{ ThursdayST }}</td>
-          <td>{{ ThursdayET }}</td>
+          <td>{{ ThursdayBH.startTime }}</td>
+          <td>{{ ThursdayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Friday</td>
-          <td>{{ FridayST }}</td>
-          <td>{{ FridayET }}</td>
+          <td>{{ FridayBH.startTime }}</td>
+          <td>{{ FridayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Saturday</td>
-          <td>{{ SaturdayST }}</td>
-          <td>{{ SaturdayET }}</td>
+          <td>{{ SaturdayBH.startTime }}</td>
+          <td>{{ SaturdayBH.endTime }}</td>
         </tr>
         <tr>
           <td>Sunday</td>
-          <td>{{ SundayST }}</td>
-          <td>{{ SundayET }}</td>
+          <td>{{ SundayBH.startTime }}</td>
+          <td>{{ SundayBH.endTime }}</td>
         </tr>
       </table>
     </div>
@@ -71,7 +71,8 @@
         />
         <CustomInput
           label="Email"
-          type="text"
+          type="email"
+          placeholder="example@email.com"
           :value="emailValue"
           @change="v => (emailValue = v)"
         />
@@ -86,11 +87,12 @@
         <CustomInput
           label="Employee Discount Rate"
           type="number"
-          :value="EmployeeDiscountRateValue"
-          @change="v => (EmployeeDiscountRateValue = v)"
+          :value="employeeDiscountRateValue"
+          @change="v => (employeeDiscountRateValue = v)"
         />
         <CustomInput
           label="PointToCash Ratio"
+          step="0.01"
           type="number"
           :value="pointToCashRatioValue"
           @change="v => (pointToCashRatioValue = v)"
@@ -177,34 +179,22 @@ export default {
       addressValue: "",
       emailValue: "",
       phoneNumberValue: null,
-      EmployeeDiscountRateValue: null,
+      employeeDiscountRateValue: null,
       pointToCashRatioValue: null,
       startTime: null,
       endTime: null,
-      MondayST: "",
-      MondayET: "",
-      TuesdayST: "",
-      TuesdayET: "",
-      WednesdayST: "",
-      WednesdayET: "",
-      ThursdayST: "",
-      ThursdayET: "",
-      FridayST: "",
-      FridayET: "",
-      SaturdayST: "",
-      SaturdayET: "",
-      SundayST: "",
-      SundayET: ""
+      MondayBH: { startTime: "", endTime: "" },
+      TuesdayBH: { startTime: "", endTime: "" },
+      WednesdayBH: { startTime: "", endTime: "" },
+      ThursdayBH: { startTime: "", endTime: "" },
+      FridayBH: { startTime: "", endTime: "" },
+      SaturdayBH: { startTime: "", endTime: "" },
+      SundayBH: { startTime: "", endTime: "" }
     };
   },
   created: function() {
-    AXIOS.get("api/store/store")
-      .then(response => {
-        this.Store = response.data;
-      })
-      .catch(e => {
-        return;
-      });
+    this.refreshStoreInfo();
+    this.refreshSchedule();
   },
   methods: {
     setupStoreInfo() {
@@ -218,12 +208,12 @@ export default {
           "&email=" +
           this.emailValue +
           "&employeeDiscountRate=" +
-          this.employeeDiscountRate +
+          this.employeeDiscountRateValue +
           "&pointToCashRatio=" +
           this.pointToCashRatioValue
       )
         .then(response => {
-          this.Store = response.data;
+          this.refreshStoreInfo();
         })
         .catch(e => {
           window.alert(e.response.data);
@@ -240,18 +230,18 @@ export default {
           "&email=" +
           this.emailValue +
           "&employeeDiscountRate=" +
-          this.employeeDiscountRate +
+          this.employeeDiscountRateValue +
           "&pointToCashRatio=" +
           this.pointToCashRatioValue
       )
         .then(response => {
-          this.Store = response.data;
+          this.refreshStoreInfo();
         })
         .catch(e => {
           window.alert(e.response.data);
         });
     },
-      addBusinessHour() {
+    addBusinessHour() {
       var select = document.getElementById("days");
       var day = select.options[select.selectedIndex].value;
       AXIOS.post(
@@ -262,10 +252,15 @@ export default {
           this.startTime +
           "&endTime=" +
           this.endTime
-      );
-
+      )
+        .then(response => {
+          this.refreshSchedule();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
-    updateBusinessHour() {
+    updateBusinessHour: function() {
       var select = document.getElementById("days");
       var day = select.options[select.selectedIndex].value;
       AXIOS.put(
@@ -275,7 +270,74 @@ export default {
           this.startTime +
           "&endTime=" +
           this.endTime
-      );
+      )
+        .then(response => {
+          this.refreshSchedule();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+    },
+    refreshSchedule: function() {
+      AXIOS.get("api/store/businessHours/Monday")
+        .then(response => {
+          this.MondayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Tuesday")
+        .then(response => {
+          this.TuesdayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Wednesday")
+        .then(response => {
+          this.WednesdayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Thursday")
+        .then(response => {
+          this.ThursdayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Friday")
+        .then(response => {
+          this.FridayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Saturday")
+        .then(response => {
+          this.SaturdayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Sunday")
+        .then(response => {
+          this.SundayBH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+        return;
+    },
+    refreshStoreInfo() {
+      AXIOS.get("api/store/store")
+        .then(response => {
+          this.Store = response.data;
+        })
+        .catch(e => {
+          return;
+        });
     }
   }
 };

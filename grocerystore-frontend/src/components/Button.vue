@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClick()" :style="{ background: color }" class="btn">
+  <button @click.prevent="onClick()" :style="{ background: color }" class="btn">
     {{ text }}
   </button>
 </template>

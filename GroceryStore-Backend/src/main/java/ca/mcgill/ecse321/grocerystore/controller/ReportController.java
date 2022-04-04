@@ -25,6 +25,7 @@ import ca.mcgill.ecse321.grocerystore.dto.OrderDto;
 import ca.mcgill.ecse321.grocerystore.dto.PerishableItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.PickUpOrderDto;
 import ca.mcgill.ecse321.grocerystore.dto.ReportDto;
+import ca.mcgill.ecse321.grocerystore.dto.TimeSlotDto;
 import ca.mcgill.ecse321.grocerystore.model.Account;
 import ca.mcgill.ecse321.grocerystore.model.AccountRole;
 import ca.mcgill.ecse321.grocerystore.model.DeliveryOrder;
@@ -117,12 +118,12 @@ public class ReportController {
 		if (order instanceof PickUpOrder) {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
 				} else {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
 				}
 			} else {
-				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
 			}
 		} else if (order instanceof InStoreOrder) {
 			if (order.getItems() != null && order.getItems().size() > 0) {
@@ -137,12 +138,12 @@ public class ReportController {
 		} else {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
 				} else {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
 				}
 			} else {
-				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
 			}
 		}
 	}
@@ -162,6 +163,10 @@ public class ReportController {
 	private AccountDto convertToDto(Account account, AccountRole role) {
 
 		return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
+	}
+
+	private TimeSlotDto convertToDto(TimeSlot t) {
+		return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
 	}
 
 }

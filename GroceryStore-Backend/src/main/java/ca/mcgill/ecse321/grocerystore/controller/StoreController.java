@@ -35,28 +35,28 @@ public class StoreController {
 	@Autowired
 	private GroceryStoreService service;
 
-	// Store 
+	// Store
 
 	@GetMapping(value = { "/store", "/store/" })
 	public ResponseEntity<?> getStoreInfo() {
 		Store store = service.getStore();
-		if(store == null) {
+		if (store == null) {
 			return new ResponseEntity<>("There is no Store assigned to the System.", HttpStatus.BAD_REQUEST);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
 		}
 	}
 
 	@PostMapping(value = { "/setStoreInfo", "/setStoreInfo/" })
 	public ResponseEntity<?> createStore(@RequestParam String name, @RequestParam String address,
-			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam Integer employeeDiscountRate,
-			@RequestParam Float pointToCashRatio) {
+			@RequestParam String phoneNumber, @RequestParam String email, @RequestParam String employeeDiscountRate,
+			@RequestParam String pointToCashRatio) {
 		Store store = null;
 		try {
-			store = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-		}
-		catch (Exception e) {
+			store = service.createStore(name, address, phoneNumber, email, Integer.parseInt(employeeDiscountRate),
+					Float.parseFloat(pointToCashRatio));
+		} catch (Exception e) {
+			System.out.print(e.getMessage().split("!")[0]);
 			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
@@ -69,31 +69,29 @@ public class StoreController {
 		Store store = null;
 		try {
 			store = service.updateStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(convertToDto(store), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = { "/deleteStore", "/deleteStore/" })
 	public ResponseEntity<?> deleteStore() {
 		service.deleteStore();
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	// BusinessHours 
+	// BusinessHours
 
 	@PostMapping(value = { "/businessHours", "/businessHours/" })
-	public ResponseEntity<?> createBusinessHours(
-			@RequestParam(name = "dayOfWeek") String dayOfWeek,
+	public ResponseEntity<?> createBusinessHours(@RequestParam(name = "dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
 		BusinessHour b = null;
 		try {
-			b = service.createBusinessHour(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime), Time.valueOf(endTime));
-		}
-		catch (Exception e) {
+			b = service.createBusinessHour(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime),
+					Time.valueOf(endTime));
+		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(convertToDto(b), HttpStatus.OK);
@@ -101,7 +99,9 @@ public class StoreController {
 
 	@GetMapping(value = { "/businessHours", "/businessHours/" })
 	public ResponseEntity<?> getBusinessHours() {
-		return new ResponseEntity<>(service.getAllBusinessHours().stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+		return new ResponseEntity<>(
+				service.getAllBusinessHours().stream().map(this::convertToDto).collect(Collectors.toList()),
+				HttpStatus.OK);
 	}
 
 	@GetMapping(value = { "/businessHours/{dayOfWeek}", "/businessHours/{dayOfWeek}/" })
@@ -146,10 +146,12 @@ public class StoreController {
 	}
 
 	private BusinessHourDto convertToDto(BusinessHour businessHour) {
-
-		return new BusinessHourDto(businessHour.getDayOfWeek().toString(), businessHour.getStartTime(),
-				businessHour.getEndTime());
+		if (businessHour != null) {
+			return new BusinessHourDto(businessHour.getDayOfWeek().toString(), businessHour.getStartTime(),
+					businessHour.getEndTime());
+		} else {
+			return null;
+		}
 	}
-
 
 }
