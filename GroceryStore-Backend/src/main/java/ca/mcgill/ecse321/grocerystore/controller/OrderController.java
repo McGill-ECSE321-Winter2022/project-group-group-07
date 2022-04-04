@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.grocerystore.controller;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -131,37 +132,89 @@ public class OrderController {
 
 	@PostMapping(value = { "/createInStoreOrder", "/createInStoreOrder/" })
 	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
-			@RequestParam Set<Item> items) {
+			@RequestParam String[] items) {
+		Set<Item> itemslist = new HashSet<Item>();
+		for(String i : items) {
+			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
+			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			if(i1 != null) {
+				itemslist.add(i1);
+			}
+			else {
+				itemslist.add(i2);
+			}
+		}
 		return new ResponseEntity<>(
-				(InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, items)),
+				(InStoreOrderDto) convertToDto(service.createInStoreOrder(date, purchaseTime, itemslist)),
 				HttpStatus.CREATED);
 	}
 
 	@PostMapping(value = { "/createInStoreOrder/{username}", "/createInStoreOrderF/{username}/" })
 	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
-			@RequestParam Set<Item> items, @PathVariable("username") String username) {
+			@RequestParam String[] items, @PathVariable("username") String username) {
+		Set<Item> itemslist = new HashSet<Item>();
+		for(String i : items) {
+			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
+			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			if(i1 != null) {
+				itemslist.add(i1);
+			}
+			else {
+				itemslist.add(i2);
+			}
+		}
 		return new ResponseEntity<>(
 				(InStoreOrderDto) convertToDto(
-						service.createInStoreOrder(date, purchaseTime, items, service.getAccount(username))),
+						service.createInStoreOrder(date, purchaseTime, itemslist, service.getAccount(username))),
 				HttpStatus.CREATED);
 	}
 
 	@PostMapping(value = { "/createDeliveryOrder/{username}", "/createDeliveryOrder/{username}/" })
 	public ResponseEntity<?> createDeliveryOrder(@PathVariable("username") String username, @RequestParam Date date,
-			@RequestParam Time purchaseTime, @RequestParam Set<Item> items, @RequestParam Date startDate,
+			@RequestParam Time purchaseTime, @RequestParam String[] items, @RequestParam Date startDate,
 			@RequestParam Date endDate, @RequestParam Time startTime, @RequestParam Time endTime) {
+		Set<Item> itemslist = new HashSet<Item>();
+		for(String i : items) {
+			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
+			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			if(i1 != null) {
+				itemslist.add(i1);
+			}
+			else if(i2 != null) {
+				itemslist.add(i2);
+			}
+			else {
+				return new ResponseEntity<>("There is no item with this ID",
+						HttpStatus.BAD_REQUEST);
+			}
+		}
 		return new ResponseEntity<>(
-				(DeliveryOrderDto) convertToDto(service.createDeliveryOrder(date, purchaseTime, items,
+				(DeliveryOrderDto) convertToDto(service.createDeliveryOrder(date, purchaseTime, itemslist,
 						service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username))),
 				HttpStatus.OK);
 	}
 
 	@PostMapping(value = { "/createPickUpOrder/{username}", "/createPickUpOrder/{username}/" })
 	public ResponseEntity<?> createPickUpOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
-			@RequestParam Set<Item> items, @RequestParam Date startDate, @RequestParam Date endDate,
+			@RequestParam String[] items, @RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam Time startTime, @RequestParam Time endTime, @PathVariable("username") String username) {
+		Set<Item> itemslist = new HashSet<Item>();
+		for(String i : items) {
+			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
+			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			if(i1 != null) {
+				itemslist.add(i1);
+			}
+			else if(i2 != null) {
+				itemslist.add(i2);
+			}
+			else {
+				return new ResponseEntity<>("There is no item with this ID",
+						HttpStatus.BAD_REQUEST);
+			}
+		}
 		return new ResponseEntity<>(
-				(PickUpOrderDto) convertToDto(service.createPickUpOrder(date, purchaseTime, items,
+				(PickUpOrderDto) convertToDto(service.createPickUpOrder(date, purchaseTime, itemslist,
 						service.createTimeSlot(startDate, endDate, startTime, endTime), service.getAccount(username))),
 				HttpStatus.CREATED);
 	}
