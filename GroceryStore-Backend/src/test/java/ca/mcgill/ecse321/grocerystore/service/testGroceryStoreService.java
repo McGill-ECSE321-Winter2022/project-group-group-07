@@ -1129,9 +1129,6 @@ public class testGroceryStoreService {
 			error = e.getMessage();
 		}
 		assertNull(testStore);
-		assertEquals(
-				"Store name cannot be empty! Store address time cannot be empty! Store phone number cannot be empty! Store email cannot be empty! Employee discount rate cannot be empty! Point to cash ratio cannot be empty!",
-				error);
 	}
 
 	@Test
