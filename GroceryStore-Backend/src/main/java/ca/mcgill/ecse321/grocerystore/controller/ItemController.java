@@ -180,6 +180,8 @@ public class ItemController {
 			service.deleteNonPerishableItem(npitem);
 		}
 	}
+	
+	@PutMapping(value= {"/restock" , "/restock/"})
 
 	@PutMapping(value = { "/items/{id}", "/items/{id}/" })
 	public ResponseEntity<?> updateItem(@PathVariable String id, @RequestParam String productName,
