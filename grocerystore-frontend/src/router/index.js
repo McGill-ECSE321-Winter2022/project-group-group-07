@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/views/Hello'
+import Welcome from '@/views/Login'
+import Signup from '@/views/Signup'
 import AccountInfo from '@/views/AccountInfo'
 import AccountInfoEmployee from '@/views/AccountInfoEmployee'
 import Delivery from '@/views/Delivery'
@@ -19,14 +21,19 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      name: 'Hello',
+      component: Hello
+    },
+    {
       path: '/Signup',
       name: 'Signup',
       component: Signup
     },
     {
-      path: '/',
-      name: 'Hello',
-      component: Hello
+      path: '/Login',
+      name: 'Login',
+      component: Welcome
     },
     {
       path: '/AccountInfo',
