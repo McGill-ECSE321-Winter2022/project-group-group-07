@@ -34,12 +34,15 @@ public class ItemController {
 	private GroceryStoreService service;
 
 	@PostMapping(value = { "/perishable/", "/perishable" })
-	public ResponseEntity<?> createPerishableItem(@RequestParam String productName, @RequestParam Float price,
-			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem,
+	public ResponseEntity<?> createPerishableItem(@RequestParam String productName, @RequestParam String price,
+			@RequestParam String availableOnline, @RequestParam String pointPerItem,
 			@RequestParam String imageLink, @RequestParam String category) {
 		try {
-			PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline,
-					numInStock, pointPerItem, imageLink, ItemCategory.valueOf(category));
+			Float p = Float.parseFloat(price);
+			Boolean a = Boolean.parseBoolean(availableOnline);
+			Integer point = Integer.parseInt(pointPerItem); 
+			PerishableItem perishableItem = service.createPerishableItem(productName, p, a,
+					0, point, imageLink, ItemCategory.valueOf(category));
 			return new ResponseEntity<>(convertToDto(perishableItem), HttpStatus.OK);
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -49,12 +52,21 @@ public class ItemController {
 	}
 
 	@PostMapping(value = { "/nonperishable", "/nonperishable/" })
-	public ResponseEntity<?> createNonPerishableItem(@RequestParam String productName, @RequestParam Float price,
-			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem,
+	public ResponseEntity<?> createNonPerishableItem(@RequestParam String productName, @RequestParam String price,
+			@RequestParam String availableOnline, @RequestParam String pointPerItem,
 			@RequestParam String imageLink, @RequestParam String category) {
 		try {
-			NonPerishableItem nonPerishableItem = service.createNonPerishableItem(productName, price, availableOnline,
-					numInStock, pointPerItem,imageLink, ItemCategory.valueOf(category));
+			System.out.println(productName);
+			System.out.println(price);
+			System.out.println(availableOnline);
+			System.out.println(pointPerItem);
+			System.out.println(imageLink);
+			System.out.println(category);
+			Float p = Float.parseFloat(price);
+			Boolean a = Boolean.parseBoolean(availableOnline);
+			Integer point = Integer.parseInt(pointPerItem); 
+			NonPerishableItem nonPerishableItem = service.createNonPerishableItem(productName, p, a,
+					0, point,imageLink, ItemCategory.valueOf(category));
 			return new ResponseEntity<>(convertToDto(nonPerishableItem), HttpStatus.OK);
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -178,6 +190,18 @@ public class ItemController {
 
 		} else {
 			service.deleteNonPerishableItem(npitem);
+		}
+	}
+	
+	@PutMapping(value= {"/restock" , "/restock/"})
+	public ResponseEntity<?> restock(@RequestParam String id, @RequestParam String quantity){
+		Integer q = Integer.parseInt(quantity);
+		Long ID = Long.parseLong(id);
+		try {
+			service.restock(ID,q);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
 

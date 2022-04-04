@@ -109,10 +109,9 @@ public class ScheduleController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
 		}
-		if(wh == null) {
-			return new ResponseEntity<>("Invalid input" , HttpStatus.BAD_REQUEST);
-		}
-		else{
+		if(wh==null) {
+			return new ResponseEntity<>(wh, HttpStatus.OK);
+		}else {
 			return new ResponseEntity<>(convertToDto(wh), HttpStatus.OK);
 		}
 	}
