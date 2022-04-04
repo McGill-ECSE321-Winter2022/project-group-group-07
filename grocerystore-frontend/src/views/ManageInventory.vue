@@ -23,13 +23,13 @@
           type="number"
           step="0.01"
           :value="price"
-          @change="v => (password = v)"
+          @change="v => (price = v)"
         />
         <div>
           <div><label style="margin-top: 10px;">Availabe Online</label></div>
           <select
-            name="AvailabeOnline"
-            id="AvailabeOnline"
+            name="AvailableOnline"
+            id="AvailableOnline"
             style="width:200px; height:30px;  margin-bottom:10px;"
           >
             <option value="True">True</option>
@@ -51,6 +51,7 @@
         <div><label style="margin-top: 10px;">Category</label></div>
         <select
           name="ItemCategory"
+          ref="ItemCategory"
           id="ItemCategory"
           style="width:200px; height:30px;"
         >
@@ -63,7 +64,18 @@
           <option value="Clothing">Clothing</option>
           <option value="Others">Others</option>
         </select>
+        <div><label style="margin-top: 10px;">Returnable</label></div>
+        <select
+          name="Returnable"
+          ref="Returnable"
+          id="Returnable"
+          style="width:200px; height:30px;"
+        >
+          <option value="True">True</option>
+          <option value="False">False</option>
+        </select>
         <Button
+          @btn-click="createItem"
           text="Add"
           color="black"
           style="margin-top:10px; width:203px;"
@@ -89,6 +101,7 @@
         />
         <div>
           <Button
+            @btn-click="restock"
             text="Restock"
             color="black"
             style="margin-top:15px; width:203px;"
@@ -127,34 +140,113 @@ export default {
       price: null,
       pointPerItem: null,
       imageLink: "",
-      quantity: null,
+      quantity: null
     };
   },
   created: function() {
-    var lst = this.$refs.itemDisplay;
-    AXIOS.get("/api/item/items/")
-      .then(response => {
-        for (var i = 0; i < response.data.length; i++) {
-          var itm = response.data[i];
-          const opt = document.createElement("option");
-          opt.textContent =
-            "Name:" +
-            itm.productName +
-            ", ID: " +
-            itm.itemID +
-            ", " +
-            itm.price +
-            " CAD, Category: " +
-            itm.category;
-          lst.appendChild(opt);
-        }
-      })
-      .catch(e => {
-        window.alert(e.response.data);
-        return;
-      });
+    this.refreshItems();
+    this.clearFields();
   },
-  method: {}
+  methods: {
+    refreshItems() {
+      AXIOS.get("/api/item/items/")
+        .then(response => {
+          var lst = this.$refs.itemDisplay;
+          this.removeOptions(lst);
+          const opt = document.createElement("option");
+          opt.textContent = "<none>";
+          lst.appendChild(opt);
+          for (var i = 0; i < response.data.length; i++) {
+            var itm = response.data[i];
+            const opt = document.createElement("option");
+            opt.textContent =
+              "Name: " +
+              itm.productName +
+              ", ID: " +
+              itm.itemID +
+              ", " +
+              itm.price +
+              " CAD, Category: " +
+              itm.category +
+              " In stock: " +
+              itm.numInStock;
+            console.log(itm.numInStock);
+            lst.appendChild(opt);
+          }
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+          return;
+        });
+    },
+    createItem() {
+      var cat = document.getElementById("ItemCategory");
+      var category = cat.options[cat.selectedIndex].value;
+      var ret = document.getElementById("Returnable");
+      var returnable = ret.options[ret.selectedIndex].value;
+      var ava = document.getElementById("AvailableOnline");
+      var available = ava.options[ava.selectedIndex].value;
+      if (returnable == "True") {
+        AXIOS.post(
+          "api/item/nonperishable?" +
+            "productName=" +
+            this.name +
+            "&price=" +
+            this.price +
+            "&availableOnline=" +
+            available +
+            "&pointPerItem=" +
+            this.pointPerItem +
+            "&imageLink=" +
+            this.imageLink +
+            "&category=" +
+            category
+        )
+          .then(response => {
+            this.refreshItems();
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      } else {
+        AXIOS.post(
+          "api/item/perishable?" +
+            "productName=" +
+            this.name +
+            "&price=" +
+            this.price +
+            "&availableOnline=" +
+            available +
+            "&pointPerItem=" +
+            this.pointPerItem +
+            "&imageLink=" +
+            this.imageLink +
+            "&category=" +
+            category
+        )
+          .then(response => {
+            this.refreshItems();
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      }
+    },
+    removeOptions(selectElement) {
+      var i,
+        L = selectElement.options.length - 1;
+      for (i = L; i >= 0; i--) {
+        selectElement.remove(i);
+      }
+    },
+    clearFields() {
+      (this.name = ""),
+        (this.price = null),
+        (this.pointPerItem = null),
+        (this.imageLink = ""),
+        (this.quantity = null);
+    }
+  }
 };
 </script>
 

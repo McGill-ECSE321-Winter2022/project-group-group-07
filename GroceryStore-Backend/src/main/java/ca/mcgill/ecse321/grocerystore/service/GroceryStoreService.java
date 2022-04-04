@@ -1487,4 +1487,21 @@ public class GroceryStoreService {
 
 	}
 
+	public void restock(Long id, Integer quantity) {	
+			
+		PerishableItem pitem = perishableItemRepository.findByItemID(id);
+
+		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);	
+		if(pitem == null && npitem == null) {
+			throw new IllegalArgumentException("Wrong item id");
+		}else if(pitem != null) {
+			pitem.setNumInStock(pitem.getNumInStock()+ quantity);
+			perishableItemRepository.save(pitem);
+		}else if(npitem != null) {
+			npitem.setNumInStock(npitem.getNumInStock()+ quantity);
+			nonPerishableItemRepository.save(npitem);
+		}
+	
+	}
+
 }
