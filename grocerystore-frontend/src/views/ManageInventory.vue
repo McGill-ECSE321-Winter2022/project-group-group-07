@@ -88,7 +88,13 @@
         <label style="font-size: 24px; margin-top: 20px;"
           >Manage Inventory</label
         >
-        <select name="Items" ref="itemDisplay" size="20" style="width:100%">
+        <select
+          name="Items"
+          ref="itemDisplay"
+          id=""
+          size="20"
+          style="width:100%"
+        >
         </select>
       </div>
       <div>
@@ -162,15 +168,14 @@ export default {
             opt.textContent =
               "Name: " +
               itm.productName +
-              ", ID: " +
+              " , ID: " +
               itm.itemID +
-              ", " +
+              " , " +
               itm.price +
               " CAD, Category: " +
               itm.category +
               " In stock: " +
               itm.numInStock;
-            console.log(itm.numInStock);
             lst.appendChild(opt);
           }
         })
@@ -204,6 +209,7 @@ export default {
         )
           .then(response => {
             this.refreshItems();
+            this.clearFields();
           })
           .catch(e => {
             window.alert(e.response.data);
@@ -226,6 +232,29 @@ export default {
         )
           .then(response => {
             this.refreshItems();
+            this.clearFields();
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      }
+    },
+    restock() {
+      const lst = this.$refs.itemDisplay;
+      const itm = lst.children[lst.selectedIndex];
+      var str = itm.textContent.split(" ");
+      var id = str[4];
+      if (id == null) {
+        window.alert("pick an item");
+      } else if (this.quantity == null) {
+        window.alert("enter a quantity");
+      } else {
+        AXIOS.put(
+          "api/item/restock?" + "id=" + id + "&quantity=" + this.quantity
+        )
+          .then(response => {
+            this.refreshItems();
+            this.clearFields();
           })
           .catch(e => {
             window.alert(e.response.data);
