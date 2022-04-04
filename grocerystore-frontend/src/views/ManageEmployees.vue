@@ -58,6 +58,7 @@
           @change="v => (town = v)"
         />
         <Button
+        @btn-click="createEmployeeAccount"
           text="Create"
           color="black"
           style="margin-top:10px; width:203px;"
@@ -162,6 +163,19 @@
 <script>
 import CustomInput from "../components/CustomInput.vue";
 import Button from "../components/Button.vue";
+import axios, { Axios } from "axios";
+import { ListGroupPlugin } from "bootstrap-vue";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+
 export default {
   name: "ManageEmployees",
   components: {
@@ -175,10 +189,17 @@ export default {
       name: "",
       buildingNumber: null,
       street: "",
-      towm: ""
+      town: ""
     };
   },
-  method: {}
+  created: function(){
+
+  },
+  method: {
+    createEmployeeAccount(){
+      AXIOS.post("/api/account/employeeAccount/" + this.username + "?name=" +this.name+ "password="+this.password)
+    }
+  }
 };
 </script>
 
