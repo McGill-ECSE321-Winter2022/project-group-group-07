@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.grocerystore.dto.ItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.NonPerishableItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.PerishableItemDto;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.ItemCategory;
 import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
@@ -34,11 +35,11 @@ public class ItemController {
 
 	@PostMapping(value = { "/perishable/", "/perishable" })
 	public ResponseEntity<?> createPerishableItem(@RequestParam String productName, @RequestParam Float price,
-			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem)
-			throws IllegalArgumentException {
+			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem,
+			@RequestParam String imageLink, @RequestParam String category) {
 		try {
 			PerishableItem perishableItem = service.createPerishableItem(productName, price, availableOnline,
-					numInStock, pointPerItem);
+					numInStock, pointPerItem, imageLink, ItemCategory.valueOf(category));
 			return new ResponseEntity<>(convertToDto(perishableItem), HttpStatus.OK);
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -49,11 +50,11 @@ public class ItemController {
 
 	@PostMapping(value = { "/nonperishable", "/nonperishable/" })
 	public ResponseEntity<?> createNonPerishableItem(@RequestParam String productName, @RequestParam Float price,
-			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem)
-			throws IllegalArgumentException {
+			@RequestParam Boolean availableOnline, @RequestParam Integer numInStock, @RequestParam Integer pointPerItem,
+			@RequestParam String imageLink, @RequestParam String category) {
 		try {
 			NonPerishableItem nonPerishableItem = service.createNonPerishableItem(productName, price, availableOnline,
-					numInStock, pointPerItem);
+					numInStock, pointPerItem,imageLink, ItemCategory.valueOf(category));
 			return new ResponseEntity<>(convertToDto(nonPerishableItem), HttpStatus.OK);
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -216,13 +217,15 @@ public class ItemController {
 	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
 				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
-				perishableItem.getPointPerItem());
+				perishableItem.getPointPerItem(), perishableItem.getImageLink(),
+				perishableItem.getCategory().toString());
 	}
 
 	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
 		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
 				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
-				nonPerishableItem.getPointPerItem());
+				nonPerishableItem.getPointPerItem(), nonPerishableItem.getImageLink(),
+				nonPerishableItem.getCategory().toString());
 	}
 
 }
