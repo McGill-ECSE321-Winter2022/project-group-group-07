@@ -2,14 +2,14 @@
   <div class="terminal" style="background-color: grey; height:100%; position:fixed; width:100%;">
   <div class="modal" ref="modal">
     <div class="payment_info">
-            <div style="margin-top:20%;" class="infor_label">
+            <div style="margin-top:10%;" class="infor_label">
               <label> CardHolder Name </label><br><br>
               <label> Credit Card number </label><br><br>
               <label> Expiration Date </label><br><br>
               <label> CVV </label><br><br>
             </div>
 
-            <div style="margin-top:20%;" class="info">
+            <div style="margin-top:10%;" class="info">
               <input v-model="cardholder" type="text" name="cardHolder"><br><br>
               <input v-model="ccn" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number"
                      maxlength="19"><br><br>
@@ -77,9 +77,11 @@ export default {
     data() {
         return {
             id: null,
+            item: null,
             user: null,
             sel: null,
             cardholder: null,
+            user2: null,
             cvv: null,
             ccn: null,
             exp: null,
@@ -135,6 +137,11 @@ export default {
                         return;
                     }
                     else {
+                        this.item = '';
+                        this.user2 = this.user;
+                        for(var i = 0; i < this.$refs.selecter.children.length; i++){
+                         this.item += ("&items=" + this.$refs.selecter.children[i].textContent.split(",")[1].trim());
+                        }
                         this.$refs.modal.style.display = "block";
                     }
                 })
@@ -144,6 +151,11 @@ export default {
                 });
             }
             else {
+                    this.item = '';
+                    this.user2 = this.user;
+                        for(var i = 0; i < this.$refs.selecter.children.length; i++){
+                         this.item += ("&items=" + this.$refs.selecter.children[i].textContent.split(",")[1].trim());
+                    }
                 this.$refs.modal.style.display = "block";
             }
         },
@@ -169,14 +181,12 @@ export default {
             }
             var currentdate = new Date();
             var datestr =  currentdate.toISOString().split("T")[0];
-            var timestr = currentdate.toISOString().split("T")[1];
+            var timestr = currentdate.toISOString().split("T")[1].split(".")[0];
             var str = "?date=" + datestr + "&purchaseTime=" + timestr;
-            for(var i = 0; i < this.$refs.selector.children.length; i++){
-              str += ("&items=" + this.$refs.selector.children[i].textContent.split(",").trim());
-            }
-            if(this.user){
+            str += this.item;
+            if(!this.user2){
               
-              AXIOS.post('/createInStoreOrder' + str)
+              AXIOS.post('/api/order/createInStoreOrder' + str)
               .then(response => {
                })
             .catch(e => {
@@ -185,7 +195,7 @@ export default {
               })
             }
            else{
-             AXIOS.post('/createInStoreOrder/' + this.user + str)
+             AXIOS.post('/api/order/createInStoreOrder/' + this.user2 + str)
               .then(response => {
                })
             .catch(e => {
@@ -195,9 +205,7 @@ export default {
            } 
             window.alert("Transaction Successful!");
             this.$refs.modal.style.display = "none";
-            for(var i = 0; i < this.$refs.selector.children.length; i++){
-              this.$refs.selector.children[i].remove();
-            }
+            this.user2 = null;
         }
     },
     components: { Button }
