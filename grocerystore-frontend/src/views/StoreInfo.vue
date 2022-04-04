@@ -251,7 +251,7 @@ export default {
           window.alert(e.response.data);
         });
     },
-    addBusinessHour() {
+      addBusinessHour() {
       var select = document.getElementById("days");
       var day = select.options[select.selectedIndex].value;
       AXIOS.post(
@@ -263,6 +263,7 @@ export default {
           "&endTime=" +
           this.endTime
       );
+
     },
     updateBusinessHour() {
       var select = document.getElementById("days");

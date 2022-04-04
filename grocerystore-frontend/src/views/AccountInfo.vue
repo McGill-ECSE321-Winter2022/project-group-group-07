@@ -4,8 +4,8 @@
       <label>AppName</label>
       <div>
         <button>Catalog</button>
-        <button>Cart/Checkout</button>
-        <button>Order Status</button>
+        <button @click="Cart()">Cart/Checkout</button>
+        <button @click="StatsOrder()">Order Status</button>
         <button>Account Information</button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -32,6 +32,7 @@
       <br />
       <label>Current Points: </label>
       <label id="points"> {{ customerAccount.pointBalance }} </label><br/>
+       <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
       <br/>
        <a href="/#/EditProfile"><button>Edit Account Informations</button></a><br />
     </div>
@@ -61,9 +62,9 @@ export default {
       },
 
       created: function () {
-        //localStorage.setItem('token','user1')
+        localStorage.setItem('token','user1')
         //localStorage.removeItem('token')
-        var username = localStorage.getItem('token');
+        var username = (localStorage.getItem('token'));
         if(username == null){
           this.$router.push('/');
         }
@@ -71,6 +72,7 @@ export default {
         .then(response => {
             this.customerAccount = response.data
             console.log(response.data)
+            this.errorName=''
         })
         .catch(e => {
             window.alert(e.response.data)
@@ -83,11 +85,23 @@ export default {
         .catch(e => {
             var errorMsg = e.response.data
             console.log(errorMsg)
-            this.errorName = errorMsg
+            this.errorAddress = errorMsg
         })
       },
     
     methods: {
+      StatsOrder: function(){
+            this.$router.push('/StatusOrder');
+      },
+      Cart: function(){
+        this.$router.push('/Cart');
+      },
+      logout: function(){
+            if (confirm("Press OK to logout")) {
+                this.$router.push('/Signup');
+                localStorage.removeItem('token');
+            }
+        }
         /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");

@@ -38,3 +38,14 @@ Sprint Report 2 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 | Ojetta Ye | Mockito tests, Service Methods, Controller Methods, JUnit Tests, Documentation | 17.5 |
 | Tran Tuan Khai Phan | Service Methods, Controller Methods, Mockito tests, JUnit Tests, Documentation | 17 |
 | Adam Kazma | Dto Methods, Controller Methods, Mockito Tests | 10 | 
+
+## Deliverable 3
+Sprint Report 3 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-3)
+| Name | Contribution | Hours |
+|------|--------------|-------|
+| Karim Moussa | Initial Setup, Owner Page Frontend, Backend | 45 |
+| Elias Abou Farah | Database management, Employee Page Frontend, Backend | 43 |
+| Adam Kazma | Frontend example, Terminal Page Frontend, Backend  | 43 |
+| Jasmine Cheung | Customer Page Frontend, Backend | 41 |
+| Ojetta Ye | Initial Setup, Login/Signup Pages Frontend, Backend | 38 |
+| Tran Tuan Khai Phan | Cart/Checkout/Payment Pages Frontend, Backend | 38 |
