@@ -8,7 +8,7 @@
         <button>Order Status</button>
         <button>Account Information</button>
       </div>
-      <div><button>Logout</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <h1 style="margin-top:1%;">Account Informations</h1>
 
@@ -16,28 +16,27 @@
 
     <div>
       <label>UserName: </label>
-      <label id="username"> {{ customerUsername }} </label><br />
+      <label id="username"> {{ customerAccount.username }} </label><br />
       <label>Name: </label>
       <label id="name"> {{ customerAccount.name }} </label>
-      <button @click="changeName()">Change Name</button>
-      <button @click="changePassword()">Change Password</button><br />
+      <!--button @click="changeName()">Change Name</button>
+      <button @click="changePassword()">Change Password</button><br />-->
       <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
 
       <br />
 
       <label>Address: </label>
-      <label id="address"> {{ customerAddress }} </label>
-      <button @click="changeAddress()">Change Address</button><br />
+      <label id="address"> {{ customerAddress.buildingNo }}, {{ customerAddress.street }}, {{ customerAddress.town }} </label>
+      <!--button @click="changeAddress()">Change Address</button><br />-->
 
       <br />
       <label>Current Points: </label>
-      <label id="points"> {{ customerAccount.pointBalance }} </label><br />
-      <label>Current Points to Cash Ratio: </label>
-      <label id="ratio"> {{ store.pointToCashRatio }} </label>
+      <label id="points"> {{ customerAccount.pointBalance }} </label><br/>
+      <br/>
+       <a href="/#/EditProfile"><button>Edit Account Informations</button></a><br />
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 var config = require('../../config')
@@ -55,49 +54,41 @@ export default {
 
     data () {
         return {
-            customerAccount: '',
+            customerAccount: { username: '', name: '', pointBalance: '', role: ''},
             errorName: '',
-            customerUsername: '',
-            customerAddress: '',
-            customerPoints: '',
-            store: ''
+            customerAddress: {	buildingNo: '', street: '', town: '', account: null }
         }
       },
 
       created: function () {
-        var username = localStorage.getItem('token')
-        this.customerUsername=username
+        //localStorage.setItem('token','user1')
+        //localStorage.removeItem('token')
+        var username = localStorage.getItem('token');
+        if(username == null){
+          this.$router.push('/');
+        }
         AXIOS.get('/api/account/'.concat(username))
         .then(response => {
             this.customerAccount = response.data
+            console.log(response.data)
         })
         .catch(e => {
-            var errorMsg = e.response.data.message
-            console.log(errorMsg)
-            this.errorName = errorMsg
+            window.alert(e.response.data)
+            return
         }),
-        AXIOS.get('/api/address/'.concat(username))
+        AXIOS.get('/api/address/address/'.concat(username))
         .then(response => {
             this.customerAddress = response.data
         })
         .catch(e => {
-            var errorMsg = e.response.data.message
-            console.log(errorMsg)
-            this.errorName = errorMsg
-        }),
-        AXIOS.get('/api/store/')
-        .then(response => {
-            this.store = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data.message
+            var errorMsg = e.response.data
             console.log(errorMsg)
             this.errorName = errorMsg
         })
       },
     
     methods: {
-        changeName: function(){
+        /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");
             AXIOS.put('/api/account/updateName/'.concat(username).concat('?newName=').concat(newName))
@@ -139,7 +130,7 @@ export default {
                 console.log(errorMsg)
                 this.errorName = errorMsg
             })
-        }
+        }*/
     }
 }
 </script>
