@@ -503,7 +503,11 @@ public class GroceryStoreService {
 
 	@Transactional
 	public BusinessHour updateBusinessHourByDay(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
-
+		
+		if (endTime != null && startTime != null && endTime.before(startTime)) {
+			throw new IllegalArgumentException("Business hour end time cannot be before Business hour start time! ");
+		}
+		
 		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
 
 		if (bh != null) {
@@ -1212,6 +1216,9 @@ public class GroceryStoreService {
 	@Transactional
 	public Store createStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
+		if(getStore() != null) {
+			throw new IllegalArgumentException("Store info already set, Please update it if you wish!");
+		}
 		// Input validation
 		String error = "";
 		if (name == null || name.trim().length() == 0) {
@@ -1313,6 +1320,7 @@ public class GroceryStoreService {
 
 		Store store = getStore();
 		if (store != null) {
+			businessHourRepository.deleteAll();
 			storeRepository.delete(store);
 		}
 		return store;
