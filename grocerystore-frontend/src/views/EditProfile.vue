@@ -140,7 +140,7 @@ export default {
             var username = this.username
             var oldPassword = this.oldPassword
             var newPassword = this.newPassword
-             AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('?newPassword=').concat(newPassword))
+             AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('&newPassword=').concat(newPassword))
             .then(response => {
                 this.errorPassword = ''
             })
@@ -155,7 +155,7 @@ export default {
             var buildingNo = this.buildingNo
             var street = this.street
             var town = this.town
-             AXIOS.put('/api/address/'.concat(username).concat('?buildingNo=').concat(buildingNo).concat('?street=').concat(street).concat('?town=').concat(town))
+             AXIOS.put('/api/address/updateAddress/'.concat(username).concat('?buildingNo=').concat(buildingNo).concat('&street=').concat(street).concat('&town=').concat(town))
             .then(response => {
                 this.errorAddress = ''
             })
