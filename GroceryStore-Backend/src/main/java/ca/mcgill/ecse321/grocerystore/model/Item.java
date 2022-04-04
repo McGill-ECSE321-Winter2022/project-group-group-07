@@ -20,6 +20,7 @@ public abstract class Item {
 	private Boolean availableOnline;
 	private Integer numInStock;
 	private Integer pointPerItem;
+	private String imageLink;
 	private ItemCategory category;
 
 	// getter and setters
@@ -79,5 +80,13 @@ public abstract class Item {
 
 	public void setCategory(ItemCategory category) {
 		this.category = category;
+	}
+
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
 	}
 }
