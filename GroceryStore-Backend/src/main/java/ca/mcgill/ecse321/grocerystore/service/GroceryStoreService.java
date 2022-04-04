@@ -270,6 +270,11 @@ public class GroceryStoreService {
 		account.setName(name);
 		account.setPointBalance(pointBalance);
 		account.setAccountRole(accountRole);
+		if(accountRole instanceof Employee) {
+			Schedule schedule = new Schedule();
+			schedule.setEmployee((Employee)accountRole);
+			scheduleRepository.save(schedule);
+		}
 
 		accountRepository.save(account);
 
@@ -503,11 +508,11 @@ public class GroceryStoreService {
 
 	@Transactional
 	public BusinessHour updateBusinessHourByDay(DayOfWeek dayOfWeek, Time startTime, Time endTime) {
-		
+
 		if (endTime != null && startTime != null && endTime.before(startTime)) {
 			throw new IllegalArgumentException("Business hour end time cannot be before Business hour start time! ");
 		}
-		
+
 		BusinessHour bh = getBusinessHourByDay(dayOfWeek);
 
 		if (bh != null) {
@@ -826,7 +831,6 @@ public class GroceryStoreService {
 		return pitem;
 	}
 
-
 	@Transactional
 	public PerishableItem deletePerishableItem(PerishableItem pitem) {
 
@@ -923,7 +927,7 @@ public class GroceryStoreService {
 
 		return toList(nonPerishableItemRepository.findAll());
 	}
-	
+
 	@Transactional
 	public NonPerishableItem getNonPerishableItemByID(Long id) {
 		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
@@ -1216,7 +1220,7 @@ public class GroceryStoreService {
 	@Transactional
 	public Store createStore(String name, String address, String phoneNumber, String email,
 			Integer employeeDiscountRate, Float pointToCashRatio) {
-		if(getStore() != null) {
+		if (getStore() != null) {
 			throw new IllegalArgumentException("Store info already set, Please update it if you wish!");
 		}
 		// Input validation
@@ -1406,27 +1410,33 @@ public class GroceryStoreService {
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
 	}
+
 	@Transactional
 	public List<PickUpOrder> getAllPickUpOrders() {
 		return toList(pickUpOrderRepository.findAll());
 	}
+
 	@Transactional
 	public List<DeliveryOrder> getAllDeliveryOrders() {
 		return toList(deliveryOrderRepository.findAll());
 	}
+
 	@Transactional
 	public List<PickUpOrder> getAllPendingPickUpOrders() {
 		List<PickUpOrder> pl = new ArrayList<PickUpOrder>();
-		for(PickUpOrder p: toList(pickUpOrderRepository.findAll())) {
-			if (p.getStatus()==PickUpOrderStatus.valueOf("Pending")) pl.add(p);
+		for (PickUpOrder p : toList(pickUpOrderRepository.findAll())) {
+			if (p.getStatus() == PickUpOrderStatus.valueOf("Pending"))
+				pl.add(p);
 		}
 		return pl;
 	}
+
 	@Transactional
 	public List<DeliveryOrder> getAllPendingDeliveryOrders() {
 		List<DeliveryOrder> pl = new ArrayList<DeliveryOrder>();
-		for(DeliveryOrder p: toList(deliveryOrderRepository.findAll())) {
-			if (p.getStatus()==DeliveryOrderStatus.valueOf("Pending")) pl.add(p);
+		for (DeliveryOrder p : toList(deliveryOrderRepository.findAll())) {
+			if (p.getStatus() == DeliveryOrderStatus.valueOf("Pending"))
+				pl.add(p);
 		}
 		return pl;
 	}
@@ -1455,6 +1465,26 @@ public class GroceryStoreService {
 		return true;
 	}
 
-	
+	public void deleteEmployeeAccount(String username) {
+
+		Account account = accountRepository.findByUsername(username);
+
+		if (account != null) {
+
+			if (account.getAccountRole() instanceof Employee) {
+				if (scheduleRepository.findByEmployee((Employee) account.getAccountRole()) != null) {
+					scheduleRepository.delete(scheduleRepository.findByEmployee((Employee) account.getAccountRole()));
+				}
+				if (addressRepository.findByAccount(account) != null) {
+					addressRepository.delete(addressRepository.findByAccount(account));
+				}
+				accountRepository.delete(account);
+				accountRoleRepository.delete(account.getAccountRole());
+			} else {
+				throw new IllegalArgumentException("This is a customer account! ");
+			}
+		}
+
+	}
 
 }

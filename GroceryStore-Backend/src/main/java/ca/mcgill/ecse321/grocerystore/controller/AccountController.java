@@ -138,6 +138,11 @@ public class AccountController {
 	public void deleteAccount(@PathVariable("username") String username, @RequestParam String password) {
 		service.deleteAccount(username, password);
 	}
+	
+	@DeleteMapping(value = { "/fireEmployee/{username}", "/fireEmployee/{username}/" })
+	public void deleteAccount(@PathVariable("username") String username) {
+		service.deleteEmployeeAccount(username);
+	}
 
 	@PutMapping(value = { "/updatePassword/{username}", "/updatePassword/{username}/" })
 	public ResponseEntity<?> updatePassword(@PathVariable("username") String username, @RequestParam String oldPassword,
