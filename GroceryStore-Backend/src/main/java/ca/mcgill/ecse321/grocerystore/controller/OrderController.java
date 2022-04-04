@@ -79,6 +79,22 @@ public class OrderController {
 		}
 	}
 	
+	@GetMapping(value = { "/allorders", "/allorders/" })
+	public ResponseEntity<?> getAllOrders() {
+		List<Order> orders = new ArrayList<Order>();
+		try {
+			orders = service.getAllOrders();
+			List<OrderDto> orderdtos = new ArrayList<OrderDto>();
+			for(Order o : orders)
+			{
+			 orderdtos.add(convertToDto(o));	
+			}
+			return new ResponseEntity<>(orderdtos, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(value = { "/pickupOrders/{username}", "/pickupOrders/{username}/" })
 	public ResponseEntity<?> getPickupByAccount(@PathVariable("username") String username) {
 		try {
@@ -135,8 +151,20 @@ public class OrderController {
 			@RequestParam String[] items) {
 		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
-			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
-			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			Item i1 = null;
+			Item i2 = null;
+			try {
+			i1 = service.getPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
+			try{
+				i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
 			if(i1 != null) {
 				itemslist.add(i1);
 			}
@@ -154,8 +182,20 @@ public class OrderController {
 			@RequestParam String[] items, @PathVariable("username") String username) {
 		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
-			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
-			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			Item i1 = null;
+			Item i2 = null;
+			try {
+			i1 = service.getPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
+			try{
+				i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
 			if(i1 != null) {
 				itemslist.add(i1);
 			}
@@ -175,8 +215,20 @@ public class OrderController {
 			@RequestParam Date endDate, @RequestParam Time startTime, @RequestParam Time endTime) {
 		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
-			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
-			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			Item i1 = null;
+			Item i2 = null;
+			try {
+			i1 = service.getPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
+			try{
+				i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
 			if(i1 != null) {
 				itemslist.add(i1);
 			}
@@ -200,8 +252,20 @@ public class OrderController {
 			@RequestParam Time startTime, @RequestParam Time endTime, @PathVariable("username") String username) {
 		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
-			Item i1 = service.getPerishableItemByID(Long.parseLong(i));
-			Item i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			Item i1 = null;
+			Item i2 = null;
+			try {
+			i1 = service.getPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
+			try{
+				i2 = service.getNonPerishableItemByID(Long.parseLong(i));
+			}
+			catch(Exception e){
+				
+			}
 			if(i1 != null) {
 				itemslist.add(i1);
 			}
@@ -243,12 +307,11 @@ public class OrderController {
 	// -----------------------------------------------------------------------------------------------------------------//
 	// ConvertToDto helper methods
 
-	private OrderDto convertToDto(Order order) {
+	OrderDto convertToDto(Order order) {
 		Long orderID = order.getOrderID();
 		Float totalValue = order.getTotalValue();
 		Date date = order.getDate();
 		Time purchaseTime = order.getPurchaseTime();
-		AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 		TimeSlot timeSlot = new TimeSlot();
 		if (order instanceof DeliveryOrder)
 			timeSlot = ((DeliveryOrder) order).getTimeSlot();
@@ -265,61 +328,41 @@ public class OrderController {
 			}
 		}
 		if (order instanceof PickUpOrder) {
-			if ((((PickUpOrder) order).getStatus())!=null) {
-				if (order.getItems() != null && order.getItems().size() > 0) {
+			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((PickUpOrder) order).getStatus());
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
 				} else {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((PickUpOrder) order).getStatus());
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
 				}
 			} else {
-				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((PickUpOrder) order).getStatus());
+				AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
 			}
-			} else
-			{
-				if (order.getItems() != null && order.getItems().size() > 0) {
-					if (order.getAccount() == null) {
-						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
-					} else {
-						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
-					}
-				} else {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
-				}
-			}
-			
 		} else if (order instanceof InStoreOrder) {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
 					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, items);
 				} else {
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account, items);
 				}
 			} else {
+				AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 				return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
 			}
 		} else {
-			if ((((DeliveryOrder) order).getStatus())!=null) {
-				if (order.getItems() != null && order.getItems().size() > 0) {
-					if (order.getAccount() == null) {
-						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((DeliveryOrder) order).getStatus());
-					} else {
-						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((DeliveryOrder) order).getStatus());
-					}
-				} else {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((DeliveryOrder) order).getStatus());
-				}	
-			} else {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
 					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
 				} else {
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
 				}
 			} else {
+				AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
 				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
 			}
-		}
 		}
 	}
 
