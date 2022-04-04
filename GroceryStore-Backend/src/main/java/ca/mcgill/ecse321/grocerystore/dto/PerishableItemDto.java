@@ -4,6 +4,35 @@ import java.sql.Date;
 
 public class PerishableItemDto extends ItemDto {
 
+	/**
+	 * @param itemID
+	 * @param productName
+	 * @param price
+	 * @param availableOnline
+	 * @param numInStock
+	 * @param pointPerItem
+	 * @param category
+	 */
+	public PerishableItemDto(Long itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
+			Integer pointPerItem, String category) {
+		super(itemID, productName, price, availableOnline, numInStock, pointPerItem, category);
+	}
+
+	/**
+	 * @param itemID
+	 * @param productName
+	 * @param price
+	 * @param availableOnline
+	 * @param numInStock
+	 * @param pointPerItem
+	 * @param imageLink
+	 * @param category
+	 */
+	public PerishableItemDto(Long itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
+			Integer pointPerItem, String imageLink, String category) {
+		super(itemID, productName, price, availableOnline, numInStock, pointPerItem, imageLink, category);
+	}
+
 	private Date perishableDate;
 
 	/**
