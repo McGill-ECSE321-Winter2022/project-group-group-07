@@ -86,12 +86,12 @@ public class StoreController {
 
 	@PostMapping(value = { "/businessHours", "/businessHours/" })
 	public ResponseEntity<?> createBusinessHours(
-			@RequestParam(name = "dayOfWeek") GroceryStoreSoftwareSystem.DayOfWeek dayOfWeek,
+			@RequestParam(name = "dayOfWeek") String dayOfWeek,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
 		BusinessHour b = null;
 		try {
-			b = service.createBusinessHour(dayOfWeek, Time.valueOf(startTime), Time.valueOf(endTime));
+			b = service.createBusinessHour(DayOfWeek.valueOf(dayOfWeek), Time.valueOf(startTime), Time.valueOf(endTime));
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage().split("!")[0] + "!", HttpStatus.BAD_REQUEST);

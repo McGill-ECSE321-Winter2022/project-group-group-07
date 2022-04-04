@@ -133,8 +133,8 @@
         />
       </div>
       <div class="column2">
-        <Button text="Add" color="black" @btn-click="addBusinessHour"/>
-        <Button text="Update" color="black" @btn-click="updateBusinessHour"/>
+        <Button text="Add" color="black" @btn-click="addBusinessHour" />
+        <Button text="Update" color="black" @btn-click="updateBusinessHour" />
       </div>
     </form>
   </div>
@@ -211,15 +211,15 @@ export default {
       AXIOS.post(
         "api/store/setStoreInfo?" +
           "name=Bake N'Bread" +
-          "address=" +
+          "&address=" +
           this.addressValue +
-          "phoneNumber=" +
+          "&phoneNumber=" +
           this.phoneNumberValue +
-          "email=" +
+          "&email=" +
           this.emailValue +
-          "employeeDiscountRate=" +
+          "&employeeDiscountRate=" +
           this.employeeDiscountRate +
-          "pointToCashRatio=" +
+          "&pointToCashRatio=" +
           this.pointToCashRatioValue
       )
         .then(response => {
@@ -231,17 +231,17 @@ export default {
     },
     updateStoreInfo() {
       AXIOS.put(
-        "api/store/updateStore" +
+        "api/store/updateStore?" +
           "name=Bake N'Bread" +
-          "address=" +
+          "&address=" +
           this.addressValue +
-          "phoneNumber=" +
+          "&phoneNumber=" +
           this.phoneNumberValue +
-          "email=" +
+          "&email=" +
           this.emailValue +
-          "employeeDiscountRate=" +
+          "&employeeDiscountRate=" +
           this.employeeDiscountRate +
-          "pointToCashRatio=" +
+          "&pointToCashRatio=" +
           this.pointToCashRatioValue
       )
         .then(response => {
@@ -251,9 +251,32 @@ export default {
           window.alert(e.response.data);
         });
     },
-    addBusinessHour(){
-     // AXIOS.
+      addBusinessHour() {
+      var select = document.getElementById("days");
+      var day = select.options[select.selectedIndex].value;
+      AXIOS.post(
+        "api/store/businessHours?" +
+          "dayOfWeek=" +
+          day +
+          "&startTime=" +
+          this.startTime +
+          "&endTime=" +
+          this.endTime
+      );
+
     },
+    updateBusinessHour() {
+      var select = document.getElementById("days");
+      var day = select.options[select.selectedIndex].value;
+      AXIOS.put(
+        "api/store/updateBusinessHour/" +
+          day +
+          "?startTime=" +
+          this.startTime +
+          "&endTime=" +
+          this.endTime
+      );
+    }
   }
 };
 </script>

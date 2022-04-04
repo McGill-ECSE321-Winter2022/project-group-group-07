@@ -3,12 +3,12 @@
     <div class = "navbar">
         <label>AppName</label>
         <div>
-            <button>Catalog</button> 
-            <button>Cart/Checkout</button> 
+            <button @click="Catalog()">Catalog</button> 
+            <button @click="Cart()">Cart/Checkout</button> 
             <button>Order Status</button>
-            <button>Account Information</button>
+            <button  @click="AccInfo()">Account Information</button>
         </div>
-        <div><button>Logout</button></div>
+        <div><button @click="logout()">Logout</button></div>
     </div>
      <h1 style="margin-top:1%;">Order Status</h1>
 
@@ -17,7 +17,7 @@
     <div>
         <table>
             <tr>
-                 <th><label style = "margin-left: 15px">Delivery Orders: </label></th>
+                <th><label style = "margin-left: 15px">Delivery Orders: </label></th>
             </tr>
             <tr v-for="delivery in deliveries" :key=delivery.orderID>
                 <td style = "margin-left: 25px">{{ delivery.orderID }}     {{ delivery.status }}</td>
@@ -61,7 +61,7 @@ export default {
       created: function () {
         var username = localStorage.getItem('token')
         //not yet written --> get deliveries of one customer
-        AXIOS.get('/api/order/deliveryOrders'.concat(username))
+        AXIOS.get('/api/order/deliveryOrders/'.concat(username))
         .then(response => {
             this.deliveries.push(response.data)
         })
@@ -71,7 +71,7 @@ export default {
            this.errorName = errorMsg
         }),
          //not yet written --> get pickup of one customer
-        AXIOS.get('/api/order/pickupOrders'.concat(username))
+        AXIOS.get('/api/order/pickupOrders/'.concat(username))
         .then(response => {
             this.pickups.push(response.data)
         })
@@ -83,7 +83,18 @@ export default {
       },
     
     methods: {
-       
+       logout: function(){
+            if (confirm("Press OK to logout")) {
+                this.$router.push('/Signup');
+                localStorage.removeItem('token');
+            }
+        },
+        AccInfo: function(){
+            this.$router.push('/AccountInfo');
+        },
+         Cart: function(){
+            this.$router.push('/Cart');
+        }
     }
 }
 </script>
