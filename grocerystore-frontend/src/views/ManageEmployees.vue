@@ -20,7 +20,7 @@
         />
         <CustomInput
           label="password"
-          type="text"
+          type="password"
           :value="password"
           @change="v => (password = v)"
         />
@@ -58,7 +58,7 @@
           @change="v => (town = v)"
         />
         <Button
-        @btn-click="createEmployeeAccount"
+          @btn-click="createEmployeeAccount"
           text="Create"
           color="black"
           style="margin-top:10px; width:203px;"
@@ -68,7 +68,12 @@
     <div class="vl"></div>
     <div class="column2">
       <label style="font-size: 24px; margin-top: 20px;">Manage Employee</label>
-      <select name="employees" id="employees" size="10" style="width:100%">
+      <select
+        name="employees"
+        ref="employeeDisplay"
+        size="10"
+        style="width:100%"
+      >
       </select>
       <div class="column3">
         <label style="font-size: 20px">Schedule</label>
@@ -80,44 +85,49 @@
           </tr>
           <tr>
             <td>Monday</td>
-            <td>{{ MondayST }}</td>
-            <td>{{ MondayET }}</td>
+            <td>{{ MondayH.startTime }}</td>
+            <td>{{ MondayH.endTime }}</td>
           </tr>
           <tr>
             <td>Tuesday</td>
-            <td>{{ TuesdayST }}</td>
-            <td>{{ TuesdayET }}</td>
+            <td>{{ TuesdayH.startTime }}</td>
+            <td>{{ TuesdayH.endTime }}</td>
           </tr>
           <tr>
             <td>Wednesday</td>
-            <td>{{ WednesdayST }}</td>
-            <td>{{ WednesdayET }}</td>
+            <td>{{ WednesdayH.startTime }}</td>
+            <td>{{ WednesdayH.endTime }}</td>
           </tr>
           <tr>
             <td>Thursday</td>
-            <td>{{ ThursdayST }}</td>
-            <td>{{ ThursdayET }}</td>
+            <td>{{ ThursdayH.startTime }}</td>
+            <td>{{ ThursdayH.endTime }}</td>
           </tr>
           <tr>
             <td>Friday</td>
-            <td>{{ FridayST }}</td>
-            <td>{{ FridayET }}</td>
+            <td>{{ FridayH.startTime }}</td>
+            <td>{{ FridayH.endTime }}</td>
           </tr>
           <tr>
             <td>Saturday</td>
-            <td>{{ SaturdayST }}</td>
-            <td>{{ SaturdayET }}</td>
+            <td>{{ SaturdayH.startTime }}</td>
+            <td>{{ SaturdayH.endTime }}</td>
           </tr>
           <tr>
             <td>Sunday</td>
-            <td>{{ SundayST }}</td>
-            <td>{{ SundayET }}</td>
+            <td>{{ SundayH.startTime }}</td>
+            <td>{{ SundayH.endTime }}</td>
           </tr>
         </table>
       </div>
       <div class="column3">
         <div>
-          <Button text="Fire Employee" color="red" style="float: right;" />
+          <Button
+            @btn-click="fireEmlployee"
+            text="Fire Employee"
+            color="red"
+            style="float: right;"
+          />
         </div>
         <form style="padding:10px; margin-top:2em;">
           <div>
@@ -189,15 +199,79 @@ export default {
       name: "",
       buildingNumber: null,
       street: "",
-      town: ""
+      town: "",
+      startTime: null,
+      endTime: null,
+      MondayH: { startTime: "", endTime: "" },
+      TuesdayH: { startTime: "", endTime: "" },
+      WednesdayH: { startTime: "", endTime: "" },
+      ThursdayH: { startTime: "", endTime: "" },
+      FridayH: { startTime: "", endTime: "" },
+      SaturdayH: { startTime: "", endTime: "" },
+      SundayH: { startTime: "", endTime: "" }
     };
   },
-  created: function(){
-
+  created: function() {
+    this.refreshEmployees();
   },
-  method: {
-    createEmployeeAccount(){
-      AXIOS.post("/api/account/employeeAccount/" + this.username + "?name=" +this.name+ "password="+this.password)
+  methods: {
+    createEmployeeAccount() {
+      console.log("creating");
+      AXIOS.post(
+        "/api/account/employeeAccount/" +
+          this.username +
+          "?name=" +
+          this.name +
+          "&password=" +
+          this.password +
+          "&role=" +
+          document.getElementById("Role").value
+      )
+        .then(response => {
+          this.refreshEmployees();
+        })
+        .catch(e => {
+          window.alert(e.reponse.data);
+        });
+      return;
+    },
+    refreshEmployees: function() {
+      AXIOS.get("api/account/employeeAccounts").then(response => {
+        var lst = this.$refs.employeeDisplay;
+        this.removeOptions(lst);
+        for (var i = 0; i < response.data.length; i++) {
+          var employee = response.data[i];
+          const opt = document.createElement("option");
+          opt.textContent =
+            "username: " +
+            employee.username +
+            " , name: " +
+            employee.name +
+            " , role: " +
+            employee.role;
+          lst.appendChild(opt);
+        }
+      });
+      return;
+    },
+    removeOptions(selectElement) {
+      var i,
+        L = selectElement.options.length - 1;
+      for (i = L; i >= 0; i--) {
+        selectElement.remove(i);
+      }
+    },
+    fireEmlployee() {
+      const inf = this.$refs.employeeDisplay;
+      const opt = inf.children[inf.selectedIndex];
+      var str = opt.textContent.split(" ");
+      var username = str[1];
+      AXIOS.delete(
+        "/api/account/deleteAccount/" + username + "?password=123456"
+      ).catch(e => {
+        console.log(e.response.data);
+      });
+      this.refreshEmployees();
     }
   }
 };

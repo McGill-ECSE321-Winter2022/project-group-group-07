@@ -3,11 +3,8 @@
     <div class = "navbar">
       <label>AppName</label>
       <div>
-      <button>Catalogue</button> 
+      <button style="float: center;">Catalogue</button> 
     </div>
-  <div>
-    <button>Button 4</button>
-  </div>
   </div>
     <h1 style="margin-top:1%;">Log In</h1>
     <div>
