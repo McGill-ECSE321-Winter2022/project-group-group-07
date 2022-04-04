@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.grocerystore.dto;
 
-import java.util.Locale.Category;
 
 public abstract class ItemDto {
 
@@ -10,7 +9,8 @@ public abstract class ItemDto {
 	private Boolean availableOnline;
 	private Integer numInStock;
 	private Integer pointPerItem;
-	private Category category;
+	private String imageLink;
+	private String category;
 
 	/**
 	 * @param itemID
@@ -29,6 +29,31 @@ public abstract class ItemDto {
 		this.availableOnline = availableOnline;
 		this.numInStock = numInStock;
 		this.pointPerItem = pointPerItem;
+	}
+
+	public ItemDto(Long itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
+			Integer pointPerItem, String category) {
+		super();
+		this.itemID = itemID;
+		this.productName = productName;
+		this.price = price;
+		this.availableOnline = availableOnline;
+		this.numInStock = numInStock;
+		this.pointPerItem = pointPerItem;
+		this.category = category;
+	}
+
+	public ItemDto(Long itemID, String productName, Float price, Boolean availableOnline, Integer numInStock,
+			Integer pointPerItem, String imageLink, String category) {
+		super();
+		this.itemID = itemID;
+		this.productName = productName;
+		this.price = price;
+		this.availableOnline = availableOnline;
+		this.numInStock = numInStock;
+		this.pointPerItem = pointPerItem;
+		this.imageLink = imageLink;
+		this.category = category;
 	}
 
 	/**
@@ -76,15 +101,19 @@ public abstract class ItemDto {
 	/**
 	 * @return the category
 	 */
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
 	/**
 	 * @param category the category to set
 	 */
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getImageLink() {
+		return imageLink;
 	}
 
 }

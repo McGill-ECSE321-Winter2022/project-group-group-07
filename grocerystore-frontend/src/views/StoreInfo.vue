@@ -11,11 +11,11 @@
     </div>
     <div class="column1">
       <label style="font-size: 24px">Store Info</label>
-      <label>Address: {{ Address }} </label>
-      <label>Email: {{ Email }} </label>
-      <label>PhoneNumber: {{ PhoneNumber }} </label>
-      <label>EmployeeDiscountRate: {{ EmployeeDiscountRate }} </label>
-      <label>PointToCashRatio: {{ PointToCashRatio }} </label>
+      <label>Address: {{ Store.address }} </label>
+      <label>Email: {{ Store.email }} </label>
+      <label>PhoneNumber: {{ Store.phoneNumber }} </label>
+      <label>EmployeeDiscountRate: {{ Store.employeeDiscountRate }} </label>
+      <label>PointToCashRatio: {{ Store.pointToCashRatio }} </label>
       <label style="font-size: 24px">Business Hours</label>
       <table>
         <tr>
@@ -97,8 +97,8 @@
         />
       </div>
       <div class="column2">
-        <Button text="Set Up" color="black" />
-        <Button text="Update" color="black" />
+        <Button text="Set Up" color="black" @btn-click="setupStoreInfo" />
+        <Button text="Update" color="black" @btn-click="updateStoreInfo" />
       </div>
     </form>
     <form>
@@ -199,12 +199,59 @@ export default {
   },
   created: function() {
     AXIOS.get("api/store/store")
-    .then(response => {this.Store= response.data;
-    }).catch(e => {
-      return;4
-    });
+      .then(response => {
+        this.Store = response.data;
+      })
+      .catch(e => {
+        return;
+      });
   },
-  methods: {}
+  methods: {
+    setupStoreInfo() {
+      AXIOS.post(
+        "api/store/setStoreInfo?" +
+          "name=Bake N'Bread" +
+          "address=" +
+          this.addressValue +
+          "phoneNumber=" +
+          this.phoneNumberValue +
+          "email=" +
+          this.emailValue +
+          "employeeDiscountRate=" +
+          this.employeeDiscountRate +
+          "pointToCashRatio=" +
+          this.pointToCashRatioValue
+      )
+        .then(response => {
+          this.Store = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+    },
+    updateStoreInfo() {
+      AXIOS.put(
+        "api/store/updateStore" +
+          "name=Bake N'Bread" +
+          "address=" +
+          this.addressValue +
+          "phoneNumber=" +
+          this.phoneNumberValue +
+          "email=" +
+          this.emailValue +
+          "employeeDiscountRate=" +
+          this.employeeDiscountRate +
+          "pointToCashRatio=" +
+          this.pointToCashRatioValue
+      )
+        .then(response => {
+          this.Store = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+    }
+  }
 };
 </script>
 

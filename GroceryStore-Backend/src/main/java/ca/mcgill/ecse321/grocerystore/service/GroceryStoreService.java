@@ -46,6 +46,7 @@ import ca.mcgill.ecse321.grocerystore.model.DeliveryPerson;
 import ca.mcgill.ecse321.grocerystore.model.Employee;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DeliveryOrderStatus;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.ItemCategory;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.PickUpOrderStatus;
 import ca.mcgill.ecse321.grocerystore.model.InStoreOrder;
@@ -768,7 +769,7 @@ public class GroceryStoreService {
 
 	@Transactional
 	public PerishableItem createPerishableItem(String name, Float price, Boolean availableOnline, Integer numInStock,
-			Integer pointPerItem) {
+			Integer pointPerItem, String imageLink, ItemCategory itemCategory) {
 
 		PerishableItem perishableItem = new PerishableItem();
 
@@ -797,6 +798,8 @@ public class GroceryStoreService {
 		perishableItem.setAvailableOnline(availableOnline);
 		perishableItem.setNumInStock(numInStock);
 		perishableItem.setPointPerItem(pointPerItem);
+		perishableItem.setImageLink(imageLink);
+		perishableItem.setCategory(itemCategory);
 
 		perishableItemRepository.save(perishableItem);
 
@@ -875,7 +878,7 @@ public class GroceryStoreService {
 
 	@Transactional
 	public NonPerishableItem createNonPerishableItem(String name, Float price, Boolean availableOnline,
-			Integer numInStock, Integer pointPerItem) {
+			Integer numInStock, Integer pointPerItem, String imageLink, ItemCategory itemCategory) {
 
 		NonPerishableItem nonPerishableItem = new NonPerishableItem();
 		ArrayList<String> errors = new ArrayList<String>();
@@ -903,6 +906,8 @@ public class GroceryStoreService {
 		nonPerishableItem.setAvailableOnline(availableOnline);
 		nonPerishableItem.setNumInStock(numInStock);
 		nonPerishableItem.setPointPerItem(pointPerItem);
+		nonPerishableItem.setImageLink(imageLink);
+		nonPerishableItem.setCategory(itemCategory);
 
 		nonPerishableItemRepository.save(nonPerishableItem);
 
