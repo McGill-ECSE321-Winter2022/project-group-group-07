@@ -3,11 +3,10 @@
     <div class = "navbar">
       <label>AppName</label>
       <div>
-      <button>Catalogue</button> 
+      <Button @btn-click="routeToLogin()"
+          text="Login"
+        />
     </div>
-  <div>
-    <button>Button 4</button>
-  </div>
   </div>
     <h1 style="margin-top:1%;">Sign Up</h1>
     <div>
@@ -91,7 +90,10 @@ export default {
   created: function () {
   },
   methods: {
-    signup: function(username,name,password){
+    routeToLogin: function(){
+      this.$router.push('/Login');
+    },
+    signup: function(){
         AXIOS.post('/api/account/customerAccount/'+this.username+"?name="+this.name+"&password="+this.password)
         .then(response => {
           console.log(response.data)

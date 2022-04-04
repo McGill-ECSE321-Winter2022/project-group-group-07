@@ -3,7 +3,9 @@
     <div class = "navbar">
       <label>AppName</label>
       <div>
-      <button style="float: center;">Catalogue</button> 
+      <Button @btn-click="routeToSignup()"
+          text="Signup"
+        />
     </div>
   </div>
     <h1 style="margin-top:1%;">Log In</h1>
@@ -23,11 +25,6 @@
         />
         <Button @btn-click="login()"
           text="Login"
-          color="black"
-          style="margin-top:10px; width:203px;"
-        />
-        <Button @btn-click="routeToSignup()"
-          text="Signup"
           color="black"
           style="margin-top:10px; width:203px;"
         />
@@ -67,6 +64,9 @@ export default {
   methods: {
     routeToSignup: function(){
       this.$router.push('/Signup');
+    },
+    routeToCatalogue: function(){
+      this.$router.push('/Hello');
     },
     login: function(){
         AXIOS.post('/api/account/login/?'+"username="+this.username+"&password="+this.password)

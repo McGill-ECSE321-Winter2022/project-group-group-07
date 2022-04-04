@@ -14,8 +14,8 @@
         <CustomInput
           label="Current username:"
           type="text" 
-          :value="username"
-          @change="v => (username = v)"
+          :value="username1"
+          @change="v => (username1 = v)"
         />
          <CustomInput
           label="New name:"
@@ -34,8 +34,8 @@
         <CustomInput
           label="Current username:"
           type="text"
-          v-bind="username"
-          @change="v => (username = v)"
+          v-bind="username2"
+          @change="v => (username2 = v)"
         />
          <CustomInput
           label="Current password:"
@@ -60,8 +60,8 @@
          <CustomInput
           label="Current username"
           type="text"
-          :value="username"
-          @change="v => (username = v)"
+          :value="username3"
+          @change="v => (username3 = v)"
         />
         <CustomInput
           label="Bulding No."
@@ -109,7 +109,9 @@ export default {
     },
     data () {
         return {
-            username: '',
+            username1: '',
+            username2: '',
+            username3: '',
             newName: '',
             errorName: '',
             oldPassword: '',
@@ -126,18 +128,18 @@ export default {
     
     methods: {
         changeName: function(){
-            var username = this.username
+            var username = this.username1
             var newName = this.newName
             AXIOS.put('/api/account/updateName/'.concat(username).concat('?newName=').concat(newName))
             .then(response => {
-                this.errorName = ''
+              this.$router.push('/AccountInfo'); 
             })
             .catch(e => {
                 window.alert(e.response.data)
             })
         },
         changePassword: function(){
-            var username = this.username
+            var username = this.username2
             var oldPassword = this.oldPassword
             var newPassword = this.newPassword
              AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('&newPassword=').concat(newPassword))
@@ -151,7 +153,7 @@ export default {
             })
         },
         changeAddress: function(){
-            var username = this.username
+            var username = this.username3
             var buildingNo = this.buildingNo
             var street = this.street
             var town = this.town

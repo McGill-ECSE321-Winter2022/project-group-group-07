@@ -62,9 +62,24 @@ export default {
       },
 
       created: function () {
-        localStorage.setItem('token','user1')
-        //localStorage.removeItem('token')
-        var username = (localStorage.getItem('token'));
+        this.refresh();
+      },
+    
+    methods: {
+      StatsOrder: function(){
+            this.$router.push('/StatusOrder');
+      },
+      Cart: function(){
+        this.$router.push('/Cart');
+      },
+      logout: function(){
+            if (confirm("Press OK to logout")) {
+                this.$router.push('/Signup');
+                localStorage.removeItem('token');
+            }
+        },
+      refresh: function(){
+      var username = (localStorage.getItem('token'));
         if(username == null){
           this.$router.push('/');
         }
@@ -87,21 +102,7 @@ export default {
             console.log(errorMsg)
             this.errorAddress = errorMsg
         })
-      },
-    
-    methods: {
-      StatsOrder: function(){
-            this.$router.push('/StatusOrder');
-      },
-      Cart: function(){
-        this.$router.push('/Cart');
-      },
-      logout: function(){
-            if (confirm("Press OK to logout")) {
-                this.$router.push('/Signup');
-                localStorage.removeItem('token');
-            }
-        }
+      }
         /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");
