@@ -133,8 +133,8 @@
         />
       </div>
       <div class="column2">
-        <Button text="Add" color="black" />
-        <Button text="Update" color="black" />
+        <Button text="Add" color="black" @btn-click="addBusinessHour"/>
+        <Button text="Update" color="black" @btn-click="updateBusinessHour"/>
       </div>
     </form>
   </div>
@@ -250,7 +250,10 @@ export default {
         .catch(e => {
           window.alert(e.response.data);
         });
-    }
+    },
+    addBusinessHour(){
+      AXIOS.
+    },
   }
 };
 </script>
