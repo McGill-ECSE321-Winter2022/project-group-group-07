@@ -167,9 +167,37 @@ export default {
               window.alert("Please enter card pin code.");
               return;
             }
-            AXIOS.post();
+            var currentdate = new Date();
+            var datestr =  currentdate.toISOString().split("T")[0];
+            var timestr = currentdate.toISOString().split("T")[1];
+            var str = "?date=" + datestr + "&purchaseTime=" + timestr;
+            for(var i = 0; i < this.$refs.selector.children.length; i++){
+              str += ("&items=" + this.$refs.selector.children[i].textContent.split(",").trim());
+            }
+            if(this.user){
+              
+              AXIOS.post('/createInStoreOrder' + str)
+              .then(response => {
+               })
+            .catch(e => {
+              window.alert("Error Processing Transaction.");
+              return;
+              })
+            }
+           else{
+             AXIOS.post('/createInStoreOrder/' + this.user + str)
+              .then(response => {
+               })
+            .catch(e => {
+              window.alert("Error Processing Transaction.");
+              return;
+              })
+           } 
             window.alert("Transaction Successful!");
             this.$refs.modal.style.display = "none";
+            for(var i = 0; i < this.$refs.selector.children.length; i++){
+              this.$refs.selector.children[i].remove();
+            }
         }
     },
     components: { Button }
