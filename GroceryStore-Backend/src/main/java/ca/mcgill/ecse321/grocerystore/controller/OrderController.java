@@ -92,20 +92,36 @@ public class OrderController {
 	}
 	
 	@GetMapping(value = { "/pickUpOrders", "/pickUpOrders/" })
-	public List<OrderDto> getAllPickUpOrders() {
+	public ResponseEntity<?> getAllPickUpOrders() {
 		List<OrderDto> orders = new ArrayList<OrderDto>();
 		for (Order order : service.getAllPickUpOrders()) {
 			orders.add(convertToDto(order));
 		}
-		return orders;
+		return new ResponseEntity<>(orders, HttpStatus.OK);
+	}
+	@GetMapping(value = { "/pendingPickUpOrders", "/pendingPickUpOrders/" })
+	public ResponseEntity<?> getAllPendingPickUpOrders() {
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for (Order order : service.getAllPendingPickUpOrders()) {
+			orders.add(convertToDto(order));
+		}
+		return new ResponseEntity<>(orders, HttpStatus.OK);
+	}
+	@GetMapping(value = { "/pendingDeliveryOrders", "/pendingDeliveryOrders/" })
+	public ResponseEntity<?> getAllPendingDeliveryOrders() {
+		List<OrderDto> orders = new ArrayList<OrderDto>();
+		for (Order order : service.getAllPendingDeliveryOrders()) {
+			orders.add(convertToDto(order));
+		}
+		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 	@GetMapping(value = { "/deliveryOrders", "/deliveryOrders/" })
-	public List<OrderDto> getAllDeliveryOrders() {
+	public ResponseEntity<?> getAllDeliveryOrders() {
 		List<OrderDto> orders = new ArrayList<OrderDto>();
 		for (Order order : service.getAllDeliveryOrders()) {
 			orders.add(convertToDto(order));
 		}
-		return orders;
+		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 	@GetMapping(value = { "/order/{id}", "/order/{id}/" })
 	public ResponseEntity<?> getOrderByID(@PathVariable("id") Long id) {
@@ -151,7 +167,7 @@ public class OrderController {
 	}
 
 	@PutMapping(value = { "/deliveryUpdate/{id}", "/deliveryUpdate/{id}/" })
-	public ResponseEntity<?> updateDeliveryStatus(@PathVariable("id") long id, @RequestParam String status) {
+	public ResponseEntity<?> updateDeliveryStatus(@PathVariable("id") Long id, @RequestParam String status) {
 		return new ResponseEntity<>(
 				(DeliveryOrderDto) convertToDto(
 						service.updateDeliveryOrderStatus((DeliveryOrder) service.getOrderById(id), status)),
@@ -159,7 +175,7 @@ public class OrderController {
 	}
 
 	@PutMapping(value = { "/PickUpUpdate/{id}", "/PickUpUpdate/{id}/" })
-	public ResponseEntity<?> updatePickUpStatus(@PathVariable("id") long id, @RequestParam String status) {
+	public ResponseEntity<?> updatePickUpStatus(@PathVariable("id") Long id, @RequestParam String status) {
 		return new ResponseEntity<>(
 				(PickUpOrderDto) convertToDto(
 						service.updatePickUpOrderStatus((PickUpOrder) service.getOrderById(id), status)),
@@ -196,15 +212,29 @@ public class OrderController {
 			}
 		}
 		if (order instanceof PickUpOrder) {
-			if (order.getItems() != null && order.getItems().size() > 0) {
+			if ((((PickUpOrder) order).getStatus())!=null) {
+				if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((PickUpOrder) order).getStatus());
 				} else {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((PickUpOrder) order).getStatus());
 				}
 			} else {
-				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((PickUpOrder) order).getStatus());
 			}
+			} else
+			{
+				if (order.getItems() != null && order.getItems().size() > 0) {
+					if (order.getAccount() == null) {
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+					} else {
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+					}
+				} else {
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+				}
+			}
+			
 		} else if (order instanceof InStoreOrder) {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
@@ -216,6 +246,17 @@ public class OrderController {
 				return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
 			}
 		} else {
+			if ((((DeliveryOrder) order).getStatus())!=null) {
+				if (order.getItems() != null && order.getItems().size() > 0) {
+					if (order.getAccount() == null) {
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((DeliveryOrder) order).getStatus());
+					} else {
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((DeliveryOrder) order).getStatus());
+					}
+				} else {
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((DeliveryOrder) order).getStatus());
+				}	
+			} else {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
 					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
@@ -225,6 +266,7 @@ public class OrderController {
 			} else {
 				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
 			}
+		}
 		}
 	}
 

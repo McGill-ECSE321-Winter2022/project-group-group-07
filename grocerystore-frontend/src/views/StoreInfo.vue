@@ -143,6 +143,19 @@
 <script>
 import CustomInput from "../components/CustomInput.vue";
 import Button from "../components/Button.vue";
+import axios from "axios";
+import { ListGroupPlugin } from "bootstrap-vue";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+
 export default {
   name: "StoreInfo",
   components: {
@@ -150,16 +163,17 @@ export default {
     Button
   },
   data() {
-    if (localStore.get() == customer) {
-    } else {
-      this.router.push("/");
-    }
     return {
-      Address: "",
-      Email: "",
-      PhoneNumber: null,
-      EmployeeDiscountRate: null,
-      PointToCashRatio: null,
+      Store: {
+        name: "",
+        address: "",
+        phoneNumber: "",
+        email: "",
+        employeeDiscountRate: null,
+        pointToCashRatio: null,
+        holidays: null,
+        businessHours: null
+      },
       addressValue: "",
       emailValue: "",
       phoneNumberValue: null,
@@ -182,6 +196,13 @@ export default {
       SundayST: "",
       SundayET: ""
     };
+  },
+  created: function() {
+    AXIOS.get("api/store/store")
+    .then(response => {this.Store= response.data;
+    }).catch(e => {
+      return;4
+    });
   },
   methods: {}
 };

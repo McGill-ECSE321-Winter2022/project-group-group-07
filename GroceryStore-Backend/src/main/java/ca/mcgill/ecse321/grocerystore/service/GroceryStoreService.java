@@ -1393,11 +1393,29 @@ public class GroceryStoreService {
 	public List<TimeSlot> getAllTimeSlots() {
 		return toList(timeSlotRepository.findAll());
 	}
+	@Transactional
 	public List<PickUpOrder> getAllPickUpOrders() {
 		return toList(pickUpOrderRepository.findAll());
 	}
+	@Transactional
 	public List<DeliveryOrder> getAllDeliveryOrders() {
 		return toList(deliveryOrderRepository.findAll());
+	}
+	@Transactional
+	public List<PickUpOrder> getAllPendingPickUpOrders() {
+		List<PickUpOrder> pl = new ArrayList<PickUpOrder>();
+		for(PickUpOrder p: toList(pickUpOrderRepository.findAll())) {
+			if (p.getStatus()==PickUpOrderStatus.valueOf("Pending")) pl.add(p);
+		}
+		return pl;
+	}
+	@Transactional
+	public List<DeliveryOrder> getAllPendingDeliveryOrders() {
+		List<DeliveryOrder> pl = new ArrayList<DeliveryOrder>();
+		for(DeliveryOrder p: toList(deliveryOrderRepository.findAll())) {
+			if (p.getStatus()==DeliveryOrderStatus.valueOf("Pending")) pl.add(p);
+		}
+		return pl;
 	}
 	// ---------------------------------------------------------------------------------------------------------------------------------//
 	// Helper Methods
