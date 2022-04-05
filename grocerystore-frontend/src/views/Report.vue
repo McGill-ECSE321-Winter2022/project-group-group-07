@@ -1,5 +1,5 @@
 <template>
-  <div class="report" overflow="auto" style="background-color:white; height:100%; position:fixed; width:100%;">
+  <div class="Report" overflow="auto" style="background-color:white; height:100%; position:fixed; width:100%;">
   <div class = "navbar">
   <label>AppName</label>
   <div>
@@ -23,11 +23,12 @@
   <div>
   <button @click="genReport()" style="margin-top:1%;">Generate Report</button>
   <div>
-      <section class="report" v-if="reportID">
+      <section style="background-color:whitesmoke;" class="reportdisplay" v-if="reportID">
                     <label>ReportID: {{ reportID }}</label>
-                    <label>ReportID: {{ total }}</label>
-                    <label>ReportID: {{ reportID }}</label>
-                    <div v-for="order in orders" :key="order.id" class="product">
+                    <label>Start Date: {{ start }}</label>
+                    <label>End Date: {{ end }}</label>
+                    <label>Total Value: {{ reportTotalValue }}</label>
+                    <div v-for="order in orders" :key="order.orderID" class="product">
                         <Order
                             :order="order"
                         />
@@ -55,9 +56,9 @@ var AXIOS = axios.create({
 })
 export default {
     name: "Report",
-    components: {
-            Order
-        },
+    components:{
+        Order
+    },
     data() {
         return {
             start:null,
@@ -97,6 +98,7 @@ export default {
                         this.reportID = response.data.reportID;
                         this.reportTotalValue = response.data.totalValue;
                         this.orders = response.data.orders;
+                        console.log(this.orders);
                     })
                     .catch(e => {
                     window.alert("Network Error.");
@@ -105,9 +107,11 @@ export default {
                 }
                 else {
                     //show report
+                    console.log(report.orders);
                     this.reportID = report.reportID;
                     this.reportTotalValue = report.totalValue;
                     this.orders = report.orders;
+                    console.log(this.orders);
                 }
             })
             .catch(e => {
@@ -157,5 +161,13 @@ export default {
     border-style:solid;
     border-color: azure;
     border-radius: 0.5em;
+}
+.reportdisplay {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 10px;
+}
+.reportdisplay label {
+    margin-top: 2%;
 }
 </style>
