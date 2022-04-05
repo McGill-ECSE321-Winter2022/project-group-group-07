@@ -3,14 +3,53 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button>Catalog</button>
-        <button onclick="location.href='/#/Cart'">
-          Cart/Checkout
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
         </button>
-        <button>Order Status</button>
-        <button>Account Information</button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
       </div>
-      <div><button>Logout</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
 
     <div class="column">
@@ -41,7 +80,11 @@
           <p>Discount: {{ discount.toFixed(2) }} CAD</p>
           <p>Total: {{ (calculateSum(products) - discount).toFixed(2) }} CAD</p>
           <checkout username="matt" />
-          <Button text="Proceed to Checkout" color="black" @btn-click="routeToCheckout()"/>
+          <Button
+            text="Proceed to Checkout"
+            color="black"
+            @btn-click="routeToCheckout()"
+          />
         </div>
       </div>
     </div>
@@ -50,26 +93,49 @@
 
 <script>
 import Product from "../components/Product.vue";
-import Button from "../components/Button.vue"
+import Button from "../components/Button.vue";
 export default {
   name: "hello",
+
   components: {
     Product,
     Button
   },
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+  },
   data() {
     return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: true,
       payMethod: 0,
       points: 10000,
       discount: 0,
-      products: [],
-       
+      products: [
+        {
+          id: 1,
+          name: "Product 1",
+          description: "This is an incredibly awesome product",
+          quantity: 1,
+          price: 100,
+          inStock: true,
+          online: false,
+          inventory: 10,
+          image: "https://via.placeholder.com/150"
+        }
+      ]
     };
   },
   methods: {
-    routeToCheckout : function(){
-      this.$router.push("/Checkout");
-    },
     calculateSum: function(products) {
       var sum = 0;
       for (var i = 0; i < products.length; i++) {
@@ -109,6 +175,13 @@ export default {
     },
     updatePayment(newMethod) {
       this.payMethod = newMethod;
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        this.$router.push("/Login");
+      }
     }
   }
 };
