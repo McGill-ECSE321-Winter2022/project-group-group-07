@@ -100,8 +100,8 @@ export default new Router({
       component: Report
     },
     {
-      path: '/Catalogue',
-      name: 'Catalogue',
+      path: '/Catalog',
+      name: 'Catalog',
       component: Catalogue
     },
   ]

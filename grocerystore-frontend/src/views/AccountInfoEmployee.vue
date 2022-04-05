@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -44,7 +43,31 @@
 
     <br>
 
-    <div align="left">
+    <div>
+       <div>
+      <label>UserName: </label>
+      <label id="username"> {{ employeeAccount.username }} </label><br />
+      <label>Name: </label>
+      <label id="name"> {{ employeeAccount.name }} </label>
+      <!--button @click="changeName()">Change Name</button>
+      <button @click="changePassword()">Change Password</button><br />-->
+
+      <br />
+
+      <label>Address: </label>
+      <label id="address">
+        {{ employeeAddress.buildingNo }}, {{ employeeAddress.street }},
+        {{ employeeAddress.town }}
+      </label>
+      <!--button @click="changeAddress()">Change Address</button><br />-->
+
+      <br />
+      <label>Current Points: </label>
+      <label id="points"> {{ employeeAccount.pointBalance }} </label><br />
+      <br />
+
+      <br />
+    </div>
       <a href="/#/EditProfile"><button>Edit Account Informations</button></a
       ><br>
 
@@ -122,16 +145,36 @@ export default {
       ThursdayH: { startTime: "", endTime: "" },
       FridayH: { startTime: "", endTime: "" },
       SaturdayH: { startTime: "", endTime: "" },
-      SundayH: { startTime: "", endTime: "" }
+      SundayH: { startTime: "", endTime: "" },
+       employeeAddress: { buildingNo: "", street: "", town: "", account: null },
+        employeeAccount: { username: "", name: "", pointBalance: "", role: "" },
     };
   },
   created: function() {
     this.refreshEmployeeSchedule();
+    var username = localStorage.getItem('token');
     this.clerk = localStorage.getItem("role").includes("Clerk");
     this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
     this.cashier = localStorage.getItem("role").includes("Cashier") ;
     this.owner = localStorage.getItem("role").includes("Owner") ;
     this.customer = localStorage.getItem("role").includes("Customer") ;
+      AXIOS.get("/api/account/".concat(username))
+      .then(response => {
+        this.employeeAccount = response.data;
+        console.log(response.data);
+      })
+      .catch(e => {
+        window.alert(e.response.data);
+        return;
+      }),
+      AXIOS.get("/api/address/address/".concat(username))
+        .then(response => {
+          this.employeeAddress = response.data;
+        })
+        .catch(e => {
+          var errorMsg = e.response.data;
+          console.log(errorMsg);
+        });
   },
 
   methods: {
