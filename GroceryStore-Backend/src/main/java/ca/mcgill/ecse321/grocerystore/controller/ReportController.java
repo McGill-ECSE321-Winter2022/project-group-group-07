@@ -79,94 +79,102 @@ public class ReportController {
 		return new ResponseEntity<>(convertToDto(report), HttpStatus.OK);
 	}
 
-	private ReportDto convertToDto(Report report) {
-		List<OrderDto> orders = new ArrayList<OrderDto>();
-		for (Order ord : report.getOrders()) {
-			if (ord instanceof PickUpOrder) {
-				orders.add((PickUpOrderDto) convertToDto(ord));
-			} else if (ord instanceof InStoreOrder) {
-				orders.add((InStoreOrderDto) convertToDto(ord));
+	// -----------------------------------------------------------------------------------------------------------------//
+		// ConvertToDto helper methods
+	
+		private ReportDto convertToDto(Report report) {
+			List<OrderDto> orders = new ArrayList<OrderDto>();
+			for (Order ord : report.getOrders()) {
+				if (ord instanceof PickUpOrder) {
+					orders.add((PickUpOrderDto) convertToDto(ord));
+				} else if (ord instanceof InStoreOrder) {
+					orders.add((InStoreOrderDto) convertToDto(ord));
+				} else {
+					orders.add((DeliveryOrderDto) convertToDto(ord));
+				}
+			}
+			return new ReportDto(report.getReportID(), report.getStartDate(), report.getEndDate(), report.getTotalValue(),
+					orders);
+		}
+		
+		OrderDto convertToDto(Order order) {
+			Long orderID = order.getOrderID();
+			Float totalValue = order.getTotalValue();
+			Date date = order.getDate();
+			Time purchaseTime = order.getPurchaseTime();
+			TimeSlot timeSlot = new TimeSlot();
+			if (order instanceof DeliveryOrder)
+				timeSlot = ((DeliveryOrder) order).getTimeSlot();
+			if (order instanceof PickUpOrder)
+				timeSlot = ((PickUpOrder) order).getTimeSlot();
+			List<ItemDto> items = new ArrayList<ItemDto>();
+			if (order.getItems() != null && order.getItems().size() > 0) {
+				for (Item i : order.getItems()) {
+					if (i instanceof PerishableItem) {
+						items.add(convertToDto((PerishableItem) i));
+					} else {
+						items.add(convertToDto((NonPerishableItem) i));
+					}
+				}
+			}
+			if (order instanceof PickUpOrder) {
+				if (order.getItems() != null && order.getItems().size() > 0) {
+					if (order.getAccount() == null) {
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
+					} else {
+						AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
+					}
+				} else {
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
+				}
+			} else if (order instanceof InStoreOrder) {
+				if (order.getItems() != null && order.getItems().size() > 0) {
+					if (order.getAccount() == null) {
+						return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, items);
+					} else {
+						AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+						return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account, items);
+					}
+				} else {
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
+				}
 			} else {
-				orders.add((DeliveryOrderDto) convertToDto(ord));
+				if (order.getItems() != null && order.getItems().size() > 0) {
+					if (order.getAccount() == null) {
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
+					} else {
+						AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
+					}
+				} else {
+					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
+				}
 			}
 		}
-		return new ReportDto(report.getReportID(), report.getStartDate(), report.getEndDate(), report.getTotalValue(),
-				orders);
-	}
 
-	private OrderDto convertToDto(Order order) {
-		Long orderID = order.getOrderID();
-		Float totalValue = order.getTotalValue();
-		Date date = order.getDate();
-		Time purchaseTime = order.getPurchaseTime();
-		AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-		TimeSlot timeSlot = new TimeSlot();
-		if (order instanceof DeliveryOrder)
-			timeSlot = ((DeliveryOrder) order).getTimeSlot();
-		if (order instanceof PickUpOrder)
-			timeSlot = ((PickUpOrder) order).getTimeSlot();
-		List<ItemDto> items = new ArrayList<ItemDto>();
-		if (order.getItems() != null && order.getItems().size() > 0) {
-			for (Item i : order.getItems()) {
-				if (i instanceof PerishableItem) {
-					items.add(convertToDto((PerishableItem) i));
-				} else {
-					items.add(convertToDto((NonPerishableItem) i));
-				}
-			}
+		private PerishableItemDto convertToDto(PerishableItem perishableItem) {
+			return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
+					perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
+					perishableItem.getPointPerItem());
 		}
-		if (order instanceof PickUpOrder) {
-			if (order.getItems() != null && order.getItems().size() > 0) {
-				if (order.getAccount() == null) {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
-				} else {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
-				}
-			} else {
-				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
-			}
-		} else if (order instanceof InStoreOrder) {
-			if (order.getItems() != null && order.getItems().size() > 0) {
-				if (order.getAccount() == null) {
-					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, items);
-				} else {
-					return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account, items);
-				}
-			} else {
-				return new InStoreOrderDto(orderID, totalValue, date, purchaseTime, account);
-			}
-		} else {
-			if (order.getItems() != null && order.getItems().size() > 0) {
-				if (order.getAccount() == null) {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
-				} else {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
-				}
-			} else {
-				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
-			}
+
+		private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
+			return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
+					nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
+					nonPerishableItem.getPointPerItem());
 		}
-	}
 
-	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
-		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
-				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
-				perishableItem.getPointPerItem());
-	}
+		private AccountDto convertToDto(Account account, AccountRole role) {
 
-	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
-		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
-				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
-				nonPerishableItem.getPointPerItem());
-	}
+			return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
+		}
 
-	private AccountDto convertToDto(Account account, AccountRole role) {
-
-		return new AccountDto(account.getUsername(), account.getName(), account.getPointBalance(), role.toString());
-	}
-
-	private TimeSlotDto convertToDto(TimeSlot t) {
-		return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
-	}
+		private TimeSlotDto convertToDto(TimeSlot t) {
+			return new TimeSlotDto(t.getStartDate(), t.getEndDate(), t.getStartTime(), t.getEndTime());
+		}
 
 }
