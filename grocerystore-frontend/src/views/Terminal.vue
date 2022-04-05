@@ -1,5 +1,44 @@
 <template>
   <div class="terminal" style="background-color: grey; height:100%; position:fixed; width:100%;">
+  <div class="navbar">
+      <label>AppName</label>
+      <div>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+      </div>
+      <div><button @click="logout()">Logout</button></div>
+    </div>
   <div class="modal" ref="modal">
     <div class="payment_info">
             <div style="margin-top:10%;" class="infor_label">
@@ -22,15 +61,7 @@
         <button style="margin-left:3%; font-size:large;" @click="pay()">Proceed</button>
       </div>
   </div>
-  <div class = "navbar">
-  <label>AppName</label>
-  <div>
-  <button>Button 1</button> 
-  <button>Button 2</button>
-  <button>Button 3</button>
-  </div>
-  <div><button>Button 4</button></div>
-  </div>
+  
   <h1 style="margin-top:1%; background-color:whitesmoke; border-style:solid;">Cashier Terminal</h1>
   <div style="display:inline-flex; margin-top:1%; padding: 2%; width: 80%; background-color:whitesmoke;">
   <div style="display:table; padding: 5%; width:50%;">
@@ -76,6 +107,11 @@ export default {
     name: "Terminal",
     data() {
         return {
+          clerk: false,
+          deliveryPerson: false,
+          cashier: false,
+          owner:false,
+          customer: true,
             id: null,
             item: null,
             user: null,
@@ -89,6 +125,11 @@ export default {
         };
     },
     created: function () {
+      this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
     },
     methods: {
         additem: function () {
@@ -206,7 +247,15 @@ export default {
             window.alert("Transaction Successful!");
             this.$refs.modal.style.display = "none";
             this.user2 = null;
-        }
+        },
+        logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
     },
     components: { Button }
 }

@@ -15,6 +15,8 @@ import Terminal from '@/views/Terminal'
 import StatusOrder from '@/views/StatusOrder'
 import EditProfile from '@/views/EditProfile'
 import ManageInventory from '@/views/ManageInventory'
+import Report from '@/views/Report'
+import Catalogue from '@/views/Catalogue'
 
 Vue.use(Router)
 
@@ -92,6 +94,15 @@ export default new Router({
       path: '/ManageInventory',
       name: 'ManageInventory',
       component: ManageInventory
-    }
+    },
+    { path: '/Report',
+      name: 'Report',
+      component: Report
+    },
+    {
+      path: '/Catalogue',
+      name: 'Catalogue',
+      component: Catalogue
+    },
   ]
 })

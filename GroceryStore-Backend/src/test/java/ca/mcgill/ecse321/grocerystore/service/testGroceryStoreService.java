@@ -395,7 +395,7 @@ public class testGroceryStoreService {
 				Cart cart = new Cart();
 				cart.setAccount(new Account());
 				cart.setCartID(1L);
-				cart.setItems(new HashSet<Item>());
+				cart.setItems(new ArrayList<Item>());
 				cart.setTotalValue(0f);
 				cart.setNumOfItems(0);
 				cart.setOrderType(OrderType.Delivery);

@@ -3,11 +3,42 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button>Button 1</button>
-        <button>Button 2</button>
-        <button>Button 3</button>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
       </div>
-      <div><button>Button 4</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <div class="column1">
       <form style="margin-top:20px; margin-left:40px;">
@@ -88,7 +119,13 @@
         <label style="font-size: 24px; margin-top: 20px;"
           >Manage Inventory</label
         >
-        <select name="Items" ref="itemDisplay" size="20" style="width:100%">
+        <select
+          name="Items"
+          ref="itemDisplay"
+          id=""
+          size="20"
+          style="width:100%"
+        >
         </select>
       </div>
       <div>
@@ -136,6 +173,11 @@ export default {
   },
   data() {
     return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner:false,
+      customer: true,
       name: "",
       price: null,
       pointPerItem: null,
@@ -144,8 +186,14 @@ export default {
     };
   },
   created: function() {
+      this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
     this.refreshItems();
     this.clearFields();
+
   },
   methods: {
     refreshItems() {
@@ -162,15 +210,14 @@ export default {
             opt.textContent =
               "Name: " +
               itm.productName +
-              ", ID: " +
+              " , ID: " +
               itm.itemID +
-              ", " +
+              " , " +
               itm.price +
               " CAD, Category: " +
               itm.category +
               " In stock: " +
               itm.numInStock;
-            console.log(itm.numInStock);
             lst.appendChild(opt);
           }
         })
@@ -204,6 +251,7 @@ export default {
         )
           .then(response => {
             this.refreshItems();
+            this.clearFields();
           })
           .catch(e => {
             window.alert(e.response.data);
@@ -226,6 +274,29 @@ export default {
         )
           .then(response => {
             this.refreshItems();
+            this.clearFields();
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      }
+    },
+    restock() {
+      const lst = this.$refs.itemDisplay;
+      const itm = lst.children[lst.selectedIndex];
+      var str = itm.textContent.split(" ");
+      var id = str[4];
+      if (id == null) {
+        window.alert("pick an item");
+      } else if (this.quantity == null) {
+        window.alert("enter a quantity");
+      } else {
+        AXIOS.put(
+          "api/item/restock?" + "id=" + id + "&quantity=" + this.quantity
+        )
+          .then(response => {
+            this.refreshItems();
+            this.clearFields();
           })
           .catch(e => {
             window.alert(e.response.data);
@@ -245,7 +316,15 @@ export default {
         (this.pointPerItem = null),
         (this.imageLink = ""),
         (this.quantity = null);
-    }
+    },
+    logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
   }
 };
 </script>

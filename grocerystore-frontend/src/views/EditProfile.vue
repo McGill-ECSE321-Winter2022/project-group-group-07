@@ -3,8 +3,41 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
       </div>
-      <div><a href="/#/AccountInfo"><button>Return</button></a></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <h1 style="margin-top:1%;">Edit Account Information</h1>
     <br />
@@ -109,9 +142,12 @@ export default {
     },
     data () {
         return {
-            username1: '',
-            username2: '',
-            username3: '',
+            clerk: false,
+            deliveryPerson: false,
+            cashier: false,
+            owner:false,
+           customer: true,
+            username: '',
             newName: '',
             errorName: '',
             oldPassword: '',
@@ -124,6 +160,11 @@ export default {
         }
       },
       created: function () {
+        this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
       },
     
     methods: {
@@ -166,7 +207,15 @@ export default {
                 console.log(errorMsg)
                 this.errorAddress = errorMsg
             })
-        }
+        },
+        logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
     }
 }
 </script>

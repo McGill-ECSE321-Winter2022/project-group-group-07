@@ -1,13 +1,14 @@
 <template>
   <div class="signup">
-    <div class = "navbar">
+    <div class="navbar">
       <label>AppName</label>
+      <div></div>
       <div>
-      <Button @btn-click="routeToLogin()"
-          text="Login"
-        />
+        <button onclick="location.href = '/#/Login';">
+          Log In
+        </button>
+      </div>
     </div>
-  </div>
     <h1 style="margin-top:1%;">Sign Up</h1>
     <div>
       <form style="margin-top:20px; margin-left:40px;">
@@ -48,7 +49,8 @@
           :value="town"
           @change="v => (town = v)"
         />
-        <Button @btn-click="signup()"
+        <Button
+          @btn-click="signup()"
           text="Signup"
           color="black"
           style="margin-top:10px; width:203px;"
@@ -58,19 +60,20 @@
   </div>
 </template>
 <script>
-import Button from '../components/Button.vue'
-import CustomInput from '../components/CustomInput.vue'
-import axios from 'axios'
-import { ListGroupPlugin } from 'bootstrap-vue'
-var config = require('../../config')
+import Button from "../components/Button.vue";
+import CustomInput from "../components/CustomInput.vue";
+import axios from "axios";
+import { ListGroupPlugin } from "bootstrap-vue";
+var config = require("../../config");
 
-var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 export default {
   name: "Signup",
   components: {
@@ -87,68 +90,86 @@ export default {
       town: ""
     };
   },
-  created: function () {
-  },
+  created: function() {},
   methods: {
-    routeToLogin: function(){
-      this.$router.push('/Login');
-    },
-    signup: function(){
-        AXIOS.post('/api/account/customerAccount/'+this.username+"?name="+this.name+"&password="+this.password)
+    signup: function() {
+      AXIOS.post(
+        "/api/account/customerAccount/" +
+          this.username +
+          "?name=" +
+          this.name +
+          "&password=" +
+          this.password
+      )
         .then(response => {
-          console.log(response.data)
-          localStorage.setItem('token',response.data)
-          AXIOS.post('/api/address/address/'+this.username+"?buildingNo="+this.buildingNumber+"&street="+this.street+"&town="+this.town)
-          .then(response =>{
-            this.$router.push('/Login')
-          })
-         .catch(e => {
-          window.alert(e.response.data)
-         })
+          console.log(response.data);
+          // localStorage.setItem('token',response.data)
+          AXIOS.post(
+            "/api/address/address/" +
+              this.username +
+              "?buildingNo=" +
+              this.buildingNumber +
+              "&street=" +
+              this.street +
+              "&town=" +
+              this.town
+          )
+            .then(response => {
+              AXIOS.post("/api/cart/cart/" + this.username)
+                .then(response => {
+                  this.$router.push("/Login");
+                })
+                .catch(e => {
+                  window.alert(e.response.data);
+                })
+            })
+            .catch(e => {
+              window.alert(e.response.data);
+            });
         })
         .catch(e => {
-          window.alert(e.response.data)
-        })
-  }
+          window.alert(e.response.data);
+        });
+    }
   }
 };
 </script>
 
 <style scoped>
-.navbar{
-    height:  auto;
-    background-color: rgb(40, 50, 50);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: azure;
-    display: inline-flex;
-    width: 100%;
+.navbar {
+  height: auto;
+  background-color: rgb(40, 50, 50);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: azure;
+  display: inline-flex;
+  width: 100%;
 }
-.navbar div{
-  display:inline-block;
+.navbar div {
+  display: inline-block;
 }
 .navbar div button {
-    background-color: rgba(0, 0, 0, 0);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size:large;
-    color: azure;
-    border-style: none;
-    height: 2em;
-    padding-top:0;
-    margin-left:2em;
-    margin-top:0px;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  color: azure;
+  border-style: none;
+  height: 2em;
+  padding-top: 0;
+  margin-left: 2em;
+  margin-top: 0px;
 }
-.navbar label{
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: large;
-    padding-top:0;
-    margin-top:0px;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+.navbar label {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  padding-top: 0;
+  margin-top: 0px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
-.navbar button:hover{
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    border-style:solid;
-    border-color: azure;
-    border-radius: 0.5em;
+.navbar button:hover {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  border-style: solid;
+  border-color: azure;
+  border-radius: 0.5em;
 }
 .btn {
   display: inline-block;
