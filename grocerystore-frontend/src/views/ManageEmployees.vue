@@ -3,11 +3,42 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button>Button 1</button>
-        <button>Button 2</button>
-        <button>Button 3</button>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
       </div>
-      <div><button>Button 4</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <div class="column1">
       <form style="margin-top:20px; margin-left:40px;">
@@ -200,6 +231,11 @@ export default {
   },
   data() {
     return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner:false,
+      customer: true,
       username: "",
       password: "",
       name: "",
@@ -219,6 +255,11 @@ export default {
     };
   },
   created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
     this.refreshEmployees();
     this.refreshSchedule();
   },
@@ -452,7 +493,15 @@ export default {
       this.name="";
       this.buildingNumber=null;
       this.street="";
-      this.town="";    }
+      this.town="";    },
+      logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
   }
 };
 </script>

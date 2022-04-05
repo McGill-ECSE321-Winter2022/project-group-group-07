@@ -1,14 +1,44 @@
 <template>
 <div class="AccountInfo">
-    <div class = "navbar">
-        <label>AppName</label>
-        <div>
-            <button @click="Catalog()">Catalog</button> 
-            <button @click="Cart()">Cart/Checkout</button> 
-            <button>Order Status</button>
-            <button  @click="AccInfo()">Account Information</button>
-        </div>
-        <div><button @click="logout()">Logout</button></div>
+    <div class="navbar">
+      <label>AppName</label>
+      <div>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+      </div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
      <h1 style="margin-top:1%;">Order Status</h1>
 
@@ -52,6 +82,11 @@ export default {
 
     data () {
         return {
+            clerk: false,
+            deliveryPerson: false,
+            cashier: false,
+            owner:false,
+            customer: true,
             deliveries: [],
             pickups: [],
             erorrName: ''
@@ -59,6 +94,11 @@ export default {
       },
 
       created: function () {
+        this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
         var username = localStorage.getItem('token')
         //not yet written --> get deliveries of one customer
         AXIOS.get('/api/order/deliveryOrders/'.concat(username))
@@ -85,8 +125,10 @@ export default {
     methods: {
        logout: function(){
             if (confirm("Press OK to logout")) {
-                this.$router.push('/Signup');
+                localStorage.removeItem('role');
                 localStorage.removeItem('token');
+                this.$router.push('/Login');
+
             }
         },
         AccInfo: function(){
