@@ -2,8 +2,8 @@
   <div class="signup">
     <div class = "navbar">
       <label>AppName</label>
-      <div>
-      <button>Catalogue</button> 
+    <div>
+      
     </div>
   <div>
     <button onclick="location.href = '/#/Login';">

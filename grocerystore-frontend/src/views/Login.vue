@@ -3,7 +3,6 @@
     <div class = "navbar">
       <label>AppName</label>
       <div>
-      <button style="float: center;">Catalogue</button> 
     </div>
   </div>
     <h1 style="margin-top:1%;">Log In</h1>
