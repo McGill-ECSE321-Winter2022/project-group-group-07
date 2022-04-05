@@ -2,12 +2,10 @@ package ca.mcgill.ecse321.grocerystore.controller;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -60,13 +58,24 @@ public class CartController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@PutMapping(value = {"/removeFromCart/{id}"})
+	public ResponseEntity<?> removeFromCart(@PathVariable("id") String id, @RequestParam String username) {
+		try {
+			Long l = Long.parseLong(id);		
+			service.removeFromCart(l, username);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PutMapping(value = { "/addToCart/{id}", "/addToCart/{id}/" })
 	public ResponseEntity<?> addToCart(@PathVariable("id") Long id, String username) {
 		try {
 			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 

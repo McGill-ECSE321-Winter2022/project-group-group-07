@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -42,11 +42,20 @@
         >
           Account Information
         </button>
-        <button
-          v-if="owner"
-          onclick="location.href = '/#/AccountInfoEmployee';"
-        >
-          Account Information
+        
+         <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+        
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -532,10 +541,11 @@ export default {
       this.street = "";
       this.town = "";
     },
-    logout: function() {
+      logout: function() {
       if (confirm("Press OK to logout")) {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance")
         this.$router.push("/Login");
       }
     }

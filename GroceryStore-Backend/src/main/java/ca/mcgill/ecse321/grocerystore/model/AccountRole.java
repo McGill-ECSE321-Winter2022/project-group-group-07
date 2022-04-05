@@ -38,7 +38,7 @@ public abstract class AccountRole {
 			return "Clerk, Employment Date: " + ((Clerk) this).getEmploymentDate();
 		}
 		if (this instanceof DeliveryPerson) {
-			return "Delivery Person, Employment Date: " + ((DeliveryPerson) this).getEmploymentDate();
+			return "DeliveryPerson, Employment Date: " + ((DeliveryPerson) this).getEmploymentDate();
 		}
 		if (this instanceof Owner) {
             return "Owner";

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -61,7 +62,7 @@ public class Cart {
 		return orderType;
 	}
 
-	@OneToMany
+	@ManyToMany
 	public Set<Item> getItems() {
 		return this.items;
 	}

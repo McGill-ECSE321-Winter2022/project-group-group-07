@@ -11,7 +11,7 @@
     <div class="product_content">
       <div class="product_status">
         <label class="product_header">{{ product.productName }}</label>
-        <p v-if="numInStock()" class="product_instock"><b> INSTOCK </b></p>
+        <p v-if="numInStock()" class="product_instock"><b> IN STOCK. </b></p>
         <p v-else class="product_out_of_stock"><b> OUT OF STOCK </b></p>
         <p
           v-if="!product.availableOnline && numInStock()"
@@ -20,31 +20,22 @@
           <b> In Store Only </b>
         </p>
       </div>
+
       <div class="product_cart">
+        
         <p>
           <b class="product_price">{{ product.price }} CAD</b>
         </p>
-        <button
-          v-if="cart"
-          @click="updateCart('subtract')"
-          class="product_button"
-        >
-          -
-        </button>
-        <span class="cart_quantity">{{ product.quantity }}</span>
-        <button v-if="cart" @click="updateCart('add')" class="product_button">
-          +
-        </button>
-        <button
-          v-if="cart"
-          @click="updateCart('remove')"
-          class="product_remove"
-        >
-          x
-        </button>
-        <Button v-if="!cart" @btn-click="addToCart()" text="Add to cart" color="black" />
+       
+        <Button
+          v-if="!cart && product.availableOnline"
+          @btn-click="addToCart()"
+          text="Add to cart"
+          color="black"
+        />
       </div>
     </div>
+    <img v-if="cart" src="https://cdn-icons-png.flaticon.com/512/458/458594.png" alt="x button to remove" style="width: 2em; height: 2em; float: right;" @click="updateCart('remove-item')"> 
   </div>
 </template>
 
@@ -57,13 +48,13 @@ export default {
     updateCart(updateType) {
       this.$emit(updateType);
     },
-    addToCart(){
-      this.$emit("addToCart", this.product.itemID);
+    addToCart() {
+      this.$emit("addToCart", this.product.itemID, this.product.numInStock);
     },
-    numInStock(){
-      if(this.product.numInStock > 0 ){
+    numInStock() {
+      if (this.product.numInStock > 0) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }
@@ -111,6 +102,7 @@ export default {
   margin-inline-start: auto;
 }
 .product_price {
+
   padding-right: 30px;
   font-size: 20px;
   color: darkgreen;
@@ -119,22 +111,25 @@ export default {
   padding-left: 15px;
 }
 .product_instock {
-  background-color: green;
   width: 150px;
-  text-align: center;
-  color: white;
+  text-align: left;
+  color: rgb(0, 168, 0);
   font-size: 15px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 .product_out_of_stock {
-  background-color: red;
-  width: 150px;
-  text-align: center;
-  color: white;
+    width: 150px;
+  text-align: left;
+  color: rgb(109, 66, 1);
   font-size: 15px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 .product_instore_only {
-  font-size: 13px;
-  color: red;
+  width: 150px;
+  text-align: left;
+  color: rgb(255, 0, 0);
+  font-size: 15px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 .product_button {
   background-color: forestgreen;
@@ -151,7 +146,7 @@ export default {
 }
 .product_remove {
   background-color: transparent;
-  border: transparent;
+   padding: 2%;
   color: red;
   height: 30px;
   width: 30px;

@@ -1,10 +1,10 @@
 <template>
-    <div class="Delivery">
-        <div class="navbar">
+  <div class="Delivery">
+    <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -24,154 +24,176 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
+       
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
     </div>
 
-        <h1 style="margin-top:1%">Delivery</h1>
-        <button @click="updateOrders()" style="margin-top:1%;">Update Orders</button>
-        <div align="left"><label>Orders to be fulfilled</label></div>
-            <div class="one">
-                <section class="products" v-if="orders.length > 0">
-                    <div v-for="order in orders" :key="order.id" class="product">
-                        <Order
-                            :order="order"
-                            @remove="updateCart(order)"
-                        />
-                    </div>
-                </section>
-            </div>
+    <h1 style="margin-top:1%">Delivery</h1>
+    <Button @btn-click="updateOrders()" style="margin-top:1%;" text="Update Orders" color="black" />
+    <div align="left"><label>Orders to be fulfilled</label></div>
+    <div class="one">
+      <section class="products" v-if="orders.length > 0">
+        <div v-for="order in orders" :key="order.id" class="product">
+          <Order :order="order" @remove="updateCart(order)" />
         </div>
+      </section>
+    </div>
+  </div>
 </template>
 
-
 <script>
-    import Order from "../components/Order.vue";
-    import axios from 'axios'
-    import { ListGroupPlugin } from 'bootstrap-vue'
-    var config = require('../../config')
-    var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-    var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+import Button from '../components/Button.vue'
+import Order from "../components/Order.vue";
+import axios from "axios";
+import { ListGroupPlugin } from "bootstrap-vue";
+var config = require("../../config");
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
-    var AXIOS = axios.create({
-        baseURL: backendUrl,
-        headers: { 'Access-Control-Allow-Origin': frontendUrl }
-    })
-    export default{
-        name: "Delivery",
-        components: {
-            Order
-        },
-        data(){
-            return {
-                clerk: false,
-                deliveryPerson: false,
-                cashier: false,
-                owner:false,
-                customer: true,
-                orders : []
-            }
-        },
-        created: function() {
-          this.clerk = localStorage.getItem("role").includes("Clerk");
-          this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-          this.cashier = localStorage.getItem("role").includes("Cashier") ;
-          this.owner = localStorage.getItem("role").includes("Owner") ;
-          this.customer = localStorage.getItem("role").includes("Customer") ;
-        },
-        methods: {
-            async updateOrders(){
-                          AXIOS.get('/api/order/pendingDeliveryOrders')
-                          .then(response => {
-                            this.orders = response.data;
-                          })
-                          .catch((e) => {
-                            window.alert("Failed to update.");
-                            return;
-                          })
-                        },
-            async updateCart(order) {
-                for (let i = 0; i < this.orders.length; i++) {
-                    if (this.orders[i].orderID === order.orderID) {
-                        console.log(this.orders[i].orderID);
-                        AXIOS.put('/api/order/deliveryUpdate/'+this.orders[i].orderID+"?status=Delivered")
-                        .then(function (response) {
-                          console.log(response);
-                        })
-                        .catch(function (error) {
-                          console.log(error);
-                        });
-                        this.orders.splice(i, 1);
-                    }
-                    break;
-                }
-            },
-            logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
-            
-        },
-        
-        
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+export default {
+  name: "Delivery",
+  components: {
+    Order,
+    Button
+  },
+  data() {
+    return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: true,
+      orders: []
+    };
+  },
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+  },
+  methods: {
+    async updateOrders() {
+      AXIOS.get("/api/order/pendingDeliveryOrders")
+        .then(response => {
+          this.orders = response.data;
+        })
+        .catch(e => {
+          window.alert("Failed to update.");
+          return;
+        });
+    },
+    async updateCart(order) {
+      for (let i = 0; i < this.orders.length; i++) {
+        if (this.orders[i].orderID === order.orderID) {
+          console.log(this.orders[i].orderID);
+          AXIOS.put(
+            "/api/order/deliveryUpdate/" +
+              this.orders[i].orderID +
+              "?status=Delivered"
+          )
+            .then(function(response) {
+              console.log(response);
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+          this.orders.splice(i, 1);
+        }
+        break;
+      }
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
+        this.$router.push("/Login");
+      }
     }
+  }
+};
 </script>
 
 <style scoped>
-.navbar{
-    height:  auto;
-    background-color: rgb(40, 50, 50);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: azure;
-    display: inline-flex;
-    width: 100%;
+.navbar {
+  height: auto;
+  background-color: rgb(40, 50, 50);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: azure;
+  display: inline-flex;
+  width: 100%;
 }
-.navbar div{
-  display:inline-block;
+.navbar div {
+  display: inline-block;
 }
 .navbar div button {
-    background-color: rgba(0, 0, 0, 0);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size:large;
-    color: azure;
-    border-style: none;
-    height: 2em;
-    padding-top:0;
-    margin-left:2em;
-    margin-top:0px;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  color: azure;
+  border-style: none;
+  height: 2em;
+  padding-top: 0;
+  margin-left: 2em;
+  margin-top: 0px;
 }
-.navbar label{
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: large;
-    padding-top:0;
-    margin-top:0px;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+.navbar label {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+  padding-top: 0;
+  margin-top: 0px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
-.navbar button:hover{
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    border-style:solid;
-    border-color: azure;
-    border-radius: 0.5em;
+.navbar button:hover {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  border-style: solid;
+  border-color: azure;
+  border-radius: 0.5em;
 }
 .center {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 h1,
 h2 {
@@ -217,6 +239,20 @@ h2 {
 }
 .navbar div {
   display: inline-block;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
 }
 
 .navbar div button {

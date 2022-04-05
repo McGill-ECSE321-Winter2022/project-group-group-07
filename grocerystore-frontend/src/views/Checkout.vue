@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -42,11 +42,19 @@
         >
           Account Information
         </button>
-        <button
-          v-if="owner"
-          onclick="location.href = '/#/AccountInfoEmployee';"
-        >
-          Account Information
+
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -67,7 +75,7 @@
               type="number"
               ref="points"
               :value="points"
-              @change="v => (points = v)"
+              @change="v => points = v"
             />
           </div>
           <div style="margin-top: 10px;">
@@ -282,6 +290,7 @@ export default {
       customer: true,
       delivery_option: 0,
       points: 0,
+      appliedPoints: 0,
       discount: 0,
       address: "",
       store: {
@@ -411,11 +420,19 @@ export default {
       }
     },
     applyPoints() {
-      let dis = this.$refs.points.value;
-      if (this.points >= dis) {
-        this.discount += (dis * 1) / this.store.pointToCashRatio;
-        this.points -= dis;
-      }
+    
+      if (this.customerAccount.pointBalance >= this.points) {
+        this.discount += parseInt(this.points) * (1 / this.store.pointToCashRatio);
+        if (this.discount <= this.calculateSum(this.products)) {
+          this.customerAccount.pointBalance -= parseInt(this.points);
+          this.appliedPoints += parseInt(this.points);    
+          console.log(this.appliedPoints);
+      } else {
+          this.discount -= p * (1 / this.store.pointToCashRatio);
+          window.alert("Can't apply discount as it is greater than the subtotal")
+        }  
+      }else{
+      window.alert("Not enough points in your balance")}
     },
     updatePayment(newMethod) {
       this.payMethod = newMethod;
@@ -432,7 +449,11 @@ export default {
         window.alert("Please pick an expiration date");
       } else if (this.cvv == null) {
         window.alert("Please enter a cvv");
-      } else if (this.$refs.delivery.checked) {
+      }else if( (parseInt(this.calculateSum(this.products)) - parseInt(this.discount)) < 10){
+          window.alert("Minimum of 10 dollars must be met for delivery orders");
+      } 
+      else if (this.$refs.delivery.checked) 
+      {
         AXIOS.put(
           "/api/cart/chooseOrderType/" +
             this.customerAccount.username +
@@ -459,7 +480,10 @@ export default {
             )
               .then(response => {
                 AXIOS.post(
-                  "/api/order/checkout/" + this.customerAccount.username
+                  "/api/order/checkout/" +
+                    this.customerAccount.username +
+                    "?points=" +
+                    this.points
                 )
                   .then(response => {
                     console.log(response.data);
@@ -475,7 +499,7 @@ export default {
           .catch(e => {
             window.alert(e.response.data);
           });
-      } else {
+      } else if(this.$refs.pickup.checked) {
         AXIOS.put(
           "/api/cart/chooseOrderType/" +
             this.customerAccount.username +
@@ -502,7 +526,10 @@ export default {
             )
               .then(response => {
                 AXIOS.post(
-                  "/api/order/checkout/" + this.customerAccount.username
+                  "/api/order/checkout/" +
+                    this.customerAccount.username +
+                    "?points=" +
+                    this.points
                 )
                   .then(response => {
                     console.log(response.data);
@@ -513,17 +540,20 @@ export default {
               })
               .catch(e => {
                 window.alert(e.response.data);
-              }); 
+              });
           })
           .catch(e => {
             window.alert(e.response.data);
           });
+      } else{
+        window.alert("please select an order type");
       }
     },
     logout: function() {
       if (confirm("Press OK to logout")) {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
         this.$router.push("/Login");
       }
     }
