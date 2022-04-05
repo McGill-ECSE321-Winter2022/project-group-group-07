@@ -42,7 +42,7 @@
         >
           x
         </button>
-        <Button v-if="catalogue" @btn-click="addToCart()" text="Add to cart" color="black" />
+        <Button v-if="!cart" @btn-click="addToCart()" text="Add to cart" color="black" />
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
 import Button from "./Button.vue";
 export default {
   components: { Button },
-  props: ["product", "catalogue", "cart"],
+  props: ["product", "cart"],
   methods: {
     updateCart(updateType) {
       this.$emit(updateType);

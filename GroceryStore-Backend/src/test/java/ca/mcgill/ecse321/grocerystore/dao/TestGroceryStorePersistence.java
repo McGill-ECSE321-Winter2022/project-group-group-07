@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -437,7 +438,7 @@ public class TestGroceryStorePersistence {
 		cart.setTotalValue(totalValue);
 		cart.setNumOfItems(numberOfItems);
 
-		Set<Item> items = new HashSet<Item>();
+		List<Item> items = new ArrayList<Item>();
 		cart.setItems(items);
 
 		Date startDate = Date.valueOf("2022-02-02");
@@ -545,7 +546,7 @@ public class TestGroceryStorePersistence {
 		Time time = Time.valueOf("14:02:03");
 		order.setPurchaseTime(time);
 
-		Set<Item> set = new HashSet<Item>();
+		List<Item> set = new ArrayList<Item>();
 		order.setItems(set);
 
 		order.setTotalValue(50f);
@@ -593,7 +594,7 @@ public class TestGroceryStorePersistence {
 
 		nonPerishableItemRepository.save(nonPerishable);
 
-		Set<Item> set = new HashSet<Item>();
+		List<Item> set = new ArrayList<Item>();
 		pickUpOrder.setItems(set);
 
 		Time time = Time.valueOf("14:02:03");
@@ -697,7 +698,7 @@ public class TestGroceryStorePersistence {
 		Date date = Date.valueOf("2022-01-02");
 		deliveryOrder.setDate(date);
 
-		Set<Item> set = new HashSet<Item>();
+		List<Item> set = new ArrayList<Item>();
 		deliveryOrder.setItems(set);
 
 		Time time = Time.valueOf("14:02:03");

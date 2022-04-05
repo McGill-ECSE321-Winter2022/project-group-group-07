@@ -61,7 +61,6 @@
           <div v-for="product in products" :key="product.id" class="product">
             <Product
               :product="product"
-              catalogue="false"
               cart="true"
               @remove="updateCart(product, 'remove')"
               @add="updateCart(product, 'add')"
@@ -79,7 +78,6 @@
           <p>Subtotal: {{ calculateSum(products) }} CAD</p>
           <p>Discount: {{ discount.toFixed(2) }} CAD</p>
           <p>Total: {{ (calculateSum(products) - discount).toFixed(2) }} CAD</p>
-          <checkout username="matt" />
           <Button
             text="Proceed to Checkout"
             color="black"
@@ -92,6 +90,17 @@
 </template>
 
 <script>
+import axios from "axios";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 import Product from "../components/Product.vue";
 import Button from "../components/Button.vue";
 export default {
@@ -109,6 +118,7 @@ export default {
     this.cashier = localStorage.getItem("role").includes("Cashier");
     this.owner = localStorage.getItem("role").includes("Owner");
     this.customer = localStorage.getItem("role").includes("Customer");
+    this.refreshCart();
   },
   data() {
     return {
@@ -120,26 +130,22 @@ export default {
       payMethod: 0,
       points: 10000,
       discount: 0,
-      products: [
-        {
-          id: 1,
-          name: "Product 1",
-          description: "This is an incredibly awesome product",
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          online: false,
-          inventory: 10,
-          image: "https://via.placeholder.com/150"
-        }
-      ]
+      products: []
     };
   },
   methods: {
+    refreshCart(){
+      var username = localStorage.getItem("token");
+        AXIOS.get("/api/cart/cart/" + username).then(response => {
+          this.products=response.data.items;
+        }).catch(e => {
+          window.alert(e.response.data);
+        })
+    },
     calculateSum: function(products) {
       var sum = 0;
       for (var i = 0; i < products.length; i++) {
-        sum += products[i].price * products[i].quantity;
+        sum += products[i].price * products[i].numInStock;
       }
       return sum;
     },
