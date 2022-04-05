@@ -9,7 +9,7 @@ import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 
 public class DeliveryOrderDto extends OrderDto {
 
-	private TimeSlot timeSlot;
+	private TimeSlotDto timeSlot;
 	private DeliveryOrderStatus status;
 
 	/**
@@ -22,7 +22,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param timeSlot
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
-			List<ItemDto> items, TimeSlot timeSlot) {
+			List<ItemDto> items, TimeSlotDto timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, account, items);
 		this.timeSlot = timeSlot;
 	}
@@ -36,7 +36,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param timeSlot
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
-			TimeSlot timeSlot) {
+			TimeSlotDto timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, account);
 		this.timeSlot = timeSlot;
 	}
@@ -51,7 +51,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param status
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items,
-			TimeSlot timeSlot, DeliveryOrderStatus status) {
+			TimeSlotDto timeSlot, DeliveryOrderStatus status) {
 		super(orderID, totalValue, date, purchaseTime, items);
 		this.timeSlot = timeSlot;
 		this.status = status;
@@ -67,7 +67,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param status
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
-			TimeSlot timeSlot, DeliveryOrderStatus status) {
+			TimeSlotDto timeSlot, DeliveryOrderStatus status) {
 		super(orderID, totalValue, date, purchaseTime, account);
 		this.timeSlot = timeSlot;
 		this.status = status;
@@ -84,7 +84,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param status
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, AccountDto account,
-			List<ItemDto> items, TimeSlot timeSlot, DeliveryOrderStatus status) {
+			List<ItemDto> items, TimeSlotDto timeSlot, DeliveryOrderStatus status) {
 		super(orderID, totalValue, date, purchaseTime, account, items);
 		this.timeSlot = timeSlot;
 		this.status = status;
@@ -99,7 +99,7 @@ public class DeliveryOrderDto extends OrderDto {
 	 * @param timeSlot
 	 */
 	public DeliveryOrderDto(Long orderID, Float totalValue, Date date, Time purchaseTime, List<ItemDto> items,
-			TimeSlot timeSlot) {
+			TimeSlotDto timeSlot) {
 		super(orderID, totalValue, date, purchaseTime, items);
 		this.timeSlot = timeSlot;
 	}
@@ -107,7 +107,7 @@ public class DeliveryOrderDto extends OrderDto {
 	/**
 	 * @return the timeSlot
 	 */
-	public TimeSlot getTimeSlot() {
+	public TimeSlotDto getTimeSlot() {
 		return timeSlot;
 	}
 

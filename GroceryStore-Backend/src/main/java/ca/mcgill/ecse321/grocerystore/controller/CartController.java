@@ -98,8 +98,11 @@ public class CartController {
 
 	private CartDto convertToDto(Cart cart) {
 		List<ItemDto> items = new ArrayList<ItemDto>();
+		TimeSlotDto timeSlot =null;
 		AccountDto account = convertToDto(cart.getaccount(), cart.getaccount().getAccountRole());
-		TimeSlotDto timeSlot = convertToDto(cart.getTimeSlot());
+		if(cart.getTimeSlot() != null) {
+		 timeSlot = convertToDto(cart.getTimeSlot());
+		}
 		for (Item i : cart.getItems()) {
 			if (i instanceof PerishableItem) {
 				items.add(convertToDto((PerishableItem) i));
@@ -108,6 +111,7 @@ public class CartController {
 				items.add(convertToDto((NonPerishableItem) i));
 			}
 		}
+
 		return new CartDto(cart.getOrderType(), cart.getTotalValue(), cart.getNumOfItems(), items, timeSlot, account);
 	}
 
@@ -123,13 +127,13 @@ public class CartController {
 	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
 				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
-				perishableItem.getPointPerItem());
+				perishableItem.getPointPerItem(),perishableItem.getImageLink(),perishableItem.getCategory().toString());
 	}
 
 	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
 		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
 				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
-				nonPerishableItem.getPointPerItem());
+				nonPerishableItem.getPointPerItem(),nonPerishableItem.getImageLink(),nonPerishableItem.getCategory().toString());
 	}
 
 }

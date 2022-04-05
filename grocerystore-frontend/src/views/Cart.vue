@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -25,16 +24,28 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
       </div>
@@ -50,13 +61,14 @@
           <div v-for="product in products" :key="product.id" class="product">
             <Product
               :product="product"
+              cart="true"
               @remove="updateCart(product, 'remove')"
               @add="updateCart(product, 'add')"
               @subtract="updateCart(product, 'subtract')"
             />
           </div>
         </section>
-        <h2 v-else>Cart is lonely...</h2>
+        <h2 v-else>Cart is lonely :( ...</h2>
       </div>
       <div class="two">
         <div class="order_label">
@@ -66,13 +78,11 @@
           <p>Subtotal: {{ calculateSum(products) }} CAD</p>
           <p>Discount: {{ discount.toFixed(2) }} CAD</p>
           <p>Total: {{ (calculateSum(products) - discount).toFixed(2) }} CAD</p>
-          <checkout username="matt" />
-          <button
-            class="checkout_buttons"
-            onclick="location.href='/#/Checkout'"
-          >
-            Proceed to checkout
-          </button>
+          <Button
+            text="Proceed to Checkout"
+            color="black"
+            @btn-click="routeToCheckout()"
+          />
         </div>
       </div>
     </div>
@@ -80,98 +90,107 @@
 </template>
 
 <script>
+import axios from "axios";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 import Product from "../components/Product.vue";
+import Button from "../components/Button.vue";
 export default {
-    name: "hello",
-  
-    components: {
-        Product
+  name: "hello",
+
+  components: {
+    Product,
+    Button
+  },
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+    this.refreshCart();
+  },
+  data() {
+    return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: true,
+      payMethod: 0,
+      points: 10000,
+      discount: 0,
+      products: []
+    };
+  },
+  methods: {
+    refreshCart(){
+      var username = localStorage.getItem("token");
+        AXIOS.get("/api/cart/cart/" + username).then(response => {
+          this.products=response.data.items;
+        }).catch(e => {
+          window.alert(e.response.data);
+        })
     },
-    created: function () {
-     this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
+    calculateSum: function(products) {
+      var sum = 0;
+      for (var i = 0; i < products.length; i++) {
+        sum += products[i].price * products[i].numInStock;
+      }
+      return sum;
     },
-    data() {
-        return {
-        clerk: false,
-        deliveryPerson: false,
-        cashier: false,
-        owner:false,
-        customer: true,
-        payMethod: 0,
-        points: 10000,
-        discount: 0,
-        products: [
-        {
-          id: 1,
-          name: "Product 1",
-          description: "This is an incredibly awesome product",
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          online: false,
-          inventory: 10,
-          image: "https://via.placeholder.com/150"
+    nothing: function() {
+      return 0;
+    },
+
+    updateCart(product, updateType) {
+      for (let i = 0; i < this.products.length; i++) {
+        if (this.products[i].id === product.id) {
+          if (updateType === "subtract") {
+            if (this.products[i].quantity !== 0) {
+              this.products[i].quantity--;
+            }
+          } else if (updateType === "add") {
+            if (this.products[i].quantity < this.products[i].inventory) {
+              this.products[i].quantity++;
+            }
+          } else if (updateType === "remove") {
+            this.products.splice(i, 1);
+          }
+
+          break;
         }
-        
-        ]
-        };
-    
-      },
-      methods: {
-          calculateSum: function(products) {
-             var sum = 0;
-            for (var i = 0; i < products.length; i++) {
-              sum += products[i].price * products[i].quantity;
-            }
-            return sum;
-            },
-          nothing: function() {
-            return 0;
-          },
-
-          updateCart(product, updateType) {
-            for (let i = 0; i < this.products.length; i++) {
-              if (this.products[i].id === product.id) {
-              if (updateType === "subtract") {
-              if (this.products[i].quantity !== 0) {
-                this.products[i].quantity--;
-              }
-              } else if (updateType === "add") {
-              if (this.products[i].quantity < this.products[i].inventory) {
-                this.products[i].quantity++;
-              }
-              } else if (updateType === "remove") {
-                this.products.splice(i, 1);
-              }
-
-              break;
-            }
-            }
-            },
-            applyPoints() {
-              let dis = document.getElementById("points").value;
-              if (this.points >= dis) {
-                this.discount += dis * 0.01;
-                this.points -= dis;
-              }
-            },
-            updatePayment(newMethod) {
-              this.payMethod = newMethod;
-            },
-            logout: function(){
-              if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-              }
-            },
+      }
+    },
+    applyPoints() {
+      let dis = document.getElementById("points").value;
+      if (this.points >= dis) {
+        this.discount += dis * 0.01;
+        this.points -= dis;
+      }
+    },
+    updatePayment(newMethod) {
+      this.payMethod = newMethod;
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        this.$router.push("/Login");
+      }
+    }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -263,5 +282,20 @@ h2 {
   display: inline-block;
   font-size: 20px;
   cursor: pointer;
+}
+
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
 }
 </style>
