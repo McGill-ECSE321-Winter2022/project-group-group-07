@@ -462,7 +462,7 @@ export default {
                   "/api/order/checkout/" + this.customerAccount.username
                 )
                   .then(response => {
-                    console.log(response.data)
+                    console.log(response.data);
                   })
                   .catch(e => {
                     window.alert(e.response.data);
@@ -481,7 +481,40 @@ export default {
             this.customerAccount.username +
             "?orderType=PickUp"
         )
-          .then(response => {})
+          .then(response => {
+            var date = document.getElementById("pickupDate");
+            const timeslot = this.$refs.pickupTime.children[
+              this.$refs.pickupTime.selectedIndex
+            ];
+            var startTime = timeslot.textContent.split("-")[0].trim();
+            var endTime = timeslot.textContent.split("-")[1].trim();
+            AXIOS.put(
+              "/api/cart/pickTimeSlot/" +
+                this.customerAccount.username +
+                "?startDate=" +
+                date.value +
+                "&endDate=" +
+                date.value +
+                "&startTime=" +
+                startTime +
+                "&endTime=" +
+                endTime
+            )
+              .then(response => {
+                AXIOS.post(
+                  "/api/order/checkout/" + this.customerAccount.username
+                )
+                  .then(response => {
+                    console.log(response.data);
+                  })
+                  .catch(e => {
+                    window.alert(e.response.data);
+                  });
+              })
+              .catch(e => {
+                window.alert(e.response.data);
+              }); 
+          })
           .catch(e => {
             window.alert(e.response.data);
           });
