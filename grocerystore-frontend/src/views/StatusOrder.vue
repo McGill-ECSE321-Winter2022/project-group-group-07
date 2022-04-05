@@ -64,7 +64,7 @@
     <br />
 
     <div>
-      <label style="margin-left: 15px">Delivery Orders: </label>
+      <!-- <label style="margin-left: 15px">Delivery Orders: </label>
       <select
         name="deliveryDisplay"
         ref="deliveryDisplay"
@@ -104,8 +104,30 @@
             {{ itm.productName }}
           </p>
         </option>
-      </select>
+      </select>-->
       <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
+      <table>
+        <tr>
+          <th>Delivery Orders</th>
+        </tr>
+        <tr v-for="delivery in deliveries" :key="delivery.orderID">
+          <td>Order ID: {{ delivery.orderID }}</td>
+          <td>Purchase Time: {{ delivery.purchaseTime }}</td>
+          <td>Current Status: {{ delivery.status }}</td>
+        </tr>
+        <br />
+        <tr>
+          <th>Pick-Up Orders</th>
+        </tr>
+        <tr v-for="pickup in pickups" :key="pickup.orderID">
+          <td>Order ID: {{ pickup.orderID }}</td>
+          <td>Purchase Time: {{ pickup.purchaseTime }}</td>
+          <td>Current Status: {{ pickup.status }}</td>
+        </tr>
+      </table>
+
+      <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
+      <!--  -->
     </div>
   </div>
 </template>
@@ -168,7 +190,6 @@ export default {
           this.errorName = errorMsg;
         });
   },
-
   methods: {
     logout: function() {
       if (confirm("Press OK to logout")) {
@@ -225,9 +246,21 @@ export default {
   border-color: azure;
   border-radius: 0.5em;
 }
+
 .products {
   display: grid;
   grid-template-columns: 1fr;
   grid-row-gap: 10px;
+}
+
+table {
+  margin-left: 2em;
+  width: 50%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 5px;
+  text-align: left;
 }
 </style>

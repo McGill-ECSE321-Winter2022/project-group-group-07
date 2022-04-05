@@ -144,9 +144,10 @@ public class OrderController {
 		return new ResponseEntity<>(orders, HttpStatus.OK);
 	}
 
-	@GetMapping(value = { "/order/{id}", "/order/{id}/" })
-	public ResponseEntity<?> getOrderByID(@PathVariable("id") Long id) {
-		Order order = service.getOrderById(id);
+	@GetMapping(value = { "/orderid", "/orderid/" })
+	public ResponseEntity<?> getOrderByID(@RequestParam String id) {
+		Long l = Long.parseLong(id);
+		Order order = service.getOrderById(l);
 		return new ResponseEntity<>(order, HttpStatus.OK);
 	}
 
