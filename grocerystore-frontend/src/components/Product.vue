@@ -2,63 +2,100 @@
   <div class="product">
     <div class="product_image">
       <img
-        :src="product.image"
-        :alt="product.name"
+        :src="product.imageLink"
+        :alt="product.productName"
         class="product_image"
         style="width: 150px; min-width: 150px;"
       />
     </div>
     <div class="product_content">
       <div class="product_status">
-        <h3 class="product_header">{{ product.name }}</h3>
-        <p v-if="product.inStock" class="product_instock"><b> INSTOCK </b></p>
+        <label class="product_header">{{ product.productName }}</label>
+        <p v-if="numInStock()" class="product_instock"><b> INSTOCK </b></p>
         <p v-else class="product_out_of_stock"><b> OUT OF STOCK </b></p>
         <p
-          v-if="!product.online & product.inStock"
+          v-if="!product.availableOnline && numInStock()"
           class="product_instore_only"
         >
-          <b> STORE PICKUP ONLY </b>
+          <b> In Store Only </b>
         </p>
       </div>
       <div class="product_cart">
         <p>
           <b class="product_price">{{ product.price }} CAD</b>
         </p>
-        <button @click="updateCart('subtract')" class="product_button">
+        <button
+          v-if="cart"
+          @click="updateCart('subtract')"
+          class="product_button"
+        >
           -
         </button>
         <span class="cart_quantity">{{ product.quantity }}</span>
-        <button @click="updateCart('add')" class="product_button">
+        <button v-if="cart" @click="updateCart('add')" class="product_button">
           +
         </button>
-        <button @click="updateCart('remove')" class="product_remove">
+        <button
+          v-if="cart"
+          @click="updateCart('remove')"
+          class="product_remove"
+        >
           x
         </button>
+        <Button v-if="catalogue" @btn-click="addToCart()" text="Add to cart" color="black" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Button from "./Button.vue";
 export default {
-  props: ["product"],
+  components: { Button },
+  props: ["product", "catalogue", "cart"],
   methods: {
     updateCart(updateType) {
       this.$emit(updateType);
+    },
+    addToCart(){
+      this.$emit("addToCart", this.product.itemID);
+    },
+    numInStock(){
+      if(this.product.numInStock > 0 ){
+        return true;
+      }else{
+        return false;
+      }
     }
   }
 };
 </script>
 <style scoped>
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
+}
 .product {
+  border-radius: 25px;
+  border: 2px solid #000;
   display: flex;
   flex-direction: row;
   background-color: whitesmoke;
-  border-radius: 10px;
   padding: 5px;
   text-align: left;
 }
 .product_image {
+  border-radius: 25px;
   text-align: center;
   flex: 1;
 }
@@ -123,5 +160,9 @@ export default {
   display: inline-block;
   font-size: 20px;
   cursor: pointer;
+}
+.product_header {
+  font-size: 24px;
+  font-family: inherit;
 }
 </style>

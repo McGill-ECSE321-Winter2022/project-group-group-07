@@ -574,7 +574,9 @@ public class GroceryStoreService {
 	@Transactional
 	public Cart addToCart(Long id, String username) {
 		Item item = null;
+
 		Cart cart = getCartByAccount(username);
+	
 		try {
 			item = getNonPerishableItemByID(id);
 		} catch (IllegalArgumentException e) {
@@ -613,7 +615,7 @@ public class GroceryStoreService {
 		cartRepository.save(cart);
 		return cart;
 	}
-
+	
 	// Order
 
 	@Transactional
@@ -631,12 +633,14 @@ public class GroceryStoreService {
 		for (Item i : items) {
 			totalValue += i.getPrice();
 		}
+		
 		deliveryOrder.setTotalValue(totalValue);
 		deliveryOrder.setDate(date);
 		deliveryOrder.setPurchaseTime(purchaseTime);
 		deliveryOrder.setItems(items);
 		deliveryOrder.setTimeSlot(timeSlot);
 		deliveryOrder.setAccount(account);
+		deliveryOrder.setStatus(DeliveryOrderStatus.Pending);
 
 		deliveryOrderRepository.save(deliveryOrder);
 
@@ -714,6 +718,7 @@ public class GroceryStoreService {
 		pickUpOrder.setItems(items);
 		pickUpOrder.setTimeSlot(timeSlot);
 		pickUpOrder.setAccount(account);
+		pickUpOrder.setStatus(PickUpOrderStatus.Pending);
 
 		pickUpOrderRepository.save(pickUpOrder);
 

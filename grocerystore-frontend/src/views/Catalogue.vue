@@ -12,45 +12,49 @@
       </div>
       <div><button>Logout</button></div>
     </div>
+    <div class="navbar">
+      <label></label>
+      <div style="width: 500px;">
+        <label>Search:</label>
+        <input type="text" placeholder="item name" class="searchBar" />
+      </div>
+      <div>
+        <button>Cart ({{ cartNumOfItems }})</button>
+      </div>
+    </div>
 
     <div class="column">
       <div class="one">
-        <div class="checkout_label">
-          <h2>My cart</h2>
-        </div>
-        <section class="products" v-if="products.length > 0">
-          <div v-for="product in products" :key="product.id" class="product">
+        <section class="products" v-if="items.length > 0">
+          <div v-for="item in items" :key="item.id" class="product">
             <Product
-              :product="product"
-              catalogue="false"
-              cart="true"
-              @remove="updateCart(product, 'remove')"
-              @add="updateCart(product, 'add')"
-              @subtract="updateCart(product, 'subtract')"
+              @addToCart="v => addToCart(v)"
+              :product="item"
+              catalogue="true"
             />
           </div>
         </section>
-        <h2 v-else>Cart is lonely :( ...</h2>
-      </div>
-      <div class="two">
-        <div class="order_label">
-          <h2>Order summary</h2>
-        </div>
-        <div class="orderSummary">
-          <p>Subtotal: {{ calculateSum(products) }} CAD</p>
-          <p>Discount: {{ discount.toFixed(2) }} CAD</p>
-          <p>Total: {{ (calculateSum(products) - discount).toFixed(2) }} CAD</p>
-          <checkout username="matt" />
-          <Button text="Proceed to Checkout" color="black" @btn-click="routeToCheckout()"/>
-        </div>
+        <h2 v-else>No items to display</h2>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+
 import Product from "../components/Product.vue";
-import Button from "../components/Button.vue"
+import Button from "../components/Button.vue";
 export default {
   name: "hello",
   components: {
@@ -62,53 +66,47 @@ export default {
       payMethod: 0,
       points: 10000,
       discount: 0,
-      products: [],
-       
+      items: [],
+      cartNumOfItems: 0
     };
   },
+  created() {
+    this.refreshItems();
+    //   this.refreshCartNumber();
+  },
   methods: {
-    routeToCheckout : function(){
+    routeToCheckout: function() {
       this.$router.push("/Checkout");
     },
-    calculateSum: function(products) {
-      var sum = 0;
-      for (var i = 0; i < products.length; i++) {
-        sum += products[i].price * products[i].quantity;
-      }
-      return sum;
+    refreshItems() {
+      AXIOS.get("/api/item/items")
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
-    nothing: function() {
-      return 0;
+    addToCart(id) {
+      var username = localStorage.getItem("token");
+      AXIOS.put("/api/cart/addToCart/" + id + "?username=" + username)
+        .then(response => {
+          this.refreshItems();
+          this.refreshCartNumber();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
-
-    updateCart(product, updateType) {
-      for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === product.id) {
-          if (updateType === "subtract") {
-            if (this.products[i].quantity !== 0) {
-              this.products[i].quantity--;
-            }
-          } else if (updateType === "add") {
-            if (this.products[i].quantity < this.products[i].inventory) {
-              this.products[i].quantity++;
-            }
-          } else if (updateType === "remove") {
-            this.products.splice(i, 1);
-          }
-
-          break;
-        }
-      }
-    },
-    applyPoints() {
-      let dis = document.getElementById("points").value;
-      if (this.points >= dis) {
-        this.discount += dis * 0.01;
-        this.points -= dis;
-      }
-    },
-    updatePayment(newMethod) {
-      this.payMethod = newMethod;
+    refreshCartNumber() {
+      var username = localStorage.getItem("token");
+      AXIOS.get("/api/cart/cart/" + username)
+        .then(response => {
+          this.cartNumOfItems = response.data.numOfItems;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     }
   }
 };
@@ -136,7 +134,6 @@ h2 {
 .one {
   background-color: white;
   flex: 2;
-  border-right: 5px solid rgb(40, 50, 50);
 }
 .two {
   background-color: white;
@@ -203,6 +200,11 @@ h2 {
   display: inline-block;
   font-size: 20px;
   cursor: pointer;
+}
+.searchBar {
+  border-radius: 5px;
+  width: 50%;
+  display: inline;
 }
 
 .btn {

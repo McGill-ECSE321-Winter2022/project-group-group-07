@@ -26,83 +26,88 @@
       <br />
 
       <label>Address: </label>
-      <label id="address"> {{ customerAddress.buildingNo }}, {{ customerAddress.street }}, {{ customerAddress.town }} </label>
+      <label id="address">
+        {{ customerAddress.buildingNo }}, {{ customerAddress.street }},
+        {{ customerAddress.town }}
+      </label>
       <!--button @click="changeAddress()">Change Address</button><br />-->
 
       <br />
       <label>Current Points: </label>
-      <label id="points"> {{ customerAccount.pointBalance }} </label><br/>
-       <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
-      <br/>
-       <a href="/#/EditProfile"><button>Edit Account Informations</button></a><br />
+      <label id="points"> {{ customerAccount.pointBalance }} </label><br />
+      <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
+      <br />
+      <a href="/#/EditProfile"><button>Edit Account Informations</button></a
+      ><br />
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
-var config = require('../../config')
+import axios from "axios";
+var config = require("../../config");
 
-var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 
 export default {
-    name: 'AccountInfoScript',
+  name: "AccountInfoScript",
 
-    data () {
-        return {
-            customerAccount: { username: '', name: '', pointBalance: '', role: ''},
-            errorName: '',
-            customerAddress: {	buildingNo: '', street: '', town: '', account: null }
-        }
-      },
+  data() {
+    return {
+      customerAccount: { username: "", name: "", pointBalance: "", role: "" },
+      errorName: "",
+      customerAddress: { buildingNo: "", street: "", town: "", account: null }
+    };
+  },
 
-      created: function () {
-        localStorage.setItem('token','user1')
-        //localStorage.removeItem('token')
-        var username = (localStorage.getItem('token'));
-        if(username == null){
-          this.$router.push('/');
-        }
-        AXIOS.get('/api/account/'.concat(username))
+  created: function() {
+    localStorage.setItem("token", "user1");
+    //localStorage.removeItem('token')
+    var username = localStorage.getItem("token");
+    if (username == null) {
+      this.$router.push("/");
+    }
+    AXIOS.get("/api/account/".concat(username))
+      .then(response => {
+        this.customerAccount = response.data;
+        console.log(response.data);
+        this.errorName = "";
+      })
+      .catch(e => {
+        window.alert(e.response.data);
+        return;
+      }),
+      AXIOS.get("/api/address/address/".concat(username))
         .then(response => {
-            this.customerAccount = response.data
-            console.log(response.data)
-            this.errorName=''
+          this.customerAddress = response.data;
         })
         .catch(e => {
-            window.alert(e.response.data)
-            return
-        }),
-        AXIOS.get('/api/address/address/'.concat(username))
-        .then(response => {
-            this.customerAddress = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data
-            console.log(errorMsg)
-            this.errorAddress = errorMsg
-        })
-      },
-    
-    methods: {
-      StatsOrder: function(){
-            this.$router.push('/StatusOrder');
-      },
-      Cart: function(){
-        this.$router.push('/Cart');
-      },
-      logout: function(){
-            if (confirm("Press OK to logout")) {
-                this.$router.push('/Signup');
-                localStorage.removeItem('token');
-            }
-        }
-        /*changeName: function(){
+          var errorMsg = e.response.data;
+          console.log(errorMsg);
+          this.errorAddress = errorMsg;
+        });
+  },
+
+  methods: {
+    StatsOrder: function() {
+      this.$router.push("/StatusOrder");
+    },
+    Cart: function() {
+      this.$router.push("/Cart");
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        this.$router.push("/Signup");
+        localStorage.removeItem("token");
+      }
+    }
+    /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");
             AXIOS.put('/api/account/updateName/'.concat(username).concat('?newName=').concat(newName))
@@ -145,8 +150,8 @@ export default {
                 this.errorName = errorMsg
             })
         }*/
-    }
-}
+  }
+};
 </script>
 
 <style scoped>

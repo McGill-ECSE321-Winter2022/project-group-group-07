@@ -91,7 +91,7 @@ export default {
   created: function () {
   },
   methods: {
-    signup: function(username,name,password){
+    signup: function(){
         AXIOS.post('/api/account/customerAccount/'+this.username+"?name="+this.name+"&password="+this.password)
         .then(response => {
           console.log(response.data)
@@ -106,6 +106,9 @@ export default {
         })
         .catch(e => {
           window.alert(e.response.data)
+        })
+        AXIOS.post("/api/cart/cart/" + this.username ).catch(e => {
+          window.alert(e.response.data);
         })
   }
   }
