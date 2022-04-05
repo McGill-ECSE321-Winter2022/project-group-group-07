@@ -3,29 +3,54 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="variable1" onclick="location.href = '/#/PickUp';">
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
           Pickup Orders
         </button>
-        <button v-if="variable" onclick="location.href = '/#/Delivery';">
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button onclick="location.href = '/#/AccountInfoEmployee';">
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
           Account Information
         </button>
       </div>
-      <div><button>Logout</button></div>
+      <div><button @click="logout()">Logout</button></div>
     </div>
     <h1 style="margin-top:1%;">Account Information</h1>
 
-    <br />
+    <br>
 
     <div align="left">
       <a href="/#/EditProfile"><button>Edit Account Informations</button></a
-      ><br />
+      ><br>
 
-      <br />
+      <br>
     </div>
-    <br />
+    <br>
     <label style="font-size: 24px">Schedule</label>
     <table>
       <tr>
@@ -76,19 +101,21 @@ import axios from "axios";
 var config = require("../../config");
 
 var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
-var backendUrl =
-  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+var backendUrl ="http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
   headers: { "Access-Control-Allow-Origin": frontendUrl }
 });
 export default {
-  name: "PickUp",
+  name: "AccountInfoEmployee",
   data() {
     return {
-      variable: true,
-      variable1: false,
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner:false,
+      customer: true,
       MondayH: { startTime: "", endTime: "" },
       TuesdayH: { startTime: "", endTime: "" },
       WednesdayH: { startTime: "", endTime: "" },
@@ -98,12 +125,13 @@ export default {
       SundayH: { startTime: "", endTime: "" }
     };
   },
-
   created: function() {
     this.refreshEmployeeSchedule();
-    this.variable = localStorage.getItem("role").localeCompare("Clerk") == 0;
-    this.variable1 =
-      localStorage.getItem("role").localeCompare("DeliveryPerson") == 0;
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
   },
 
   methods: {
@@ -165,8 +193,17 @@ export default {
             window.alert(e.response.data);
           });
         return;
-      }
+      }, 
+      logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
     },
+    
 };
 </script>
 
