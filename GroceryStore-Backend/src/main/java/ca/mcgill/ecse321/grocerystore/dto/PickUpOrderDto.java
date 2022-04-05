@@ -9,10 +9,6 @@ import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 
 public class PickUpOrderDto extends OrderDto {
 
-
-	private TimeSlotDto timeSlot;
-	private PickUpOrderStatus status;
-	
 	/**
 	 * @param orderID
 	 * @param totalValue
@@ -30,6 +26,8 @@ public class PickUpOrderDto extends OrderDto {
 		this.status = status;
 	}
 
+	private TimeSlotDto timeSlot;
+	private PickUpOrderStatus status;
 
 	/**
 	 * @param orderID

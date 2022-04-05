@@ -56,12 +56,7 @@ public class ItemController {
 			@RequestParam String availableOnline, @RequestParam String pointPerItem,
 			@RequestParam String imageLink, @RequestParam String category) {
 		try {
-			System.out.println(productName);
-			System.out.println(price);
-			System.out.println(availableOnline);
-			System.out.println(pointPerItem);
-			System.out.println(imageLink);
-			System.out.println(category);
+	
 			Float p = Float.parseFloat(price);
 			Boolean a = Boolean.parseBoolean(availableOnline);
 			Integer point = Integer.parseInt(pointPerItem); 

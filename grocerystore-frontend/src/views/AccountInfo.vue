@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -25,16 +24,28 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
       </div>
@@ -56,93 +67,99 @@
       <br />
 
       <label>Address: </label>
-      <label id="address"> {{ customerAddress.buildingNo }}, {{ customerAddress.street }}, {{ customerAddress.town }} </label>
+      <label id="address">
+        {{ customerAddress.buildingNo }}, {{ customerAddress.street }},
+        {{ customerAddress.town }}
+      </label>
       <!--button @click="changeAddress()">Change Address</button><br />-->
 
       <br />
       <label>Current Points: </label>
-      <label id="points"> {{ customerAccount.pointBalance }} </label><br/>
-       <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
-      <br/>
-       <a href="/#/EditProfile"><button>Edit Account Informations</button></a><br />
+      <label id="points"> {{ customerAccount.pointBalance }} </label><br />
+      <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
+      <br />
+      <a href="/#/EditProfile"><button>Edit Account Informations</button></a
+      ><br />
     </div>
   </div>
 </template>
 <script>
-import axios from 'axios'
-var config = require('../../config')
+import axios from "axios";
+var config = require("../../config");
 
-var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 
 export default {
-    name: 'AccountInfoScript',
+  name: "AccountInfoScript",
 
-    data () {
-        return {
-            clerk: false,
-            deliveryPerson: false,
-            cashier: false,
-            owner:false,
-            customer: true,
-            customerAccount: { username: '', name: '', pointBalance: '', role: ''},
-            errorName: '',
-            customerAddress: {	buildingNo: '', street: '', town: '', account: null }
-        };
-      },
+  data() {
+    return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: true,
+      customerAccount: { username: "", name: "", pointBalance: "", role: "" },
+      errorName: "",
+      customerAddress: { buildingNo: "", street: "", town: "", account: null }
+    };
+  },
 
-      created: function () {
-        this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
-        var username = localStorage.getItem('token');
-        if(username == null){
-          this.$router.push('/');
-        }
-        AXIOS.get('/api/account/'.concat(username))
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+    var username = localStorage.getItem("token");
+    if (username == null) {
+      this.$router.push("/");
+    }
+    AXIOS.get("/api/account/".concat(username))
+      .then(response => {
+        this.customerAccount = response.data;
+        console.log(response.data);
+        this.errorName = "";
+      })
+      .catch(e => {
+        window.alert(e.response.data);
+        return;
+      }),
+      AXIOS.get("/api/address/address/".concat(username))
         .then(response => {
-            this.customerAccount = response.data
-            console.log(response.data)
-            this.errorName=''
+          this.customerAddress = response.data;
         })
         .catch(e => {
-            window.alert(e.response.data)
-            return
-        }),
-        AXIOS.get('/api/address/address/'.concat(username))
-        .then(response => {
-            this.customerAddress = response.data
-        })
-        .catch(e => {
-            var errorMsg = e.response.data
-            console.log(errorMsg)
-            this.errorAddress = errorMsg
-        })
-      },
-    
-    methods: {
-      StatsOrder: function(){
-            this.$router.push('/StatusOrder');
-      },
-      Cart: function(){
-        this.$router.push('/Cart');
-      },
-      logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
+          var errorMsg = e.response.data;
+          console.log(errorMsg);
+          this.errorAddress = errorMsg;
+        });
+  },
 
-            }
-        },
-        /*changeName: function(){
+  methods: {
+    StatsOrder: function() {
+      this.$router.push("/StatusOrder");
+    },
+    Cart: function() {
+      this.$router.push("/Cart");
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        this.$router.push("/Login");
+      }
+    }
+    /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");
             AXIOS.put('/api/account/updateName/'.concat(username).concat('?newName=').concat(newName))
@@ -185,8 +202,8 @@ export default {
                 this.errorName = errorMsg
             })
         }*/
-    }
-}
+  }
+};
 </script>
 
 <style scoped>
