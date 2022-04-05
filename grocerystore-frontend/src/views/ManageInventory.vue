@@ -142,6 +142,12 @@
             color="black"
             style="margin-top:15px; width:203px;"
           />
+           <!--<Button
+            @btn-click="deleteItem"
+            text="Delete"
+            color="black"
+            style="margin-top:15px; width:203px;"
+          />-->
         </div>
       </div>
     </form>
@@ -272,6 +278,25 @@ export default {
             category
         )
           .then(response => {
+            this.refreshItems();
+            this.clearFields();
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      }
+    },
+    deleteItem(){
+      const lst = this.$refs.itemDisplay;
+      const itm = lst.children[lst.selectedIndex];
+      var str = itm.textContent.split(" ");
+      var id = str[4];
+      if (id == null) {
+        window.alert("pick an item");
+      } 
+      else{
+        AXIOS.delete("api/item/deleteItems/".concat(id)) 
+        .then(response => {
             this.refreshItems();
             this.clearFields();
           })

@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -38,7 +37,7 @@
           Account Information
         </button>
       </div>
-      <div><button @click="logout()">Logout</button></div>
+      <div><button onclick="history.back()">Return</button></div>
     </div>
     <h1 style="margin-top:1%;">Edit Account Information</h1>
     <br />
