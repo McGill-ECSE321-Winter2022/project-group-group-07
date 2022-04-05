@@ -542,7 +542,7 @@ public class GroceryStoreService {
 
 		Account account = getAccount(username);
 		Cart cart = new Cart();
-		Set<Item> items = new HashSet<Item>();
+		List<Item> items = new ArrayList<Item>();
 
 		cart.setAccount(account);
 		cart.setNumOfItems(0);
@@ -574,7 +574,9 @@ public class GroceryStoreService {
 	@Transactional
 	public Cart addToCart(Long id, String username) {
 		Item item = null;
+
 		Cart cart = getCartByAccount(username);
+	
 		try {
 			item = getNonPerishableItemByID(id);
 		} catch (IllegalArgumentException e) {
@@ -613,7 +615,7 @@ public class GroceryStoreService {
 		cartRepository.save(cart);
 		return cart;
 	}
-
+	
 	// Order
 
 	@Transactional
@@ -623,7 +625,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
+	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
@@ -631,12 +633,14 @@ public class GroceryStoreService {
 		for (Item i : items) {
 			totalValue += i.getPrice();
 		}
+		
 		deliveryOrder.setTotalValue(totalValue);
 		deliveryOrder.setDate(date);
 		deliveryOrder.setPurchaseTime(purchaseTime);
 		deliveryOrder.setItems(items);
 		deliveryOrder.setTimeSlot(timeSlot);
 		deliveryOrder.setAccount(account);
+		deliveryOrder.setStatus(DeliveryOrderStatus.Pending);
 
 		deliveryOrderRepository.save(deliveryOrder);
 
@@ -692,7 +696,7 @@ public class GroceryStoreService {
 		cart.setTotalValue(0f);
 		cart.setNumOfItems(0);
 		cart.setOrderType(null);
-		Set<Item> items = cart.getItems();
+		List<Item> items = cart.getItems();
 		items.clear();
 		cart.setItems(items);
 
@@ -700,7 +704,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
+	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
@@ -714,6 +718,7 @@ public class GroceryStoreService {
 		pickUpOrder.setItems(items);
 		pickUpOrder.setTimeSlot(timeSlot);
 		pickUpOrder.setAccount(account);
+		pickUpOrder.setStatus(PickUpOrderStatus.Pending);
 
 		pickUpOrderRepository.save(pickUpOrder);
 
@@ -727,7 +732,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		Float totalValue = Float.valueOf(0);
@@ -745,7 +750,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items, Account account) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items, Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		float totalValue = 0;

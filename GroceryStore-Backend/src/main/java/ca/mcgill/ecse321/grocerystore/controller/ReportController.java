@@ -119,27 +119,27 @@ public class ReportController {
 			if ((((PickUpOrder) order).getStatus())!=null) {
 				if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((PickUpOrder) order).getStatus());
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot),((PickUpOrder) order).getStatus());
 				} else {
 					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((PickUpOrder) order).getStatus());
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot),((PickUpOrder) order).getStatus());
 				}
 			} else {
 				AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((PickUpOrder) order).getStatus());
+				return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot),((PickUpOrder) order).getStatus());
 			}
 			} else
 			{
 				if (order.getItems() != null && order.getItems().size() > 0) {
 					if (order.getAccount() == null) {
-						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
 					} else {
 						AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+						return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
 					}
 				} else {
 					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+					return new PickUpOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
 				}
 			}
 			
@@ -159,26 +159,26 @@ public class ReportController {
 			if ((((DeliveryOrder) order).getStatus())!=null) {
 				if (order.getItems() != null && order.getItems().size() > 0) {
 					if (order.getAccount() == null) {
-						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot,((DeliveryOrder) order).getStatus());
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot),((DeliveryOrder) order).getStatus());
 					} else {
 						AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot,((DeliveryOrder) order).getStatus());
+						return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot),((DeliveryOrder) order).getStatus());
 					}
 				} else {
 					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot,((DeliveryOrder) order).getStatus());
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot),((DeliveryOrder) order).getStatus());
 				}	
 			} else {
 			if (order.getItems() != null && order.getItems().size() > 0) {
 				if (order.getAccount() == null) {
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, timeSlot);
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, items, convertToDto(timeSlot));
 				} else {
 					AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, timeSlot);
+					return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, items, convertToDto(timeSlot));
 				}
 			} else {
 				AccountDto account = convertToDto(order.getAccount(), order.getAccount().getAccountRole());
-				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, timeSlot);
+				return new DeliveryOrderDto(orderID, totalValue, date, purchaseTime, account, convertToDto(timeSlot));
 			}
 		}
 		}

@@ -21,8 +21,8 @@ public abstract class AccountRole {
 		return this.roleID;
 	}
 
-	public void setRoleID(Long roleID2) {
-		this.roleID = roleID2;
+	public void setRoleID(Long roleID) {
+		this.roleID = roleID;
 	}
 
 	public String toString() {
