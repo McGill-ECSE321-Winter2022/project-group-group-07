@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -47,17 +46,21 @@
     <div>
         <table>
             <tr>
-                <th><label style = "margin-left: 15px">Delivery Orders: </label></th>
+                <th>Delivery Orders</th>
             </tr>
             <tr v-for="delivery in deliveries" :key=delivery.orderID>
-                <td style = "margin-left: 25px">{{ delivery.orderID }}     {{ delivery.status }}</td>
+                <td> Order ID: {{ delivery.orderID }}</td> 
+                <td> Purchase Time: {{ delivery.purchaseTime }} </td> 
+                <td> Current Status: {{ delivery.status }} </td>
             </tr>
-
+            <br>
             <tr>
-                 <th><label style = "margin-left: 8px">Pick-Up Orders: </label></th>
+                 <th>Pick-Up Orders</th>
             </tr>
             <tr v-for="pickup in pickups" :key=pickup.orderID>
-                <td style = "margin-left: 18px">{{ pickup.orderID }}     {{ pickup.status }}</td>
+                <td> Order ID: {{ pickup.orderID }} </td> 
+                <td> Purchase Time: {{ pickup.purchaseTime }} </td> 
+                <td> Current Status: {{ pickup.status }}</td>
             </tr>
         </table>
          <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
@@ -89,12 +92,13 @@ export default {
             customer: true,
             deliveries: [],
             pickups: [],
-            erorrName: ''
+            items: [],
+            errorName: ''
         }
       },
 
       created: function () {
-        this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.clerk = localStorage.getItem("role").includes("Clerk");
     this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
     this.cashier = localStorage.getItem("role").includes("Cashier") ;
     this.owner = localStorage.getItem("role").includes("Owner") ;
@@ -103,7 +107,9 @@ export default {
         //not yet written --> get deliveries of one customer
         AXIOS.get('/api/order/deliveryOrders/'.concat(username))
         .then(response => {
-            this.deliveries.push(response.data)
+            this.deliveries=response.data
+            this.items=response.data.items
+            console.log(response.data.items)
         })
         .catch(e => {
            var errorMsg = e.response.data.message
@@ -113,7 +119,7 @@ export default {
          //not yet written --> get pickup of one customer
         AXIOS.get('/api/order/pickupOrders/'.concat(username))
         .then(response => {
-            this.pickups.push(response.data)
+            this.pickups=response.data
         })
         .catch(e => {
             var errorMsg = e.response.data.message
@@ -178,5 +184,15 @@ export default {
     border-style:solid;
     border-color: azure;
     border-radius: 0.5em;
+}
+table {
+  margin-left: 2em;
+  width: 50%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 5px;
+  text-align: left;
 }
 </style>
