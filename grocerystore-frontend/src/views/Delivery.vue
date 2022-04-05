@@ -1,14 +1,45 @@
 <template>
     <div class="Delivery">
-        <div class = "navbar">
-            <label>AppName</label>
-            <div>
-                <button v-if="variable" onclick= "location.href = '/#/PickUp';">Pickup Orders</button> 
-                <button v-if="variable1" onclick="location.href = '/#/Delivery';">Delivery Orders</button> 
-                <button onclick="location.href = '/#/AccountInfoEmployee';">Account Information</button>
-            </div>
-            <div><button>Logout</button></div>
-        </div>
+        <div class="navbar">
+      <label>AppName</label>
+      <div>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+      </div>
+      <div><button @click="logout()">Logout</button></div>
+    </div>
 
         <h1 style="margin-top:1%">Delivery</h1>
         <button @click="updateOrders()" style="margin-top:1%;">Update Orders</button>
@@ -47,14 +78,20 @@
         },
         data(){
             return {
-                variable: true,
-                variable1: false,
+                clerk: false,
+                deliveryPerson: false,
+                cashier: false,
+                owner:false,
+                customer: true,
                 orders : []
             }
         },
         created: function() {
-            this.variable=localStorage.getItem('role').localeCompare('Clerk')==0;
-            this.variable1=localStorage.getItem('role').localeCompare('DeliveryPerson')==0;
+          this.clerk = localStorage.getItem("role").includes("Clerk");
+          this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+          this.cashier = localStorage.getItem("role").includes("Cashier") ;
+          this.owner = localStorage.getItem("role").includes("Owner") ;
+          this.customer = localStorage.getItem("role").includes("Customer") ;
         },
         methods: {
             async updateOrders(){
@@ -83,6 +120,14 @@
                     break;
                 }
             },
+            logout: function(){
+            if (confirm("Press OK to logout")) {
+                localStorage.removeItem('role');
+                localStorage.removeItem('token');
+                this.$router.push('/Login');
+
+            }
+        },
             
         },
         

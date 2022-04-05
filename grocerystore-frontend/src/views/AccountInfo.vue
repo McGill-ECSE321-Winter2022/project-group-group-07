@@ -3,10 +3,40 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button>Catalog</button>
-        <button @click="Cart()">Cart/Checkout</button>
-        <button @click="StatsOrder()">Order Status</button>
-        <button>Account Information</button>
+        <button v-if="customer" onclick="location.href = '/#/Catalog';">
+          Catalog
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+          Account Information
+        </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
     </div>
@@ -55,16 +85,24 @@ export default {
 
     data () {
         return {
+            clerk: false,
+            deliveryPerson: false,
+            cashier: false,
+            owner:false,
+            customer: true,
             customerAccount: { username: '', name: '', pointBalance: '', role: ''},
             errorName: '',
             customerAddress: {	buildingNo: '', street: '', town: '', account: null }
-        }
+        };
       },
 
       created: function () {
-        localStorage.setItem('token','user1')
-        //localStorage.removeItem('token')
-        var username = (localStorage.getItem('token'));
+        this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
+    this.cashier = localStorage.getItem("role").includes("Cashier") ;
+    this.owner = localStorage.getItem("role").includes("Owner") ;
+    this.customer = localStorage.getItem("role").includes("Customer") ;
+        var username = localStorage.getItem('token');
         if(username == null){
           this.$router.push('/');
         }
@@ -98,10 +136,12 @@ export default {
       },
       logout: function(){
             if (confirm("Press OK to logout")) {
-                this.$router.push('/Signup');
+                localStorage.removeItem('role');
                 localStorage.removeItem('token');
+                this.$router.push('/Login');
+
             }
-        }
+        },
         /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
             let newName = prompt("Please enter your new Username", "Enter new name");
