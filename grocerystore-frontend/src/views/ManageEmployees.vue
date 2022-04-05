@@ -69,14 +69,16 @@
     <div class="column2">
       <label style="font-size: 24px; margin-top: 20px;">Manage Employee</label>
       <select
+        @change="refreshEmployeeSchedule()"
         name="employees"
+        id="employeeDisplay"
         ref="employeeDisplay"
         size="10"
         style="width:100%"
       >
       </select>
       <div class="column3">
-        <label style="font-size: 20px">Schedule</label>
+        <label style="font-size: 20px">{{ currentEmployee }} Schedule</label>
         <table>
           <tr>
             <th>Day</th>
@@ -161,8 +163,12 @@
             />
           </div>
           <div style="margin-top: 10px;">
-            <Button text="Add" color="black" />
-            <Button text="Update" color="black" />
+            <Button text="Add" color="black" @btn-click="addWorkingHour()" />
+            <Button
+              text="Update"
+              color="black"
+              @btn-click="updateWorkingHour()"
+            />
           </div>
         </form>
       </div>
@@ -208,15 +214,16 @@ export default {
       ThursdayH: { startTime: "", endTime: "" },
       FridayH: { startTime: "", endTime: "" },
       SaturdayH: { startTime: "", endTime: "" },
-      SundayH: { startTime: "", endTime: "" }
+      SundayH: { startTime: "", endTime: "" },
+      currentEmployee: "Store's"
     };
   },
   created: function() {
     this.refreshEmployees();
+    this.refreshSchedule();
   },
   methods: {
     createEmployeeAccount() {
-      console.log("creating");
       AXIOS.post(
         "/api/account/employeeAccount/" +
           this.username +
@@ -229,6 +236,7 @@ export default {
       )
         .then(response => {
           this.refreshEmployees();
+          this.clearFields();
         })
         .catch(e => {
           window.alert(e.reponse.data);
@@ -239,6 +247,9 @@ export default {
       AXIOS.get("api/account/employeeAccounts").then(response => {
         var lst = this.$refs.employeeDisplay;
         this.removeOptions(lst);
+        const opt = document.createElement("option");
+        opt.textContent = "<none>";
+        lst.appendChild(opt);
         for (var i = 0; i < response.data.length; i++) {
           var employee = response.data[i];
           const opt = document.createElement("option");
@@ -266,13 +277,182 @@ export default {
       const opt = inf.children[inf.selectedIndex];
       var str = opt.textContent.split(" ");
       var username = str[1];
-      AXIOS.delete(
-        "/api/account/deleteAccount/" + username + "?password=123456"
-      ).catch(e => {
-        console.log(e.response.data);
+      AXIOS.delete("/api/account/fireEmployee/" + username).then(response =>{
+         this.refreshEmployees();
+      }).catch(e => {
+        window.alert(e.response.data);
       });
-      this.refreshEmployees();
-    }
+     
+    },
+    refreshSchedule() {
+      AXIOS.get("api/store/businessHours/Monday")
+        .then(response => {
+          this.MondayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Tuesday")
+        .then(response => {
+          this.TuesdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Wednesday")
+        .then(response => {
+          this.WednesdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Thursday")
+        .then(response => {
+          this.ThursdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Friday")
+        .then(response => {
+          this.FridayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Saturday")
+        .then(response => {
+          this.SaturdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/store/businessHours/Sunday")
+        .then(response => {
+          this.SundayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      return;
+    },
+    refreshEmployeeSchedule() {
+      const inf = this.$refs.employeeDisplay;
+      if (inf.selectedIndex == 0) {
+        this.currentEmployee = "Store's ";
+        this.refreshSchedule();
+      } else {
+        const inf = this.$refs.employeeDisplay;
+        const opt = inf.children[inf.selectedIndex];
+        var str = opt.textContent.split(" ");
+        var username = str[1];
+        this.currentEmployee = username + "'s ";
+        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Monday")
+          .then(response => {
+            this.MondayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Tuesday")
+          .then(response => {
+            this.TuesdayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get(
+          "api/schedule/workingHour/" + username + "?dayOfWeek=Wednesday"
+        )
+          .then(response => {
+            this.WednesdayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get(
+          "api/schedule/workingHour/" + username + "?dayOfWeek=Thursday"
+        )
+          .then(response => {
+            this.ThursdayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Friday")
+          .then(response => {
+            this.FridayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get(
+          "api/schedule/workingHour/" + username + "?dayOfWeek=Saturday"
+        )
+          .then(response => {
+            this.SaturdayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Sunday")
+          .then(response => {
+            this.SundayH = response.data;
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+        return;
+      }
+    },
+    addWorkingHour() {
+      const inf = this.$refs.employeeDisplay;
+      const opt = inf.children[inf.selectedIndex];
+      var str = opt.textContent.split(" ");
+      var username = str[1];
+      var select = document.getElementById("days");
+      var day = select.options[select.selectedIndex].value;
+      AXIOS.put(
+        "/api/schedule/updateSchedule?" +
+          "username=" +
+          username +
+          "&dayOfWeek=" +
+          day +
+          "&startTime=" +
+          this.startTime +
+          "&endTime=" +
+          this.endTime
+      ).then(response => {
+        this.refreshEmployeeSchedule();
+      }).catch(e => {
+        window.alert(e.response.data);
+      });
+    },
+    updateWorkingHour() {
+      const inf = this.$refs.employeeDisplay;
+      const opt = inf.children[inf.selectedIndex];
+      var str = opt.textContent.split(" ");
+      var username = str[1];
+      var select = document.getElementById("days");
+      var day = select.options[select.selectedIndex].value;
+      AXIOS.put("/api/schedule/updateWorkingHour/" + username + "?dayOfWeek=" +
+          day +
+          "&startTime=" +
+          this.startTime +
+          "&endTime=" +
+          this.endTime).then(response => {
+        this.refreshEmployeeSchedule();
+      }).catch(e => {
+        window.alert(e.response.data);
+      });
+    },
+    clearFields(){
+      this.username="";
+      this.password= "";
+      this.name="";
+      this.buildingNumber=null;
+      this.street="";
+      this.town="";    }
   }
 };
 </script>
