@@ -81,7 +81,7 @@
           <Button
             text="Proceed to Checkout"
             color="black"
-            @btn-click="routeToCheckout()"
+            @btn-click="routeToCheckout"
           />
         </div>
       </div>
@@ -128,7 +128,7 @@ export default {
       owner: false,
       customer: true,
       payMethod: 0,
-      points: 10000,
+      points: 0,
       discount: 0,
       products: []
     };
@@ -145,14 +145,16 @@ export default {
     calculateSum: function(products) {
       var sum = 0;
       for (var i = 0; i < products.length; i++) {
-        sum += products[i].price * products[i].numInStock;
+        sum += products[i].price;
       }
       return sum;
     },
     nothing: function() {
       return 0;
     },
-
+  routeToCheckout(){
+    this.$router.push("/Checkout");
+  },
     updateCart(product, updateType) {
       for (let i = 0; i < this.products.length; i++) {
         if (this.products[i].id === product.id) {

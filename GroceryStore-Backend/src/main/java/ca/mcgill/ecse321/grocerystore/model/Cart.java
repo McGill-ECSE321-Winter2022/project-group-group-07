@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -22,7 +21,7 @@ public class Cart {
 	private Integer numOfItems;
 
 	// association fields
-	private List<Item> items;
+	private Set<Item> items;
 	private TimeSlot timeSlot;
 	private Account account;
 
@@ -63,11 +62,11 @@ public class Cart {
 	}
 
 	@OneToMany
-	public List<Item> getItems() {
+	public Set<Item> getItems() {
 		return this.items;
 	}
 
-	public void setItems(List<Item> items) {
+	public void setItems(Set<Item> items) {
 		this.items = items;
 	}
 

@@ -1,6 +1,5 @@
 <template>
   <div class="checkout" id="checkout">
-    <p>{{ username }}</p>
     <div class="navbar">
       <label>AppName</label>
       <div>
@@ -16,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -26,16 +24,28 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
       </div>
@@ -48,202 +58,109 @@
         <div class="Discount">
           <h3>Discount points</h3>
           <p class="points">
-            <b>POINTS AVAILABLE:</b> <b style="color: red">{{ points }}</b>
+            <b>Points Available:</b>
+            <b style="color: red">{{ customerAccount.pointBalance }}</b>
           </p>
-          <span class="coupon"></span>
-          <input
-            type="text"
-            required
-            id="points"
-            name="points"
-            placeholder="Enter amount of points"
-          />
-          <button class="checkout_buttons" type="button" @click="applyPoints()">
-            Apply
-          </button>
+          <div>
+            <CustomInput
+              placeholder="enter amount of points"
+              type="number"
+              ref="points"
+              :value="points"
+              @change="v => (points = v)"
+            />
+          </div>
+          <div style="margin-top: 10px;">
+            <Button text="apply" color="black" @btn-click="applyPoints" />
+          </div>
         </div>
         <div class="information">
-          <h2>Order information</h2>
-          <div class="personal_info">
-            <div class="infor_label">
-              <b>First Name</b><br /><br />
-              <b>Last Name</b><br /><br />
-              <b>Phone Number</b><br /><br />
-            </div>
-            <div class="info">
-              <input
-                type="text"
-                required
-                id="firstname"
-                name="firstname"
-                :value="prevInfo.FirstName"
-                placeholder="First Name"
-              /><br /><br />
-              <input
-                type="text"
-                required
-                id="lasttname"
-                name="lasttname"
-                :value="prevInfo.LastName"
-                placeholder="Last Name"
-              /><br /><br />
-              <input
-                type="tel"
-                required
-                id="phone"
-                name="phone"
-                :value="prevInfo.phoneNumber"
-                placeholder="Phone Number"
-              /><br /><br />
-            </div>
-          </div>
-
+          <h2>Order Type</h2>
           <input
             type="radio"
-            id="delivery"
+            ref="delivery"
             name="payment"
             @click="updateDelivery(1)"
           />
           <label for="delivery">Delivery</label><br />
-          <div class="delivery_info" v-show="delivery_option === 1">
-            <div class="infor_label">
-              <b>Street Address</b><br /><br />
-              <b>Building number</b><br /><br />
-              <br /><br />
-              <b>Delivery date</b><br /><br />
-              <b>Delivery time slot</b><br /><br />
-            </div>
-            <div class="info">
-              <input
+          <div class="information" v-show="delivery_option == 1">
+            <div class="information">
+              <CustomInput
+                placeholder="Address"
                 type="text"
-                required
-                id="address"
-                name="address"
-                :value="prevInfo.address"
-                placeholder="Street Address"
+                :value="address"
+                @change="v => (address = v)"
               /><br /><br />
-              <input
-                type="text"
-                required
-                id="building_number"
-                name="building_number"
-                :value="prevInfo.build_number"
-                placeholder="Building number"
-              /><br /><br />
+
               <p style="color: darkgreen"><b>Choose delivery date</b></p>
               <input
+                @change="computeHours('deliveryDate')"
                 type="date"
-                name="pickup_date"
+                id="deliveryDate"
+                name="deliveryDate"
                 min="2021-04-01"
                 max="2021-04-30"
               /><br /><br />
+              <label>Time Slot:</label><br />
               <select
-                class="timeslots_delivery"
-                name="timeslots_delivery"
-                v-if="timeslots_delivery.length > 0"
+                name="deliveryTime"
+                ref="deliveryTime"
+                style="width:200px; height:30px;"
               >
                 <option
-                  v-for="timeslot in timeslots_delivery"
-                  :key="timeslot.startDate"
-                  class="timeslot"
+                  v-for="timeslot in this.timeslots"
+                  :key="timeslot"
+                  :value="timeslot"
+                  >{{ timeslot }}</option
                 >
-                  <div>
-                    {{ "Time:" + timeslot.startTime + "-" + timeslot.endTime }}
-                  </div>
-                </option>
               </select>
             </div>
           </div>
 
           <input
             type="radio"
-            id="pickup"
+            ref="pickup"
             name="payment"
             @click="updateDelivery(2)"
           />
           <label for="pickup">PickUp</label><br />
           <div class="delivery_info" v-show="delivery_option === 2">
-            <div class="infor_label">
-              <b>Store Address</b><br /><br />
-              <br /><br />
-              <b>Delivery date</b><br /><br />
-              <b>Delivery time slot</b><br /><br />
-            </div>
-            <div class="info">
-              {{ store_address }}<br /><br />
-              <b style="color: darkgreen">Choose pickup date</b><br /><br />
+            <div class="information">
+              <div>
+                <label> Store Address: {{ store.address }}</label>
+              </div>
+              <div>
+                <b style="color: darkgreen">Choose pickup date</b><br /><br />
+              </div>
               <input
+                @change="computeHours('pickupDate')"
                 type="date"
-                name="pickup_date"
+                name="pickupDate"
+                id="pickupDate"
                 min="2021-04-01"
                 max="2021-04-30"
               /><br /><br />
+              <label>Time Slot:</label><br />
               <select
-                class="timeslots"
-                name="timeslot"
-                v-if="timeslots.length > 0"
+                name="pickupTime"
+                ref="pickupTime"
+                style="width:200px; height:30px;"
               >
                 <option
-                  v-for="timeslot in timeslots"
-                  :key="timeslot.startDate"
-                  class="timeslot"
+                  v-for="timeslot in this.timeslots"
+                  :key="timeslot"
+                  :value="timeslot"
+                  >{{ timeslot }}</option
                 >
-                  <div>
-                    {{ "Time:" + timeslot.startTime + "-" + timeslot.endTime }}
-                  </div>
-                </option>
               </select>
             </div>
           </div>
-
-          <button type="submit" class="checkout_buttons" onclick="doThing">
-            Save
-          </button>
         </div>
 
         <form class="paymentMethod">
           <h2>Payment method</h2>
-          <input
-            type="radio"
-            id="Previous"
-            name="payment"
-            @click="updatePayment(1)"
-          />
-          <label for="Previous">Previous Payment Method</label><br />
-          <div class="payment_info" v-show="payMethod === 1">
-            <div class="infor_label">
-              <label> CardHolder Name </label><br /><br />
-              <label> Credit Card number </label><br /><br />
-              <label> Expiration Date </label><br /><br />
-              <label> CVV </label><br /><br />
-            </div>
-
-            <div class="info">
-              <label>{{ prev.name }}</label
-              ><br /><br />
-              <label>{{ prev.credit }}</label
-              ><br /><br />
-              <label>{{ prev.expiration }}</label
-              ><br /><br />
-              <input
-                type="password"
-                style="width: 4em"
-                name="pincode"
-                maxlength="3"
-                pattern="[0-9]"
-                required
-              /><br /><br />
-            </div>
-          </div>
-
-          <input
-            type="radio"
-            id="CreditCard"
-            name="payment"
-            @click="updatePayment(2)"
-          />
           <label for="CreditCard">Credit Card</label><br />
-          <div class="payment_info" v-show="payMethod === 2">
+          <div class="payment_info">
             <div class="infor_label">
               <label> CardHolder Name </label><br /><br />
               <label> Credit Card number </label><br /><br />
@@ -257,6 +174,7 @@
                 required
                 id="cardHolder"
                 name="cardHolder"
+                v-model="cardHolder"
               /><br /><br />
               <input
                 id="ccn"
@@ -265,8 +183,14 @@
                 pattern="[0-9\s]{13,19}"
                 autocomplete="cc-number"
                 maxlength="19"
+                v-model="ccn"
               /><br /><br />
-              <input type="month" id="Expiration Date" name="Expiration Date" />
+              <input
+                type="month"
+                id="Expiration Date"
+                name="Expiration Date"
+                v-model="expirationDate"
+              />
               <br /><br />
               <input
                 type="password"
@@ -275,6 +199,7 @@
                 maxlength="3"
                 pattern="[0-9]"
                 required
+                v-model="cvv"
               /><br /><br />
             </div>
           </div>
@@ -289,8 +214,8 @@
           <div v-for="product in products" :key="product.id" class="product">
             <div class="product_image">
               <img
-                :src="product.image"
-                :alt="product.name"
+                :src="product.imageLink"
+                :alt="product.productName"
                 class="product_image"
                 style="width: 100px; min-width: 100px;"
               />
@@ -298,15 +223,11 @@
             <div class="product_content">
               <div class="content_label">
                 <p><b>Name</b></p>
-                <p><b>Qty</b></p>
-                <p><b>Unit Price</b></p>
-                <p><b>Sub Total</b></p>
+                <p><b>Price</b></p>
               </div>
               <div class="content_value">
-                <p>{{ product.name }}</p>
-                <p>{{ product.quantity }}</p>
+                <p>{{ product.productName }}</p>
                 <p>{{ product.price }}</p>
-                <p>{{ product.price * product.quantity }}</p>
               </div>
             </div>
           </div>
@@ -320,133 +241,151 @@
             </p>
           </div>
         </section>
-        <button class="checkout_buttons" type="button" @click="applyPoints()">
-          Place Order
-        </button>
+        <Button
+          text="Place Order"
+          @btn-click="checkout"
+          style="width: 150px, height: 40px;"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import Button from './Button'
+import Button from "../components/Button.vue";
+import CustomInput from "../components/CustomInput.vue";
+
+import axios from "axios";
+var config = require("../../config");
+
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+var AXIOS = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
+
 export default {
-  name: "hello",
-  props: ["username"],
-  created: function () {
-     this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
-    },
+  name: "Checkout",
+  components: {
+    Button,
+    CustomInput
+  },
   data() {
     return {
       clerk: false,
       deliveryPerson: false,
       cashier: false,
-      owner:false,
+      owner: false,
       customer: true,
-      payMethod: 0,
       delivery_option: 0,
-      points: 10000,
+      points: 0,
       discount: 0,
-      store_address: "McgiLL street 123",
-      timeslots: [
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "11:00",
-          endTime: "13:00"
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "14:00",
-          endTime: "15:00"
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "16:00",
-          endTime: "20:00"
-        }
-      ],
-      timeslots_delivery: [
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "11:00",
-          endTime: "13:00"
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "14:00",
-          endTime: "15:00"
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-01",
-          startTime: "16:00",
-          endTime: "20:00"
-        }
-      ],
-      products: [
-        {
-          id: 1,
-          name: "Product 1",
-          description: "This is an incredibly awesome product",
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          online: false,
-          inventory: 7,
-          image: "https://via.placeholder.com/150"
-        },
-        {
-          id: 2,
-          name: "Product 2",
-          description: "This is an incredibly awesome product",
-          quantity: 1,
-          price: 10,
-          inStock: true,
-          online: false,
-          inventory: 7,
-          image: "https://via.placeholder.com/150"
-        },
-        {
-          id: 3,
-          name: "Product 3",
-          description: "This is an incredibly awesome product",
-          quantity: 1,
-          price: 50,
-          inStock: true,
-          online: false,
-          inventory: 7,
-          image: "https://via.placeholder.com/150"
-        }
-      ],
-      prev: {
-        name: "Ivan Ivanovich",
-        credit: "************4321",
-        expiration: "11/2035"
+      address: "",
+      store: {
+        name: "",
+        address: "",
+        phoneNumber: "",
+        email: "",
+        employeeDiscountRate: "",
+        pointToCashRatio: "",
+        holidays: null,
+        businessHours: null
       },
-      prevInfo: {
-        FirstName: "Ivan",
-        LastName: "Ivanovich",
-        phoneNumber: "+111111111",
-        delivery_option: 1,
-        address: "somthing street",
-        build_number: 11
-      }
+      customerAccount: { username: "", name: "", pointBalance: "", role: "" },
+      customerAddress: { buildingNo: "", street: "", town: "", account: null },
+      timeslots: [],
+      products: [],
+      deliveryTime: null,
+      pickupTime: null,
+      expirationDate: null,
+      cvv: null,
+      ccn: null,
+      cardHolder: null,
+      hours: []
     };
   },
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+    this.refresh();
+  },
   methods: {
+    computeHours(id) {
+      const array = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ];
+      var day = new Date(document.getElementById(id).value);
+
+      for (var i = 0; i < this.store.businessHours.length; i++) {
+        if (
+          array[day.getDay()].localeCompare(
+            this.store.businessHours[i].dayOfWeek
+          ) == 0
+        ) {
+          var startTime = this.store.businessHours[i].startTime;
+          var endTime = this.store.businessHours[i].endTime;
+          var startHour = parseInt(startTime.split(":")[0]);
+          var endHour = parseInt(endTime.split(":")[0]);
+          this.timeslots = [];
+          for (var i = startHour; i < endHour; i++) {
+            this.timeslots.push(
+              i.toString() + ":00:00 - " + (i + 1).toString() + ":00:00"
+            );
+          }
+          break;
+        }
+      }
+    },
+    refresh() {
+      var username = localStorage.getItem("token");
+      AXIOS.get("/api/cart/cart/" + username)
+        .then(response => {
+          this.products = response.data.items;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("/api/store/store")
+        .then(response => {
+          this.store = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("/api/account/".concat(username))
+        .then(response => {
+          this.customerAccount = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+          return;
+        });
+      AXIOS.get("/api/address/address/".concat(username))
+        .then(response => {
+          this.customerAddress = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+    },
     calculateSum: function(products) {
       var sum = 0;
       for (var i = 0; i < products.length; i++) {
-        sum += products[i].price * products[i].quantity;
+        sum += products[i].price;
       }
       return sum;
     },
@@ -472,9 +411,9 @@ export default {
       }
     },
     applyPoints() {
-      let dis = document.getElementById("points").value;
+      let dis = this.$refs.points.value;
       if (this.points >= dis) {
-        this.discount += dis * 0.01;
+        this.discount += (dis * 1) / this.store.pointToCashRatio;
         this.points -= dis;
       }
     },
@@ -484,19 +423,97 @@ export default {
     updateDelivery(newMethod) {
       this.delivery_option = newMethod;
     },
-    logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
+    checkout() {
+      if (this.cardHolder == null) {
+        window.alert("Please insert card holder name");
+      } else if (this.ccn == null) {
+        window.alert("Please insert credit card number");
+      } else if (this.expirationDate == null) {
+        window.alert("Please pick an expiration date");
+      } else if (this.cvv == null) {
+        window.alert("Please enter a cvv");
+      } else if (this.$refs.delivery.checked) {
+        AXIOS.put(
+          "/api/cart/chooseOrderType/" +
+            this.customerAccount.username +
+            "?orderType=Delivery"
+        )
+          .then(response => {
+            var date = document.getElementById("deliveryDate");
+            const timeslot = this.$refs.deliveryTime.children[
+              this.$refs.deliveryTime.selectedIndex
+            ];
+            var startTime = timeslot.textContent.split("-")[0].trim();
+            var endTime = timeslot.textContent.split("-")[1].trim();
+            AXIOS.put(
+              "/api/cart/pickTimeSlot/" +
+                this.customerAccount.username +
+                "?startDate=" +
+                date.value +
+                "&endDate=" +
+                date.value +
+                "&startTime=" +
+                startTime +
+                "&endTime=" +
+                endTime
+            )
+              .then(response => {
+                AXIOS.post(
+                  "/api/order/checkout/" + this.customerAccount.username
+                )
+                  .then(response => {
+                    console.log(response.data)
+                  })
+                  .catch(e => {
+                    window.alert(e.response.data);
+                  });
+              })
+              .catch(e => {
+                window.alert(e.response.data);
+              });
+          })
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      } else {
+        AXIOS.put(
+          "/api/cart/chooseOrderType/" +
+            this.customerAccount.username +
+            "?orderType=PickUp"
+        )
+          .then(response => {})
+          .catch(e => {
+            window.alert(e.response.data);
+          });
+      }
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        this.$router.push("/Login");
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
+.btn {
+  margin-top: 10 px;
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
+}
 h1,
 h2 {
   font-weight: normal;

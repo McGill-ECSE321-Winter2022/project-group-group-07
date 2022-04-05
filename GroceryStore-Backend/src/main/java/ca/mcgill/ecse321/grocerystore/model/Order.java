@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.grocerystore.model;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -25,7 +24,7 @@ public abstract class Order {
 	private Time purchaseTime;
 
 	// association fields
-	private List<Item> items;
+	private Set<Item> items;
 	private Account account;
 
 	@Id
@@ -72,11 +71,11 @@ public abstract class Order {
 	}
 
 	@OneToMany
-	public List<Item> getItems() {
+	public Set<Item> getItems() {
 		return this.items;
 	}
 
-	public void setItems(List<Item> items) {
+	public void setItems(Set<Item> items) {
 		this.items = items;
 	}
 

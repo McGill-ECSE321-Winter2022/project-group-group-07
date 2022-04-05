@@ -395,7 +395,7 @@ public class testGroceryStoreService {
 				Cart cart = new Cart();
 				cart.setAccount(new Account());
 				cart.setCartID(1L);
-				cart.setItems(new ArrayList<Item>());
+				cart.setItems(new HashSet<Item>());
 				cart.setTotalValue(0f);
 				cart.setNumOfItems(0);
 				cart.setOrderType(OrderType.Delivery);
@@ -1121,12 +1121,11 @@ public class testGroceryStoreService {
 		String email = null;
 		Integer employeeDiscountRate = null;
 		Float pointToCashRatio = null;
-		String error = null;
 		Store testStore = null;
 		try {
 			testStore = service.createStore(name, address, phoneNumber, email, employeeDiscountRate, pointToCashRatio);
 		} catch (IllegalArgumentException e) {
-			error = e.getMessage();
+			
 		}
 		assertNull(testStore);
 	}

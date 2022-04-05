@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -25,16 +24,28 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
       </div>
@@ -234,7 +245,7 @@ export default {
       clerk: false,
       deliveryPerson: false,
       cashier: false,
-      owner:false,
+      owner: false,
       customer: true,
       username: "",
       password: "",
@@ -256,10 +267,12 @@ export default {
   },
   created: function() {
     this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
     this.refreshEmployees();
     this.refreshSchedule();
   },
@@ -276,8 +289,23 @@ export default {
           document.getElementById("Role").value
       )
         .then(response => {
-          this.refreshEmployees();
-          this.clearFields();
+          AXIOS.post(
+            "/api/address/address/" +
+              this.username +
+              "?buildingNo=" +
+              this.buildingNumber +
+              "&street=" +
+              this.street +
+              "&town=" +
+              this.town
+          )
+            .then(response => {
+              this.refreshEmployees();
+              this.clearFields();
+            })
+            .catch(e => {
+              window.alert(e.reponse.data);
+            });
         })
         .catch(e => {
           window.alert(e.reponse.data);
@@ -318,12 +346,13 @@ export default {
       const opt = inf.children[inf.selectedIndex];
       var str = opt.textContent.split(" ");
       var username = str[1];
-      AXIOS.delete("/api/account/fireEmployee/" + username).then(response =>{
-         this.refreshEmployees();
-      }).catch(e => {
-        window.alert(e.response.data);
-      });
-     
+      AXIOS.delete("/api/account/fireEmployee/" + username)
+        .then(response => {
+          this.refreshEmployees();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
     refreshSchedule() {
       AXIOS.get("api/store/businessHours/Monday")
@@ -463,11 +492,13 @@ export default {
           this.startTime +
           "&endTime=" +
           this.endTime
-      ).then(response => {
-        this.refreshEmployeeSchedule();
-      }).catch(e => {
-        window.alert(e.response.data);
-      });
+      )
+        .then(response => {
+          this.refreshEmployeeSchedule();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
     updateWorkingHour() {
       const inf = this.$refs.employeeDisplay;
@@ -476,32 +507,38 @@ export default {
       var username = str[1];
       var select = document.getElementById("days");
       var day = select.options[select.selectedIndex].value;
-      AXIOS.put("/api/schedule/updateWorkingHour/" + username + "?dayOfWeek=" +
+      AXIOS.put(
+        "/api/schedule/updateWorkingHour/" +
+          username +
+          "?dayOfWeek=" +
           day +
           "&startTime=" +
           this.startTime +
           "&endTime=" +
-          this.endTime).then(response => {
-        this.refreshEmployeeSchedule();
-      }).catch(e => {
-        window.alert(e.response.data);
-      });
+          this.endTime
+      )
+        .then(response => {
+          this.refreshEmployeeSchedule();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
-    clearFields(){
-      this.username="";
-      this.password= "";
-      this.name="";
-      this.buildingNumber=null;
-      this.street="";
-      this.town="";    },
-      logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
+    clearFields() {
+      this.username = "";
+      this.password = "";
+      this.name = "";
+      this.buildingNumber = null;
+      this.street = "";
+      this.town = "";
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        this.$router.push("/Login");
+      }
+    }
   }
 };
 </script>

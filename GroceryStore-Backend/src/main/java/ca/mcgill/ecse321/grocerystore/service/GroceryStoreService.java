@@ -542,7 +542,7 @@ public class GroceryStoreService {
 
 		Account account = getAccount(username);
 		Cart cart = new Cart();
-		List<Item> items = new ArrayList<Item>();
+		Set<Item> items = new HashSet<Item>();
 
 		cart.setAccount(account);
 		cart.setNumOfItems(0);
@@ -625,7 +625,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
+	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
@@ -669,25 +669,48 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Order checkout(String username) {
-		Order order;
 		Cart cart = getCartByAccount(username);
 		if (cart.getOrderType().equals(OrderType.PickUp)) {
-			order = new PickUpOrder();
+			PickUpOrder order = new PickUpOrder();
+			if (paymentSimulator()) {
+				
+				Set<Item> items = new HashSet<>(cart.getItems());
+				order.setAccount(cart.getaccount());
+				order.setDate(getCurrentDate());
+				order.setTimeSlot(cart.getTimeSlot());
+				order.setStatus(PickUpOrderStatus.Pending);
+				order.setPurchaseTime(getCurrentTime());
+				order.setTotalValue(cart.getTotalValue());
+				order.setItems(items);
+				
+				pickUpOrderRepository.save(order);
+				
+
+				emptyCart(cart);
+			}
+			return order;
 		} else if (cart.getOrderType().equals(OrderType.Delivery)) {
-			order = new DeliveryOrder();
+			DeliveryOrder order = new DeliveryOrder();
+			if (paymentSimulator()) {
+				
+			
+				Set<Item> items = new HashSet<>(cart.getItems());
+				order.setAccount(cart.getaccount());
+				order.setDate(getCurrentDate());
+				order.setTimeSlot(cart.getTimeSlot());
+				order.setStatus(DeliveryOrderStatus.Pending);
+				order.setPurchaseTime(getCurrentTime());
+				order.setTotalValue(cart.getTotalValue());
+				order.setItems(items);
+				deliveryOrderRepository.save(order);
+		
+				emptyCart(cart);
+			}
+			return order;
 		} else {
 			throw new IllegalArgumentException("Order must be either a pickup or delivery");
 		}
-		if (paymentSimulator()) {
-			order.setAccount(cart.getaccount());
-			order.setDate(getCurrentDate());
-			order.setItems(cart.getItems());
-			order.setPurchaseTime(getCurrentTime());
-			order.setTotalValue(cart.getTotalValue());
-			orderRepository.save(order);
-			emptyCart(cart);
-		}
-		return order;
+		
 	}
 
 	@Transactional
@@ -696,7 +719,7 @@ public class GroceryStoreService {
 		cart.setTotalValue(0f);
 		cart.setNumOfItems(0);
 		cart.setOrderType(null);
-		List<Item> items = cart.getItems();
+		Set<Item> items = cart.getItems();
 		items.clear();
 		cart.setItems(items);
 
@@ -704,7 +727,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
+	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
@@ -732,7 +755,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		Float totalValue = Float.valueOf(0);
@@ -750,7 +773,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items, Account account) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items, Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		float totalValue = 0;

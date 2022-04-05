@@ -5,7 +5,6 @@ import java.sql.Time;
 import java.util.List;
 
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.PickUpOrderStatus;
-import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
 
 public class PickUpOrderDto extends OrderDto {
 

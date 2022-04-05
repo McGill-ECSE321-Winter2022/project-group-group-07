@@ -150,7 +150,7 @@ public class OrderController {
 	@PostMapping(value = { "/createInStoreOrder", "/createInStoreOrder/" })
 	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam String[] items) {
-		List<Item> itemslist = new ArrayList<Item>();
+		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
 			Item i1 = null;
 			Item i2 = null;
@@ -181,7 +181,7 @@ public class OrderController {
 	@PostMapping(value = { "/createInStoreOrder/{username}", "/createInStoreOrderF/{username}/" })
 	public ResponseEntity<?> createInStoreOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam String[] items, @PathVariable("username") String username) {
-		List<Item> itemslist = new ArrayList<Item>();
+		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
 			Item i1 = null;
 			Item i2 = null;
@@ -214,7 +214,7 @@ public class OrderController {
 	public ResponseEntity<?> createDeliveryOrder(@PathVariable("username") String username, @RequestParam Date date,
 			@RequestParam Time purchaseTime, @RequestParam String[] items, @RequestParam Date startDate,
 			@RequestParam Date endDate, @RequestParam Time startTime, @RequestParam Time endTime) {
-		List<Item> itemslist = new ArrayList<Item>();
+		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
 			Item i1 = null;
 			Item i2 = null;
@@ -251,7 +251,7 @@ public class OrderController {
 	public ResponseEntity<?> createPickUpOrder(@RequestParam Date date, @RequestParam Time purchaseTime,
 			@RequestParam String[] items, @RequestParam Date startDate, @RequestParam Date endDate,
 			@RequestParam Time startTime, @RequestParam Time endTime, @PathVariable("username") String username) {
-		List<Item> itemslist = new ArrayList<Item>();
+		Set<Item> itemslist = new HashSet<Item>();
 		for(String i : items) {
 			Item i1 = null;
 			Item i2 = null;

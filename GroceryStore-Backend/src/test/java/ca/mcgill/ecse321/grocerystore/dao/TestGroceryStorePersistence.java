@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -438,7 +437,7 @@ public class TestGroceryStorePersistence {
 		cart.setTotalValue(totalValue);
 		cart.setNumOfItems(numberOfItems);
 
-		List<Item> items = new ArrayList<Item>();
+		Set<Item> items = new HashSet<Item>();
 		cart.setItems(items);
 
 		Date startDate = Date.valueOf("2022-02-02");
@@ -546,7 +545,7 @@ public class TestGroceryStorePersistence {
 		Time time = Time.valueOf("14:02:03");
 		order.setPurchaseTime(time);
 
-		List<Item> set = new ArrayList<Item>();
+		Set<Item> set = new HashSet<Item>();
 		order.setItems(set);
 
 		order.setTotalValue(50f);
@@ -594,7 +593,7 @@ public class TestGroceryStorePersistence {
 
 		nonPerishableItemRepository.save(nonPerishable);
 
-		List<Item> set = new ArrayList<Item>();
+		Set<Item> set = new HashSet<Item>();
 		pickUpOrder.setItems(set);
 
 		Time time = Time.valueOf("14:02:03");
@@ -698,7 +697,17 @@ public class TestGroceryStorePersistence {
 		Date date = Date.valueOf("2022-01-02");
 		deliveryOrder.setDate(date);
 
-		List<Item> set = new ArrayList<Item>();
+		Set<Item> set = new HashSet<Item>();
+		PerishableItem perishable = new PerishableItem();
+
+		perishable.setProductName("Apple");
+		perishable.setAvailableOnline(true);
+		perishable.setNumInStock(1);
+		perishable.setPointPerItem(5);
+		perishable.setPrice((float) 2.0);
+		set.add(perishable);
+		perishableItemRepository.save(perishable);
+		
 		deliveryOrder.setItems(set);
 
 		Time time = Time.valueOf("14:02:03");
