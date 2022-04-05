@@ -2,43 +2,7 @@
   <div class="terminal" style="background-color: grey; height:100%; position:fixed; width:100%;">
   <div class="navbar">
       <label>AppName</label>
-      <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
-        </button>
-        <button v-if="customer" onclick="location.href = '/#/Cart';">
-          Cart
-        </button>
-        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
-          Order Status
-        </button>
-        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
-          Account Information
-        </button>
-        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
-          Terminal
-        </button>
-        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
-          Pickup Orders
-        </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
-          Delivery Orders
-        </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
-        </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
-        </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
-        </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
-        </button>
-      </div>
-      <div><button @click="logout()">Logout</button></div>
-    </div>
+  </div>
   <div class="modal" ref="modal">
     <div class="payment_info">
             <div style="margin-top:10%;" class="infor_label">
@@ -248,14 +212,14 @@ export default {
             this.$refs.modal.style.display = "none";
             this.user2 = null;
         },
-        logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
+         logout: function() {
+          if (confirm("Press OK to logout")) {
+            localStorage.removeItem("role");
+            localStorage.removeItem("token");
+            localStorage.removeItem("pointBalance")
+           this.$router.push("/Login");
+          }
+         },
     },
     components: { Button }
 }

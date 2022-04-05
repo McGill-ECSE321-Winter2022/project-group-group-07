@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -42,11 +42,19 @@
         >
           Account Information
         </button>
-        <button
-          v-if="owner"
-          onclick="location.href = '/#/AccountInfoEmployee';"
-        >
-          Account Information
+
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -62,9 +70,7 @@
             <Product
               :product="product"
               cart="true"
-              @remove="updateCart(product, 'remove')"
-              @add="updateCart(product, 'add')"
-              @subtract="updateCart(product, 'subtract')"
+              @remove-item="updateCart(product)"
             />
           </div>
         </section>
@@ -81,7 +87,7 @@
           <Button
             text="Proceed to Checkout"
             color="black"
-            @btn-click="routeToCheckout()"
+            @btn-click="routeToCheckout"
           />
         </div>
       </div>
@@ -128,49 +134,44 @@ export default {
       owner: false,
       customer: true,
       payMethod: 0,
-      points: 10000,
+      points: 0,
       discount: 0,
       products: []
     };
   },
   methods: {
-    refreshCart(){
+    refreshCart() {
       var username = localStorage.getItem("token");
-        AXIOS.get("/api/cart/cart/" + username).then(response => {
-          this.products=response.data.items;
-        }).catch(e => {
-          window.alert(e.response.data);
+      AXIOS.get("/api/cart/cart/" + username)
+        .then(response => {
+          this.products = response.data.items;
         })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
     calculateSum: function(products) {
       var sum = 0;
       for (var i = 0; i < products.length; i++) {
-        sum += products[i].price * products[i].numInStock;
+        sum += products[i].price;
       }
       return sum;
     },
     nothing: function() {
       return 0;
     },
-
-    updateCart(product, updateType) {
-      for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === product.id) {
-          if (updateType === "subtract") {
-            if (this.products[i].quantity !== 0) {
-              this.products[i].quantity--;
-            }
-          } else if (updateType === "add") {
-            if (this.products[i].quantity < this.products[i].inventory) {
-              this.products[i].quantity++;
-            }
-          } else if (updateType === "remove") {
-            this.products.splice(i, 1);
-          }
-
-          break;
-        }
-      }
+    routeToCheckout() {
+      this.$router.push("/Checkout");
+    },
+    updateCart(product) {
+      var username = localStorage.getItem("token");
+      AXIOS.put("/api/cart/removeFromCart/" + product.itemID + "?username=" + username)
+        .then(response => {
+          this.refreshCart();
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
     },
     applyPoints() {
       let dis = document.getElementById("points").value;
@@ -186,6 +187,7 @@ export default {
       if (confirm("Press OK to logout")) {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
         this.$router.push("/Login");
       }
     }

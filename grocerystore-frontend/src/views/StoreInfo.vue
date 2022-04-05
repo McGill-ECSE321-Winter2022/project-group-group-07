@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -15,7 +15,6 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
         <button v-if="cashier" onclick="location.href = '/#/Terminal';">
           Terminal
         </button>
@@ -25,17 +24,37 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
+
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -201,7 +220,7 @@ export default {
         clerk: false,
         deliveryPerson: false,
         cashier: false,
-        owner:false,
+        owner: false,
         customer: true,
         name: "",
         address: "",
@@ -232,10 +251,12 @@ export default {
     this.refreshStoreInfo();
     this.refreshSchedule();
     this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
   },
   methods: {
     setupStoreInfo() {
@@ -369,7 +390,7 @@ export default {
         .catch(e => {
           window.alert(e.response.data);
         });
-        return;
+      return;
     },
     refreshStoreInfo() {
       AXIOS.get("api/store/store")
@@ -380,14 +401,14 @@ export default {
           return;
         });
     },
-    logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
+        this.$router.push("/Login");
+      }
+    }
   }
 };
 </script>

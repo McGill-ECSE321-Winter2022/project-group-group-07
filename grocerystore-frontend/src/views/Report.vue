@@ -1,14 +1,67 @@
 <template>
   <div class="Report" overflow="auto" style="background-color:white; height:100%; position:fixed; width:100%;">
-  <div class = "navbar">
-  <label>AppName</label>
-  <div>
-  <button>Button 1</button> 
-  <button>Button 2</button>
-  <button>Button 3</button>
-  </div>
-  <div><button>Button 4</button></div>
-  </div>
+ <div class="navbar">
+      <label>AppName</label>
+      <div>
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        
+        <button
+          v-if="owner"
+          onclick="location.href = '/#/Report';"
+        >
+          Generate Report
+        </button>
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
+        </button>
+      </div>
+      <div><button @click="logout()">Logout</button></div>
+    </div>
   <h1 style="margin-top:1%;">Generate Report</h1>
   <div style="display:inline-flex; margin-top:1%; padding: 2%; width: 70%;">
   <div style="display:table; padding: 5%; width:50%;">
@@ -21,14 +74,14 @@
   </div>
   </div>
   <div>
-  <button @click="genReport()" style="margin-top:1%;">Generate Report</button>
+  <Button @btn-click="genReport()"  style="margin-top:1%;" text="Generate Report" color="black" />
   <div>
       <section style="background-color:whitesmoke;" class="reportdisplay" v-if="reportID">
                     <label>ReportID: {{ reportID }}</label>
                     <label>Start Date: {{ start }}</label>
                     <label>End Date: {{ end }}</label>
                     <label>Total Value: {{ reportTotalValue }}</label>
-                    <div v-for="order in orders" :key="order.orderID" class="product">
+                    <div v-for="order in orders" :key="order.orderID" class="products">
                         <Order
                             :order="order"
                         />
@@ -42,6 +95,7 @@
 
 <script>
 import Order from "../components/Order.vue";
+
 import axios from 'axios'
 import { ListGroupPlugin } from 'bootstrap-vue'
 import Button from '../components/Button.vue'
@@ -57,10 +111,15 @@ var AXIOS = axios.create({
 export default {
     name: "Report",
     components:{
-        Order
+        Order,
+        Button
     },
     data() {
-        return {
+        return {clerk: false,
+          deliveryPerson: false,
+          cashier: false,
+          owner: false,
+           customer: true,
             start:null,
             end:null,
             reportID: null,
@@ -69,8 +128,27 @@ export default {
         };
     },
     created: function () {
+         this.clerk = localStorage.getItem("role").includes("Clerk");
+         this.deliveryPerson = localStorage
+          .getItem("role")
+         .includes("DeliveryPerson");
+          this.cashier = localStorage.getItem("role").includes("Cashier");
+         this.owner = localStorage.getItem("role").includes("Owner");
+          this.customer = localStorage.getItem("role").includes("Customer");
+          var username = localStorage.getItem("token");
+     if (username == null) {
+      this.$router.push("/");
+    }
     },
-    methods: {
+    methods: { 
+         logout: function() {
+          if (confirm("Press OK to logout")) {
+               localStorage.removeItem("role");
+                localStorage.removeItem("token");
+                localStorage.removeItem("pointBalance")
+             this.$router.push("/Login");
+           }
+          },
         genReport: function () {
             if(!this.start){
                 window.alert("No start date was entered for the Report.")
@@ -89,6 +167,9 @@ export default {
                     if (response.data[i].startDate.localeCompare(this.start) == 0 && response.data[i].endDate.localeCompare(this.end) == 0) {
                         b = true;
                         report = response.data[i];
+                                            this.reportID = report.reportID;
+                    this.reportTotalValue = report.totalValue;
+                    this.orders = report.orders;
                         break;
                     }
                 }
@@ -104,14 +185,6 @@ export default {
                     window.alert("Network Error.");
                     return;
                     });
-                }
-                else {
-                    //show report
-                    console.log(report.orders);
-                    this.reportID = report.reportID;
-                    this.reportTotalValue = report.totalValue;
-                    this.orders = report.orders;
-                    console.log(this.orders);
                 }
             })
             .catch(e => {
@@ -169,5 +242,19 @@ export default {
 }
 .reportdisplay label {
     margin-top: 2%;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
 }
 </style>

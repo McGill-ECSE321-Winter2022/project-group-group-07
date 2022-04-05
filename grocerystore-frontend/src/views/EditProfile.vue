@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -24,17 +24,37 @@
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
+       
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button onclick="history.back()">Return</button></div>
@@ -46,17 +66,17 @@
         <label style="font-size: 24px">Update Name</label>
         <CustomInput
           label="Current username:"
-          type="text" 
-          :value="username"
-          @change="v => (username = v)"
+          type="text"
+          :value="username1"
+          @change="v => (username1 = v)"
         />
-         <CustomInput
+        <CustomInput
           label="New name:"
-          type="text" 
+          type="text"
           :value="newName"
           @change="v => (newName = v)"
         />
-        <br/>
+        <br />
         <button class="button" @click="changeName()">Update</button>
         <span v-if="errorName" style="color:red">Error: {{ errorName }} </span>
       </form>
@@ -67,34 +87,36 @@
         <CustomInput
           label="Current username:"
           type="text"
-          v-bind="username"
-          @change="v => (username = v)"
+          v-bind="username2"
+          @change="v => (username2 = v)"
         />
-         <CustomInput
+        <CustomInput
           label="Current password:"
           type="text"
           :value="oldPassword"
           @change="v => (oldPassword = v)"
         />
-         <CustomInput
+        <CustomInput
           label="New password:"
           type="text"
           :value="newPassword"
           @change="v => (newPassword = v)"
         />
-        <br/>
+        <br />
         <button class="button" @click="changePassword()">Update</button>
-        <span v-if="errorPassword" style="color:red">Error: {{ errorPassword }} </span>
+        <span v-if="errorPassword" style="color:red"
+          >Error: {{ errorPassword }}
+        </span>
       </form>
     </div>
     <div class="column3">
-         <form style="margin-top:20px; margin-left:40px;">
+      <form style="margin-top:20px; margin-left:40px;">
         <label style="font-size: 20px; margin-top:1em;">Update Address</label>
-         <CustomInput
+        <CustomInput
           label="Current username"
           type="text"
-          :value="username"
-          @change="v => (username = v)"
+          :value="username3"
+          @change="v => (username3 = v)"
         />
         <CustomInput
           label="Bulding No."
@@ -104,7 +126,8 @@
         />
         <CustomInput
           label="Street"
-          type="text" :value="street"
+          type="text"
+          :value="street"
           @change="v => (street = v)"
         />
         <CustomInput
@@ -113,111 +136,138 @@
           :value="town"
           @change="v => (town = v)"
         />
-        <br/>
+        <br />
         <button class="button" @click="changeAddress()">Update</button>
-        <span v-if="errorAddress" style="color:red">Error: {{ errorAddress }} </span>
-         </form>
+        <span v-if="errorAddress" style="color:red"
+          >Error: {{ errorAddress }}
+        </span>
+      </form>
     </div>
-    <br/>
-</div>
-
+    <br />
+  </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 import CustomInput from "../components/CustomInput.vue";
-var config = require('../../config')
+var config = require("../../config");
 
-var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+  headers: { "Access-Control-Allow-Origin": frontendUrl }
+});
 
 export default {
-    name: 'AccountInfoScript',
-    components: {
-        CustomInput
-    },
-    data () {
-        return {
-            clerk: false,
-            deliveryPerson: false,
-            cashier: false,
-            owner:false,
-           customer: true,
-            username: '',
-            newName: '',
-            errorName: '',
-            oldPassword: '',
-            newPassword: '',
-            errorPassword: '',
-            buildingNo: '',
-            street: '',
-            town: '',
-            errorAddress: ''
-        }
-      },
-      created: function () {
-        this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
-      },
-    
-    methods: {
-        changeName: function(){
-            var username = this.username
-            var newName = this.newName
-            AXIOS.put('/api/account/updateName/'.concat(username).concat('?newName=').concat(newName))
-            .then(response => {
-                this.errorName = ''
-            })
-            .catch(e => {
-                window.alert(e.response.data)
-            })
-        },
-        changePassword: function(){
-            var username = this.username
-            var oldPassword = this.oldPassword
-            var newPassword = this.newPassword
-             AXIOS.put('/api/account/updatePassword/'.concat(username).concat('?oldPassword=').concat(oldPassword).concat('&newPassword=').concat(newPassword))
-            .then(response => {
-                this.errorPassword = ''
-            })
-            .catch(e => {
-                var errorMsg = e.response.data.message
-                console.log(errorMsg)
-                this.errorPassword = errorMsg
-            })
-        },
-        changeAddress: function(){
-            var username = this.username
-            var buildingNo = this.buildingNo
-            var street = this.street
-            var town = this.town
-             AXIOS.put('/api/address/updateAddress/'.concat(username).concat('?buildingNo=').concat(buildingNo).concat('&street=').concat(street).concat('&town=').concat(town))
-            .then(response => {
-                this.errorAddress = ''
-            })
-            .catch(e => {
-                var errorMsg = e.response.data.message
-                console.log(errorMsg)
-                this.errorAddress = errorMsg
-            })
-        },
-        logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
+  name: "AccountInfoScript",
+  components: {
+    CustomInput
+  },
+  data() {
+    return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: true,
+      username1: "",
+      username2: "",
+      username3: "",
+      newName: "",
+      errorName: "",
+      oldPassword: "",
+      newPassword: "",
+      errorPassword: "",
+      buildingNo: "",
+      street: "",
+      town: "",
+      errorAddress: ""
+    };
+  },
+  created: function() {
+    this.clerk = localStorage.getItem("role").includes("Clerk");
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+  },
 
-            }
-        },
+  methods: {
+    changeName: function() {
+      var username = this.username1;
+      var newName = this.newName;
+      AXIOS.put(
+        "/api/account/updateName/"
+          .concat(username)
+          .concat("?newName=")
+          .concat(newName)
+      )
+        .then(response => {
+          this.$router.push("/AccountInfo");
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+    },
+    changePassword: function() {
+      var username = this.username2;
+      var oldPassword = this.oldPassword;
+      var newPassword = this.newPassword;
+      AXIOS.put(
+        "/api/account/updatePassword/"
+          .concat(username)
+          .concat("?oldPassword=")
+          .concat(oldPassword)
+          .concat("&newPassword=")
+          .concat(newPassword)
+      )
+        .then(response => {
+           this.$router.push("/AccountInfo");
+        })
+        .catch(e => {
+          var errorMsg = e.response.data.message;
+          console.log(errorMsg);
+          this.errorPassword = errorMsg;
+        });
+    },
+    changeAddress: function() {
+      var username = this.username3;
+      var buildingNo = this.buildingNo;
+      var street = this.street;
+      var town = this.town;
+      AXIOS.put(
+        "/api/address/updateAddress/"
+          .concat(username)
+          .concat("?buildingNo=")
+          .concat(buildingNo)
+          .concat("&street=")
+          .concat(street)
+          .concat("&town=")
+          .concat(town)
+      )
+        .then(response => {
+           this.$router.push("/AccountInfo");
+        })
+        .catch(e => {
+          var errorMsg = e.response.data.message;
+          console.log(errorMsg);
+          this.errorAddress = errorMsg;
+        });
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
+        this.$router.push("/Login");
+      }
     }
-}
+  }
+};
 </script>
 
 <style scoped>
@@ -264,8 +314,8 @@ export default {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin-top:10px;
-  width:150px;
+  margin-top: 10px;
+  width: 150px;
   cursor: pointer;
 }
 </style>

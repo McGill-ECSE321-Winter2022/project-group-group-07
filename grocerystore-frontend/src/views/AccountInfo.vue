@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -42,11 +42,19 @@
         >
           Account Information
         </button>
-        <button
-          v-if="owner"
-          onclick="location.href = '/#/AccountInfoEmployee';"
-        >
-          Account Information
+      
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
@@ -78,12 +86,18 @@
       <label id="points"> {{ customerAccount.pointBalance }} </label><br />
       <span v-if="errorName" style="color:red">Error: {{ errorAddress }} </span>
       <br />
-      <a href="/#/EditProfile"><button>Edit Account Informations</button></a
-      ><br />
+      <Button
+        @btn-click="routeToEdit"
+        text="Edit Account Information"
+        color="black"
+        style="width: auto"
+      />
+      <br />
     </div>
   </div>
 </template>
 <script>
+import Button from "../components/Button.vue";
 import axios from "axios";
 var config = require("../../config");
 
@@ -98,7 +112,9 @@ var AXIOS = axios.create({
 
 export default {
   name: "AccountInfoScript",
-
+  components: {
+    Button
+  },
   data() {
     return {
       clerk: false,
@@ -156,8 +172,12 @@ export default {
       if (confirm("Press OK to logout")) {
         localStorage.removeItem("role");
         localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
         this.$router.push("/Login");
       }
+    },
+    routeToEdit(){
+     this.$router.push("/EditProfile");
     }
     /*changeName: function(){
             let username = prompt("Please enter your current Username", "Enter username");
@@ -241,5 +261,19 @@ export default {
   border-style: solid;
   border-color: azure;
   border-radius: 0.5em;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
 }
 </style>

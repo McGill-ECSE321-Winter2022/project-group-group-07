@@ -2,7 +2,7 @@ package ca.mcgill.ecse321.grocerystore.controller;
 
 import java.sql.Time;
 import java.time.LocalTime;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.grocerystore.dto.BusinessHourDto;
 import ca.mcgill.ecse321.grocerystore.dto.StoreDto;
 import ca.mcgill.ecse321.grocerystore.model.BusinessHour;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem;
-import ca.mcgill.ecse321.grocerystore.model.Store;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
+import ca.mcgill.ecse321.grocerystore.model.Store;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
@@ -141,8 +140,12 @@ public class StoreController {
 	}
 
 	private StoreDto convertToDto(Store store) {
+		ArrayList<BusinessHourDto> bhdto= new ArrayList<>();
+		for(BusinessHour bh :service.getAllBusinessHours()) {
+			bhdto.add(convertToDto(bh));
+		}
 		return new StoreDto(store.getName(), store.getAddress(), store.getPhoneNumber(), store.getEmail(),
-				store.getEmployeeDiscountRate(), store.getPointToCashRatio());
+				store.getEmployeeDiscountRate(), store.getPointToCashRatio(),bhdto);
 	}
 
 	private BusinessHourDto convertToDto(BusinessHour businessHour) {

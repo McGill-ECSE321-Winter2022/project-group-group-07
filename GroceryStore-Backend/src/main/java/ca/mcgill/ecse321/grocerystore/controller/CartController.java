@@ -2,12 +2,10 @@ package ca.mcgill.ecse321.grocerystore.controller;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,11 +26,11 @@ import ca.mcgill.ecse321.grocerystore.dto.TimeSlotDto;
 import ca.mcgill.ecse321.grocerystore.model.Account;
 import ca.mcgill.ecse321.grocerystore.model.AccountRole;
 import ca.mcgill.ecse321.grocerystore.model.Cart;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.TimeSlot;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.OrderType;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
@@ -60,25 +58,33 @@ public class CartController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@PutMapping(value = {"/removeFromCart/{id}"})
+	public ResponseEntity<?> removeFromCart(@PathVariable("id") String id, @RequestParam String username) {
+		try {
+			Long l = Long.parseLong(id);		
+			service.removeFromCart(l, username);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PutMapping(value = { "/addToCart/{id}", "/addToCart/{id}/" })
 	public ResponseEntity<?> addToCart(@PathVariable("id") Long id, String username) {
 		try {
 			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(convertToDto(service.addToCart(id, username)), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(value = { "/pickTimeSlot/{username}", "/pickTimeSlot/{username}/" })
 	public ResponseEntity<?> addTimeSlotToCart(@PathVariable("username") String username, @RequestParam Date startDate,
-			@RequestParam Date endDate,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime startTime,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME, pattern = "HH:mm") LocalTime endTime) {
+			@RequestParam Date endDate, @RequestParam Time startTime, @RequestParam Time endTime) {
 		try {
 			return new ResponseEntity<>(convertToDto(service.addTimeSlotToCart(username,
-					service.createTimeSlot(startDate, endDate, Time.valueOf(startTime), Time.valueOf(endTime)))),
-					HttpStatus.OK);
+					service.createTimeSlot(startDate, endDate, startTime, endTime))), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 		}
@@ -92,16 +98,16 @@ public class CartController {
 					convertToDto(service.chooseOrderTypeForCart(username, OrderType.valueOf(orderType))),
 					HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	private CartDto convertToDto(Cart cart) {
 		List<ItemDto> items = new ArrayList<ItemDto>();
-		TimeSlotDto timeSlot =null;
+		TimeSlotDto timeSlot = null;
 		AccountDto account = convertToDto(cart.getaccount(), cart.getaccount().getAccountRole());
-		if(cart.getTimeSlot() != null) {
-		 timeSlot = convertToDto(cart.getTimeSlot());
+		if (cart.getTimeSlot() != null) {
+			timeSlot = convertToDto(cart.getTimeSlot());
 		}
 		for (Item i : cart.getItems()) {
 			if (i instanceof PerishableItem) {
@@ -127,13 +133,15 @@ public class CartController {
 	private PerishableItemDto convertToDto(PerishableItem perishableItem) {
 		return new PerishableItemDto(perishableItem.getItemID(), perishableItem.getProductName(),
 				perishableItem.getPrice(), perishableItem.getAvailableOnline(), perishableItem.getNumInStock(),
-				perishableItem.getPointPerItem(),perishableItem.getImageLink(),perishableItem.getCategory().toString());
+				perishableItem.getPointPerItem(), perishableItem.getImageLink(),
+				perishableItem.getCategory().toString());
 	}
 
 	private NonPerishableItemDto convertToDto(NonPerishableItem nonPerishableItem) {
 		return new NonPerishableItemDto(nonPerishableItem.getItemID(), nonPerishableItem.getProductName(),
 				nonPerishableItem.getPrice(), nonPerishableItem.getAvailableOnline(), nonPerishableItem.getNumInStock(),
-				nonPerishableItem.getPointPerItem(),nonPerishableItem.getImageLink(),nonPerishableItem.getCategory().toString());
+				nonPerishableItem.getPointPerItem(), nonPerishableItem.getImageLink(),
+				nonPerishableItem.getCategory().toString());
 	}
 
 }
