@@ -68,7 +68,6 @@ export default {
     login: function(){
         AXIOS.post('/api/account/login/?'+"username="+this.username+"&password="+this.password)
         .then(response => {
-          console.log(response.data);
           localStorage.setItem('token',response.data.username);
           localStorage.setItem('pointBalance',response.data.pointBalance);
           localStorage.setItem('role',response.data.role);

@@ -191,6 +191,7 @@ export default {
                 var errorMsg = e.response.data.message
                 console.log(errorMsg)
                 this.errorPassword = errorMsg
+                window.alert(e.response.data);
             })
         },
         changeAddress: function(){

@@ -327,7 +327,7 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Account updateName(String username, String newName) {
-		if (newName == null) {
+		if (newName == null || newName.trim().length() <= 0) {
 			throw new IllegalArgumentException("Your name cannot be blank.");
 		}
 		Account account = accountRepository.findByUsername(username);
