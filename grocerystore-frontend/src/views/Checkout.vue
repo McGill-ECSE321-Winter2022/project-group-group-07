@@ -240,7 +240,7 @@
             </div>
           </div>
           <div class="orderSummary">
-            <p>Subtotal: {{ calculateSum(products) }} CAD</p>
+            <p>Subtotal: {{ calculateSum(products).toFixed(2) }} CAD</p>
             <p>Discount: {{ discount.toFixed(2) }} CAD</p>
             <p>
               <b>

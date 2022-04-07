@@ -81,8 +81,7 @@
           <h2>Order summary</h2>
         </div>
         <div class="orderSummary">
-          <p>Subtotal: {{ calculateSum(products) }} CAD</p>
-          <p>Discount: {{ discount.toFixed(2) }} CAD</p>
+          <p>Subtotal: {{ calculateSum(products).toFixed(2) }} CAD</p>
           <p>Total: {{ (calculateSum(products) - discount).toFixed(2) }} CAD</p>
           <Button
             text="Proceed to Checkout"

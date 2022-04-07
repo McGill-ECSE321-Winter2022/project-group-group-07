@@ -244,6 +244,7 @@ export default {
               itm.category +
               " In stock: " +
               itm.numInStock;
+              opt.value = itm.itemID;
             lst.appendChild(opt);
           }
         })
@@ -328,8 +329,8 @@ export default {
     restock() {
       const lst = this.$refs.itemDisplay;
       const itm = lst.children[lst.selectedIndex];
-      var str = itm.textContent.split(" ");
-      var id = str[4];
+      
+      var id = itm.value;
       if (id == null) {
         window.alert("pick an item");
       } else if (this.quantity == null) {

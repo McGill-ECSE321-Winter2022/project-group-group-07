@@ -251,7 +251,7 @@ public class GroceryStoreService {
 		if (username == null || name.trim().length() == 0) {
 			error = error + "Account username cannot be empty! ";
 		}
-		if (password == null || name.trim().length() <6) {
+		if (password == null || password.trim().length() <6) {
 			error = error + "Your password must at least be 6 characters long! ";
 		}
 		if (name == null || name.trim().length() == 0) {
