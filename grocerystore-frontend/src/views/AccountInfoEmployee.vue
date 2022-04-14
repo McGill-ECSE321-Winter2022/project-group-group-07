@@ -3,8 +3,8 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button v-if="customer" onclick="location.href = '/#/Catalog';">
-          Catalog
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
         <button v-if="customer" onclick="location.href = '/#/Cart';">
           Cart
@@ -15,42 +15,89 @@
         <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
           Account Information
         </button>
-        </button>
-        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
-          Terminal
-        </button>
         <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/PickUp';">
           Pickup Orders
         </button>
         <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
           Delivery Orders
         </button>
-        <button v-if="clerk" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="cashier" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="deliveryPerson" onclick="location.href = '/#/AccountInfoEmployee';">
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
           Account Information
         </button>
-        <button v-if="owner" onclick="location.href = '/#/AccountInfoEmployee';">
-          Account Information
+
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
         </button>
       </div>
       <div><button @click="logout()">Logout</button></div>
     </div>
     <h1 style="margin-top:1%;">Account Information</h1>
 
-    <br>
+    <br />
 
-    <div align="left">
-      <a href="/#/EditProfile"><button>Edit Account Informations</button></a
-      ><br>
+    <div>
+      <div>
+        <label>UserName: </label>
+        <label id="username"> {{ employeeAccount.username }} </label><br />
+        <label>Name: </label>
+        <label id="name"> {{ employeeAccount.name }} </label>
+        <!--button @click="changeName()">Change Name</button>
+      <button @click="changePassword()">Change Password</button><br />-->
 
-      <br>
+        <br />
+
+        <label>Address: </label>
+        <label id="address">
+          {{ employeeAddress.buildingNo }}, {{ employeeAddress.street }},
+          {{ employeeAddress.town }}
+        </label>
+        <!--button @click="changeAddress()">Change Address</button><br />-->
+
+        <br />
+        <label>Current Points: </label>
+        <label id="points"> {{ employeeAccount.pointBalance }} </label><br />
+        <br />
+
+        <br />
+      </div>
+      <Button
+        @btn-click="routeToEdit"
+        text="Edit Account Information"
+        color="black"
+        style="width: auto"
+      /><br />
+
+      <br />
     </div>
-    <br>
+    <br />
     <label style="font-size: 24px">Schedule</label>
     <table>
       <tr>
@@ -97,11 +144,13 @@
   </div>
 </template>
 <script>
+import Button from "../components/Button.vue";
 import axios from "axios";
 var config = require("../../config");
 
 var frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
-var backendUrl ="http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+var backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
@@ -109,12 +158,15 @@ var AXIOS = axios.create({
 });
 export default {
   name: "AccountInfoEmployee",
+  components: {
+    Button
+  },
   data() {
     return {
       clerk: false,
       deliveryPerson: false,
       cashier: false,
-      owner:false,
+      owner: false,
       customer: true,
       MondayH: { startTime: "", endTime: "" },
       TuesdayH: { startTime: "", endTime: "" },
@@ -122,88 +174,106 @@ export default {
       ThursdayH: { startTime: "", endTime: "" },
       FridayH: { startTime: "", endTime: "" },
       SaturdayH: { startTime: "", endTime: "" },
-      SundayH: { startTime: "", endTime: "" }
+      SundayH: { startTime: "", endTime: "" },
+      employeeAddress: { buildingNo: "", street: "", town: "", account: null },
+      employeeAccount: { username: "", name: "", pointBalance: "", role: "" }
     };
   },
   created: function() {
     this.refreshEmployeeSchedule();
+    var username = localStorage.getItem("token");
     this.clerk = localStorage.getItem("role").includes("Clerk");
-    this.deliveryPerson = localStorage.getItem("role").includes("DeliveryPerson") ;
-    this.cashier = localStorage.getItem("role").includes("Cashier") ;
-    this.owner = localStorage.getItem("role").includes("Owner") ;
-    this.customer = localStorage.getItem("role").includes("Customer") ;
+    this.deliveryPerson = localStorage
+      .getItem("role")
+      .includes("DeliveryPerson");
+    this.cashier = localStorage.getItem("role").includes("Cashier");
+    this.owner = localStorage.getItem("role").includes("Owner");
+    this.customer = localStorage.getItem("role").includes("Customer");
+    AXIOS.get("/api/account/".concat(username))
+      .then(response => {
+        this.employeeAccount = response.data;
+        console.log(response.data);
+      })
+      .catch(e => {
+        window.alert(e.response.data);
+        return;
+      }),
+      AXIOS.get("/api/address/address/".concat(username))
+        .then(response => {
+          this.employeeAddress = response.data;
+        })
+        .catch(e => {
+          var errorMsg = e.response.data;
+          console.log(errorMsg);
+        });
   },
 
   methods: {
-     refreshEmployeeSchedule() {
-       var username = localStorage.getItem('token');
-        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Monday")
-          .then(response => {
-            this.MondayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Tuesday")
-          .then(response => {
-            this.TuesdayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get(
-          "api/schedule/workingHour/" + username + "?dayOfWeek=Wednesday"
-        )
-          .then(response => {
-            this.WednesdayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get(
-          "api/schedule/workingHour/" + username + "?dayOfWeek=Thursday"
-        )
-          .then(response => {
-            this.ThursdayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Friday")
-          .then(response => {
-            this.FridayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get(
-          "api/schedule/workingHour/" + username + "?dayOfWeek=Saturday"
-        )
-          .then(response => {
-            this.SaturdayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Sunday")
-          .then(response => {
-            this.SundayH = response.data;
-          })
-          .catch(e => {
-            window.alert(e.response.data);
-          });
-        return;
-      }, 
-      logout: function(){
-            if (confirm("Press OK to logout")) {
-                localStorage.removeItem('role');
-                localStorage.removeItem('token');
-                this.$router.push('/Login');
-
-            }
-        },
+    refreshEmployeeSchedule() {
+      var username = localStorage.getItem("token");
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Monday")
+        .then(response => {
+          this.MondayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Tuesday")
+        .then(response => {
+          this.TuesdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Wednesday")
+        .then(response => {
+          this.WednesdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Thursday")
+        .then(response => {
+          this.ThursdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Friday")
+        .then(response => {
+          this.FridayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Saturday")
+        .then(response => {
+          this.SaturdayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      AXIOS.get("api/schedule/workingHour/" + username + "?dayOfWeek=Sunday")
+        .then(response => {
+          this.SundayH = response.data;
+        })
+        .catch(e => {
+          window.alert(e.response.data);
+        });
+      return;
     },
-    
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
+        this.$router.push("/Login");
+      }
+    },
+    routeToEdit() {
+      this.$router.push("/EditProfile");
+    }
+  }
 };
 </script>
 
@@ -243,7 +313,20 @@ export default {
   border-color: azure;
   border-radius: 0.5em;
 }
-
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  width: 200px;
+  height: 40px;
+}
 table {
   margin-left: 2em;
   width: 90%;

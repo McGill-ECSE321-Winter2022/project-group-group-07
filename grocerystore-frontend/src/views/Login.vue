@@ -71,8 +71,10 @@ export default {
           localStorage.setItem('token',response.data.username);
           localStorage.setItem('pointBalance',response.data.pointBalance);
           localStorage.setItem('role',response.data.role);
-          if (localStorage.getItem("role").localeCompare("Customer") == 0) {
-            this.$router.push('/Cart');
+          if (localStorage.getItem("role").includes("Customer")) {
+            this.$router.push('/Catalogue');
+          }else if(localStorage.getItem("role").includes("Owner")){
+            this.$router.push('/StoreInfo');
           } else {
             this.$router.push('/AccountInfoEmployee');
           }

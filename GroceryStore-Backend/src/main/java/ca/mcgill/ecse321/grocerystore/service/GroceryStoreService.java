@@ -22,6 +22,7 @@ import ca.mcgill.ecse321.grocerystore.dao.CustomerRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryOrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.DeliveryPersonRepository;
 import ca.mcgill.ecse321.grocerystore.dao.InStoreOrderRepository;
+import ca.mcgill.ecse321.grocerystore.dao.ItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.NonPerishableItemRepository;
 import ca.mcgill.ecse321.grocerystore.dao.OrderRepository;
 import ca.mcgill.ecse321.grocerystore.dao.OwnerRepository;
@@ -250,8 +251,8 @@ public class GroceryStoreService {
 		if (username == null || name.trim().length() == 0) {
 			error = error + "Account username cannot be empty! ";
 		}
-		if (password == null || name.trim().length() == 0) {
-			error = error + "Account password cannot be empty! ";
+		if (password == null || password.trim().length() <6) {
+			error = error + "Your password must at least be 6 characters long! ";
 		}
 		if (name == null || name.trim().length() == 0) {
 			error = error + "Account name cannot be empty! ";
@@ -270,9 +271,9 @@ public class GroceryStoreService {
 		account.setName(name);
 		account.setPointBalance(pointBalance);
 		account.setAccountRole(accountRole);
-		if(accountRole instanceof Employee) {
+		if (accountRole instanceof Employee) {
 			Schedule schedule = new Schedule();
-			schedule.setEmployee((Employee)accountRole);
+			schedule.setEmployee((Employee) accountRole);
 			scheduleRepository.save(schedule);
 		}
 
@@ -327,7 +328,7 @@ public class GroceryStoreService {
 
 	@Transactional
 	public Account updateName(String username, String newName) {
-		if (newName == null || newName.trim().length() <= 0) {
+		if (newName == null || newName.trim().length() =< 0) {
 			throw new IllegalArgumentException("Your name cannot be blank.");
 		}
 		Account account = accountRepository.findByUsername(username);
@@ -542,7 +543,7 @@ public class GroceryStoreService {
 
 		Account account = getAccount(username);
 		Cart cart = new Cart();
-		List<Item> items = new ArrayList<Item>();
+		Set<Item> items = new HashSet<Item>();
 
 		cart.setAccount(account);
 		cart.setNumOfItems(0);
@@ -576,7 +577,7 @@ public class GroceryStoreService {
 		Item item = null;
 
 		Cart cart = getCartByAccount(username);
-	
+
 		try {
 			item = getNonPerishableItemByID(id);
 		} catch (IllegalArgumentException e) {
@@ -615,7 +616,7 @@ public class GroceryStoreService {
 		cartRepository.save(cart);
 		return cart;
 	}
-	
+
 	// Order
 
 	@Transactional
@@ -625,7 +626,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
+	public DeliveryOrder createDeliveryOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		DeliveryOrder deliveryOrder = new DeliveryOrder();
@@ -633,7 +634,7 @@ public class GroceryStoreService {
 		for (Item i : items) {
 			totalValue += i.getPrice();
 		}
-		
+
 		deliveryOrder.setTotalValue(totalValue);
 		deliveryOrder.setDate(date);
 		deliveryOrder.setPurchaseTime(purchaseTime);
@@ -668,26 +669,82 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public Order checkout(String username) {
-		Order order;
+	public Order checkout(String username,Integer points) {
 		Cart cart = getCartByAccount(username);
 		if (cart.getOrderType().equals(OrderType.PickUp)) {
-			order = new PickUpOrder();
+			PickUpOrder order = new PickUpOrder();
+			if (paymentSimulator()) {
+				
+				Integer sum = 0; 
+				for (Item i : cart.getItems()) {
+					i.setNumInStock(i.getNumInStock() - 1);
+					if (i instanceof PerishableItem) {
+						sum += i.getPointPerItem();
+						perishableItemRepository.save((PerishableItem) i);
+					} else if (i instanceof NonPerishableItem) {
+						sum += i.getPointPerItem();
+						nonPerishableItemRepository.save((NonPerishableItem) i);
+					}
+				}
+				
+				Float pointToCash = getStore().getPointToCashRatio();
+
+				Set<Item> items = new HashSet<>(cart.getItems());
+				order.setAccount(cart.getaccount());
+				order.setDate(getCurrentDate());
+				order.setTimeSlot(cart.getTimeSlot());
+				order.setStatus(PickUpOrderStatus.Pending);
+				order.setPurchaseTime(getCurrentTime());
+				order.setTotalValue(cart.getTotalValue() - (points * (1/pointToCash)));
+				order.setItems(items);
+				
+				cart.getaccount().setPointBalance(cart.getaccount().getPointBalance()+sum);
+				accountRepository.save(cart.getaccount());
+
+				pickUpOrderRepository.save(order);
+
+				emptyCart(cart);
+			}
+			return order;
 		} else if (cart.getOrderType().equals(OrderType.Delivery)) {
-			order = new DeliveryOrder();
+			DeliveryOrder order = new DeliveryOrder();
+			if (paymentSimulator()) {
+
+				Integer sum = 0; 
+				for (Item i : cart.getItems()) {
+					i.setNumInStock(i.getNumInStock() - 1);
+					if (i instanceof PerishableItem) {
+						sum += i.getPointPerItem();
+						perishableItemRepository.save((PerishableItem) i);
+					} else if (i instanceof NonPerishableItem) {
+						sum += i.getPointPerItem();
+						nonPerishableItemRepository.save((NonPerishableItem) i);
+					}
+				}
+				
+				Float pointToCash = getStore().getPointToCashRatio();
+
+				Set<Item> items = new HashSet<>(cart.getItems());
+				order.setAccount(cart.getaccount());
+				order.setDate(getCurrentDate());
+				order.setTimeSlot(cart.getTimeSlot());
+				order.setStatus(DeliveryOrderStatus.Pending);
+				order.setPurchaseTime(getCurrentTime());
+				order.setTotalValue(cart.getTotalValue() - (points * (1/pointToCash)));
+				order.setItems(items);
+				
+				cart.getaccount().setPointBalance(cart.getaccount().getPointBalance()+sum);
+				accountRepository.save(cart.getaccount());
+				
+				deliveryOrderRepository.save(order);
+
+				emptyCart(cart);
+			}
+			return order;
 		} else {
 			throw new IllegalArgumentException("Order must be either a pickup or delivery");
 		}
-		if (paymentSimulator()) {
-			order.setAccount(cart.getaccount());
-			order.setDate(getCurrentDate());
-			order.setItems(cart.getItems());
-			order.setPurchaseTime(getCurrentTime());
-			order.setTotalValue(cart.getTotalValue());
-			orderRepository.save(order);
-			emptyCart(cart);
-		}
-		return order;
+
 	}
 
 	@Transactional
@@ -696,7 +753,7 @@ public class GroceryStoreService {
 		cart.setTotalValue(0f);
 		cart.setNumOfItems(0);
 		cart.setOrderType(null);
-		List<Item> items = cart.getItems();
+		Set<Item> items = cart.getItems();
 		items.clear();
 		cart.setItems(items);
 
@@ -704,7 +761,7 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, List<Item> items, TimeSlot timeSlot,
+	public PickUpOrder createPickUpOrder(Date date, Time purchaseTime, Set<Item> items, TimeSlot timeSlot,
 			Account account) {
 
 		PickUpOrder pickUpOrder = new PickUpOrder();
@@ -732,30 +789,53 @@ public class GroceryStoreService {
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		Float totalValue = Float.valueOf(0);
 		for (Item i : items) {
 			totalValue += i.getPrice();
 		}
+
+		for (Item i : items) {
+			i.setNumInStock(i.getNumInStock() - 1);
+			if (i instanceof PerishableItem) {
+				perishableItemRepository.save((PerishableItem) i);
+			} else if (i instanceof NonPerishableItem) {
+				nonPerishableItemRepository.save((NonPerishableItem) i);
+			}
+		}
+
 		inStoreOrder.setTotalValue(totalValue);
 		inStoreOrder.setDate(date);
 		inStoreOrder.setPurchaseTime(purchaseTime);
 		inStoreOrder.setItems(items);
 
+		
 		inStoreOrderRepository.save(inStoreOrder);
 
 		return inStoreOrder;
 	}
 
 	@Transactional
-	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, List<Item> items, Account account) {
+	public InStoreOrder createInStoreOrder(Date date, Time purchaseTime, Set<Item> items, Account account) {
 
 		InStoreOrder inStoreOrder = new InStoreOrder();
 		float totalValue = 0;
 		for (Item i : items) {
 			totalValue += i.getPrice();
+		}
+
+		Integer sum = 0; 
+		for (Item i : items) {
+			i.setNumInStock(i.getNumInStock() - 1);
+			if (i instanceof PerishableItem) {
+				sum += i.getPointPerItem();
+				perishableItemRepository.save((PerishableItem) i);
+			} else if (i instanceof NonPerishableItem) {
+				sum += i.getPointPerItem();
+				nonPerishableItemRepository.save((NonPerishableItem) i);
+			}
 		}
 		inStoreOrder.setTotalValue(totalValue);
 		inStoreOrder.setDate(date);
@@ -763,6 +843,8 @@ public class GroceryStoreService {
 		inStoreOrder.setItems(items);
 		inStoreOrder.setAccount(account);
 
+		account.setPointBalance(account.getPointBalance()+sum);
+		accountRepository.save(account);
 		inStoreOrderRepository.save(inStoreOrder);
 
 		return inStoreOrder;
@@ -1492,21 +1574,42 @@ public class GroceryStoreService {
 
 	}
 
-	public void restock(Long id, Integer quantity) {	
-			
+	public void restock(Long id, Integer quantity) {
+
 		PerishableItem pitem = perishableItemRepository.findByItemID(id);
 
-		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);	
-		if(pitem == null && npitem == null) {
+		NonPerishableItem npitem = nonPerishableItemRepository.findByItemID(id);
+		if (pitem == null && npitem == null) {
 			throw new IllegalArgumentException("Wrong item id");
-		}else if(pitem != null) {
-			pitem.setNumInStock(pitem.getNumInStock()+ quantity);
+		} else if (pitem != null) {
+			pitem.setNumInStock(pitem.getNumInStock() + quantity);
 			perishableItemRepository.save(pitem);
-		}else if(npitem != null) {
-			npitem.setNumInStock(npitem.getNumInStock()+ quantity);
+		} else if (npitem != null) {
+			npitem.setNumInStock(npitem.getNumInStock() + quantity);
 			nonPerishableItemRepository.save(npitem);
 		}
-	
+
+	}
+
+	public void removeFromCart(Long id, String username) {
+		
+		Cart cart = getCartByAccount(username);
+		Item item = null;
+		
+		for(Item i : cart.getItems()) {
+			if(i.getItemID() == id) {
+				item = i;
+				break;
+			}
+		}
+		
+		if(item != null) {
+			cart.getItems().remove(item);
+			cart.setNumOfItems(cart.getNumOfItems() -1);
+			cart.setTotalValue(cart.getTotalValue() - item.getPrice());
+			cartRepository.save(cart);
+		}
+		return;
 	}
 
 }

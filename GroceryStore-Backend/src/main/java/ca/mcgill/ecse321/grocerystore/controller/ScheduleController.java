@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.grocerystore.controller;
 
 import java.sql.Time;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.grocerystore.dto.ScheduleDto;
 import ca.mcgill.ecse321.grocerystore.dto.WorkingHourDto;
+import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.model.Schedule;
 import ca.mcgill.ecse321.grocerystore.model.WorkingHour;
-import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.DayOfWeek;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;
 
 @CrossOrigin(origins = "*")
