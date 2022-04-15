@@ -9,11 +9,22 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="AccountInfo_label">Account Informations</string>
+    <string name="AccountInfo_label">Account Information</string>
     <string name="username_AccountInfo_label">Username:</string>
     <string name="name_AccountInfo_label">Name:</string>
     <string name="address_AccountInfo_label">Address:</string>
     <string name="points_AccountInfo_label">Current points:</string>
-    <string name="tbl_AccountInfo_label">To be labeled</string>
     <string name="editAccountInfo_button">Edit Information</string>
+    <string name="EditAccountInfo_label">Information Edit</string>
+    <string name="updateName_button">Update Name</string>
+    <string name="password_AccountInfo_label">Password:</string>
+    <string name="username_EditInfo_label">Username:</string>
+    <string name="name_EditInfo_label">Name:</string>
+    <string name="password_EditInfo_label">Password:</string>
+    <string name="newPassword_EditInfo_label">New Password:</string>
+    <string name="updatePassword_button">Update Password</string>
+    <string name="buildingNo_EditInfo_label">Building No:</string>
+    <string name="street_EditInfo_label">Street:</string>
+    <string name="town_EditInfo_label">Town:</string>
+    <string name="updateAddress_button">Update Address</string>
 </resources>

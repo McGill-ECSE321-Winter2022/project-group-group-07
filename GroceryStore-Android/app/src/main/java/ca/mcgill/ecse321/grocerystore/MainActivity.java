@@ -81,4 +81,12 @@ public class MainActivity extends AppCompatActivity {
     public void editAccountInfo(View v) {
         //yet to be written
     }
+
+    public void updateName(View view) {
+        //yet to be written
+    }
+
+    public void updatePassword(View view) {
+        //yet to be written
+    }
 }
