@@ -33,6 +33,7 @@
             android:layout_height="2dp"
             android:background="#E6E6FA" />
 
+        <!--Update Name Layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -90,6 +91,7 @@
             android:textSize="12dp"
             android:text="@string/updateName_button" />
 
+        <!--Update Password Layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -171,6 +173,7 @@
             android:text="@string/updatePassword_button"
             android:textSize="12dp" />
 
+        <!--Update Address Layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
