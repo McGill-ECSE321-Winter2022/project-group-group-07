@@ -25,11 +25,6 @@
           color="black"
           style="margin-top:10px; width:203px;"
         />
-        <Button @btn-click="routeToSignup()"
-          text="Signup"
-          color="black"
-          style="margin-top:10px; width:203px;"
-        />
       </form>
     </div>
   </div>
@@ -67,10 +62,12 @@ export default {
     routeToSignup: function(){
       this.$router.push('/Signup');
     },
+    routeToCatalogue: function(){
+      this.$router.push('/Hello');
+    },
     login: function(){
         AXIOS.post('/api/account/login/?'+"username="+this.username+"&password="+this.password)
         .then(response => {
-          console.log(response.data);
           localStorage.setItem('token',response.data.username);
           localStorage.setItem('pointBalance',response.data.pointBalance);
           localStorage.setItem('role',response.data.role);
