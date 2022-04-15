@@ -20,7 +20,6 @@ import ca.mcgill.ecse321.grocerystore.dto.ItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.NonPerishableItemDto;
 import ca.mcgill.ecse321.grocerystore.dto.PerishableItemDto;
 import ca.mcgill.ecse321.grocerystore.model.GroceryStoreSoftwareSystem.ItemCategory;
-import ca.mcgill.ecse321.grocerystore.model.Item;
 import ca.mcgill.ecse321.grocerystore.model.NonPerishableItem;
 import ca.mcgill.ecse321.grocerystore.model.PerishableItem;
 import ca.mcgill.ecse321.grocerystore.service.GroceryStoreService;

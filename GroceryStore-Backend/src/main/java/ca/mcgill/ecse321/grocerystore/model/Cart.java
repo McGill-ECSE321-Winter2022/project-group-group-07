@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.grocerystore.model;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -22,7 +22,7 @@ public class Cart {
 	private Integer numOfItems;
 
 	// association fields
-	private List<Item> items;
+	private Set<Item> items;
 	private TimeSlot timeSlot;
 	private Account account;
 
@@ -62,12 +62,12 @@ public class Cart {
 		return orderType;
 	}
 
-	@OneToMany
-	public List<Item> getItems() {
+	@ManyToMany
+	public Set<Item> getItems() {
 		return this.items;
 	}
 
-	public void setItems(List<Item> items) {
+	public void setItems(Set<Item> items) {
 		this.items = items;
 	}
 

@@ -3,14 +3,64 @@
     <div class="navbar">
       <label>AppName</label>
       <div>
-        <button>Catalog</button>
-        <button onclick="location.href='/#/Cart'">
-          Cart/Checkout
+        <button v-if="customer" onclick="location.href = '/#/Catalogue';">
+          Catalogue
         </button>
-        <button>Order Status</button>
-        <button>Account Information</button>
+        <button v-if="customer" onclick="location.href = '/#/Cart';">
+          Cart
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/StatusOrder';">
+          Order Status
+        </button>
+        <button v-if="customer" onclick="location.href = '/#/AccountInfo';">
+          Account Information
+        </button>
+        <button v-if="cashier" onclick="location.href = '/#/Terminal';">
+          Terminal
+        </button>
+        <button v-if="clerk" onclick="location.href = '/#/PickUp';">
+          Pickup Orders
+        </button>
+        <button v-if="deliveryPerson" onclick="location.href = '/#/Delivery';">
+          Delivery Orders
+        </button>
+        <button
+          v-if="clerk"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="cashier"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+        <button
+          v-if="deliveryPerson"
+          onclick="location.href = '/#/AccountInfoEmployee';"
+        >
+          Account Information
+        </button>
+      
+        <button v-if="owner" onclick="location.href = '/#/Report';">
+          Generate Report
+        </button>
+        
+        <button v-if="owner" onclick="location.href = '/#/ManageEmployees';">
+          Manage Employees
+        </button>
+        <button v-if="owner" onclick="location.href = '/#/ManageInventory';">
+          Manage Inventory
+        </button>
+         <button v-if="owner" onclick="location.href = '/#/StoreInfo';">
+          Store Info
+        </button>
       </div>
-      <div><button>Logout</button></div>
+      <div>
+        <button v-if="loggedin" @click="logout()">Logout</button
+        ><button v-if="!loggedin" @click="login()">Login</button>
+      </div>
     </div>
     <div class="navbar">
       <label></label>
@@ -28,7 +78,7 @@
         <section class="products" v-if="items.length > 0">
           <div v-for="item in items" :key="item.id" class="product">
             <Product
-              @addToCart="v => addToCart(v)"
+              @addToCart="(v,num) => addToCart(v,num)"
               :product="item"
               catalogue="true"
             />
@@ -63,18 +113,53 @@ export default {
   },
   data() {
     return {
+      clerk: false,
+      deliveryPerson: false,
+      cashier: false,
+      owner: false,
+      customer: false,
       payMethod: 0,
       points: 10000,
       discount: 0,
       items: [],
-      cartNumOfItems: 0
+      cartNumOfItems: 0,
+      loggedin: false
     };
   },
   created() {
+    if (localStorage.getItem("token") == null) {
+      this.loggedin = false;
+    } else {
+      this.loggedin = true;
+      this.clerk = localStorage.getItem("role").includes("Clerk");
+      this.deliveryPerson = localStorage
+        .getItem("role")
+        .includes("DeliveryPerson");
+      this.cashier = localStorage.getItem("role").includes("Cashier");
+      this.owner = localStorage.getItem("role").includes("Owner");
+      this.customer = localStorage.getItem("role").includes("Customer");
+      var username = localStorage.getItem("token");
+      if (username == null) {
+        this.$router.push("/");
+      }
+    }
     this.refreshItems();
-    //   this.refreshCartNumber();
+    if (this.loggedin) {
+      this.refreshCartNumber();
+    }
   },
   methods: {
+    login() {
+      this.$router.push("/Login");
+    },
+    logout: function() {
+      if (confirm("Press OK to logout")) {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        localStorage.removeItem("pointBalance");
+        this.$router.push("/Login");
+      }
+    },
     routeToCheckout: function() {
       this.$router.push("/Checkout");
     },
@@ -87,8 +172,16 @@ export default {
           window.alert(e.response.data);
         });
     },
-    addToCart(id) {
+    addToCart(id,numInStock) {
       var username = localStorage.getItem("token");
+      if(username == null){
+        window.alert("You must login first to add to cart.")
+        return;
+      }
+      if(numInStock == 0){
+        window.alert("Item is out of stock. Please try again at a later date.")
+        return;
+      }
       AXIOS.put("/api/cart/addToCart/" + id + "?username=" + username)
         .then(response => {
           this.refreshItems();
