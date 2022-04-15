@@ -7,7 +7,7 @@ on:
     branches: main
 
 jobs:
-  build:
+  backend:
 
     runs-on: Ubuntu-latest
 
@@ -33,4 +33,16 @@ jobs:
           heroku_api_key: 9963ec96-441a-4f1a-afb1-b4f6633ce5c3
           heroku_app_name: grocerystore-backend-g7g
           heroku_email: elias.aboufarah@mail.mcgill.ca
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: push frontend
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: 9963ec96-441a-4f1a-afb1-b4f6633ce5c3
+          heroku_app_name: "grocerystore-frontend-g7g" #Must be unique in Heroku
+          heroku_email: "elias.aboufarah@mail.mcgill.ca"
+          dontuseforce: false
+      
 
