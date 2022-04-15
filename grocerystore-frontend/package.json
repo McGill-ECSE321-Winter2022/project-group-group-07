@@ -87,8 +87,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "postinstall": "npm run build",
-  "start": "node server.js"
-
+  ]
 }
