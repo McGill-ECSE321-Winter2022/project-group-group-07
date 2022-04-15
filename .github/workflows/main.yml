@@ -7,32 +7,32 @@ on:
     branches: main
 
 jobs:
-  #backend:
+  backend:
 
-   # runs-on: Ubuntu-latest
+    runs-on: Ubuntu-latest
 
-   # steps:
-   # - uses: actions/checkout@v2
-   # - name: Set up JDK 17
-   #   uses: actions/setup-java@v2
-   #   with:
-   #     java-version: '17'
-   #     distribution: 'adopt'
-   #     cache: gradle
-   # - name: Validate Gradle wrapper
-   #   uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-   # - name: Grant execute permission for gradlew
-   #   run: chmod +x gradlew
-   #   working-directory: GroceryStore-Backend
-   # - name: Build with Gradle
-   #   run: ./gradlew build
-   #   working-directory: GroceryStore-Backend
-   # - name: Deploy to Heroku
-   #   uses: akhileshns/heroku-deploy@v3.12.12
-   #   with:
-   #       heroku_api_key: 9963ec96-441a-4f1a-afb1-b4f6633ce5c3
-   #       heroku_app_name: grocerystore-backend-g7g
-   #       heroku_email: elias.aboufarah@mail.mcgill.ca
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        cache: gradle
+    - name: Validate Gradle wrapper
+      uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      working-directory: GroceryStore-Backend
+    - name: Build with Gradle
+      run: ./gradlew build
+      working-directory: GroceryStore-Backend
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+          heroku_api_key: 9963ec96-441a-4f1a-afb1-b4f6633ce5c3
+          heroku_app_name: grocerystore-backend-g7g
+          heroku_email: elias.aboufarah@mail.mcgill.ca
   frontend:
     runs-on: ubuntu-latest
     steps:
