@@ -9,4 +9,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="AccountInfo_label">Account Informations</string>
+    <string name="username_AccountInfo_label">Username:</string>
+    <string name="name_AccountInfo_label">Name:</string>
+    <string name="address_AccountInfo_label">Address:</string>
+    <string name="points_AccountInfo_label">Current points:</string>
+    <string name="tbl_AccountInfo_label">To be labeled</string>
+    <string name="editAccountInfo_button">Edit Information</string>
 </resources>

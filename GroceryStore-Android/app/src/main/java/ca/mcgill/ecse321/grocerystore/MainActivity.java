@@ -17,11 +17,15 @@ import ca.mcgill.ecse321.grocerystore.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    //private TextView myCurrentPoints = (TextView)findViewById(R.id.myPoints_AccountInfo);
+    //myCurrentPoints.setText()???
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,5 +76,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void editAccountInfo(View v) {
+        //yet to be written
     }
 }
