@@ -65,19 +65,15 @@ public class MainActivity extends AppCompatActivity {
         myAddress = (TextView)findViewById(R.id.myAddress_AccountInfo);
         myCurrentPoints = (TextView)findViewById(R.id.myPoints_AccountInfo);
 
-
         //function needed on page creation for AccountInfo
         error = "";
-        HttpUtils.get("/api/account/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("/api/account/"+ username, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     myUsername.setText(response.getString("username"));
-                    System.out.println(response.getString("username"));
                     myName.setText(response.getString("name"));
-                    System.out.println(response.getString("name"));
                     myCurrentPoints.setText(response.getString("pointBalance"));
-                    System.out.println(response.getString("pointBalance"));
                 } catch (Exception e) {
                     error += e.getMessage();
                 }
@@ -91,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         error = "";
         HttpUtils.get("/api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
