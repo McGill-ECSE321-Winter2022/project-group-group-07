@@ -11,25 +11,38 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
+    <!--In common label-->
+    <string name="buildingNo_label">Building No:</string>
+    <string name="street_label">Street:</string>
+    <string name="town_label">Town:</string>
+    <string name="username_label">Username:</string>
+    <string name="name_label">Name:</string>
+    <string name="password_label">Password:</string>
+
     <!--Account Info Strings-->
     <string name="AccountInfo_label">Account Information</string>
-    <string name="username_AccountInfo_label">Username:</string>
-    <string name="name_AccountInfo_label">Name:</string>
-    <string name="address_AccountInfo_label">Address:</string>
     <string name="points_AccountInfo_label">Current points:</string>
     <string name="editAccountInfo_button">Edit Information</string>
     <string name="EditAccountInfo_label">Information Edit</string>
+    <string name="address_AccountInfo_label">Address:</string>
 
     <!--Edit Account Info Strings-->
     <string name="updateName_button">Update Name</string>
-    <string name="password_AccountInfo_label">Password:</string>
-    <string name="username_EditInfo_label">Username:</string>
-    <string name="name_EditInfo_label">Name:</string>
-    <string name="password_EditInfo_label">Password:</string>
     <string name="newPassword_EditInfo_label">New Password:</string>
     <string name="updatePassword_button">Update Password</string>
-    <string name="buildingNo_EditInfo_label">Building No:</string>
-    <string name="street_EditInfo_label">Street:</string>
-    <string name="town_EditInfo_label">Town:</string>
     <string name="updateAddress_button">Update Address</string>
+    <string name="return_button">Back</string>
+
+    <!--Log in Strings-->
+    <string name="Login_label">Log In</string>
+    <string name="LogIn_button">Login</string>
+    <string name="SignUp_button">Signup</string>
+
+    <!--Sign Up Strings-->
+    <string name="SignUp_label">Sign Up</string>
+    <string name="SignUp_Address_label">Please add in your address:</string>
+    <string name="SignupPage_button">Signup</string>
+    <string name="profile_label">Profile</string>
+    <string name="Logout_button">Logout</string>
+
 </resources>
