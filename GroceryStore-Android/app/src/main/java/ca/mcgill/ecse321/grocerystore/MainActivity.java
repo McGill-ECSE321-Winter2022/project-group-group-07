@@ -9,6 +9,7 @@ import com.loopj.android.http.RequestParams;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private String error = null;
-    private String username = "Hello";
+    private String username = "testing1";
 
     //fragment_account_info variables
     private TextView myUsername;
@@ -72,8 +73,11 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     myUsername.setText(response.getString("username"));
+                    System.out.println(response.getString("username"));
                     myName.setText(response.getString("name"));
+                    System.out.println(response.getString("name"));
                     myCurrentPoints.setText(response.getString("pointBalance"));
+                    System.out.println(response.getString("pointBalance"));
                 } catch (Exception e) {
                     error += e.getMessage();
                 }
