@@ -9,36 +9,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 
-import ca.mcgill.ecse321.grocerystore.databinding.CustomerProfileBinding;
-
 public class CustomerProfileFragment extends Fragment {
 
-    private CustomerProfileBinding binding;
+    private View customerProfileView;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = CustomerProfileBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        customerProfileView = inflater.inflate(R.layout.customer_profile, container, false);
+        return customerProfileView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.ViewAccountInfo.setOnClickListener(new View.OnClickListener() {
+        customerProfileView.findViewById(R.id.ViewAccountInfo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(CustomerProfileFragment.this)
                         .navigate(R.id.action_CustomerProfileFragment_to_AccountInfoFragment);
-            }
-        });
-
-        binding.ViewCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(CustomerProfileFragment.this)
-                        .navigate(R.id.action_CustomerProfileFragment_to_checkoutFragment);
             }
         });
     }
@@ -46,6 +36,6 @@ public class CustomerProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        customerProfileView = null;
     }
 }
