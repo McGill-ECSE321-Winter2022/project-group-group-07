@@ -5,33 +5,81 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ca.mcgill.ecse321.grocerystore.databinding.FragmentSignupBinding;
+import cz.msebera.android.httpclient.Header;
 
 public class SignupFragment extends Fragment {
 
-    private FragmentSignupBinding binding;
+    //private FragmentSignupBinding binding;
+    private View signupView;
+    private String error;
+    private EditText username;
+    private EditText name;
+    private EditText password;
+    private String currUsername;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = FragmentSignupBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        /*binding = FragmentSignupBinding.inflate(inflater, container, false);
+        return binding.getRoot();*/
+        signupView = inflater.inflate(R.layout.fragment_signup, container, false);
+        return signupView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.SignUpButtonInSignUpPage.setOnClickListener(new View.OnClickListener() {
+        signupView.findViewById(R.id.SignUpButtonInSignUpPage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //should be calling a method then navigate; not sure how that works
-                NavHostFragment.findNavController(SignupFragment.this)
-                        .navigate(R.id.action_SignupFragment_to_LoginFragment);
+                username = (EditText) signupView.findViewById(R.id.myUsername_SignUpPage);
+                name = (EditText) signupView.findViewById(R.id.myName_SignUpPage);
+                password = (EditText) signupView.findViewById(R.id.myPassword_SignUpPage);
+                signup();
+                /*NavHostFragment.findNavController(SignupFragment.this)
+                        .navigate(R.id.action_SignupFragment_to_LoginFragment);*/
+            }
+        });
+    }
+
+    private void signup(){
+        HttpUtils.post("api/account/customerAccount/" +
+                username.getText().toString() +
+                "?name=" +
+                name.getText().toString() +
+                "&password=" +
+                password.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    currUsername += response.get("username").toString();
+                    error += "oh hey it worked?";
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+
+            }
+
+            public void onFailure(int statusCode, Header[] headers,
+                                  Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
             }
         });
     }
@@ -39,6 +87,6 @@ public class SignupFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        signupView = null;
     }
 }

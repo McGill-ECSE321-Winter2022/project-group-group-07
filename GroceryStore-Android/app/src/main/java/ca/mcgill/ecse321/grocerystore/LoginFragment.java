@@ -66,16 +66,17 @@ public class LoginFragment extends Fragment {
 
     private void login(EditText username, EditText password) {
 
-        HttpUtils.post("account/" + username.getText().toString() +
+        HttpUtils.post("api/account/login/?" + "username=" + username.getText().toString() + "&password=" +
                 password.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        refreshErrorMessage();
                         try {
                             currUsername += response.get("username").toString();
+                            error += "oh hey it worked?";
                         } catch (JSONException e) {
-                            //error += e.getMessage();
+                            error += e.getMessage();
                         }
+                        refreshErrorMessage();
                     }
 
                     public void onFailure(int statusCode, Header[] headers,
