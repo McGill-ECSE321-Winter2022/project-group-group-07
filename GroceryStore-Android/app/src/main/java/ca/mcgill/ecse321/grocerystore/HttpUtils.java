@@ -5,7 +5,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class HttpUtils {
-    public static final String DEFAULT_BASE_URL = "http://127.0.0.1:8080";
+    public static final String DEFAULT_BASE_URL = "https://grocerystore-backend-g7g.herokuapp.com/";
 
     private static String baseUrl;
     private static AsyncHttpClient client = new AsyncHttpClient();
