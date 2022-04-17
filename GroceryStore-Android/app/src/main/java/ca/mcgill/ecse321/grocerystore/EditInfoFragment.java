@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.grocerystore.databinding.FragmentEditInfoBinding;
 public class EditInfoFragment extends Fragment {
 
     private FragmentEditInfoBinding binding;
+    private int userType = 1;
 
     @Override
     public View onCreateView(
@@ -30,8 +31,13 @@ public class EditInfoFragment extends Fragment {
         binding.AccountInfoToEditInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(EditInfoFragment.this)
-                        .navigate(R.id.action_EditInfoFragment_to_AccountInfoFragment);
+                if (userType == 1 ) {
+                    NavHostFragment.findNavController(EditInfoFragment.this)
+                            .navigate(R.id.action_EditInfoFragment_to_AccountInfoFragment);
+                } else {
+                    NavHostFragment.findNavController(EditInfoFragment.this)
+                            .navigate(R.id.action_EditInfoFragment_to_NonCustomerInfoFragment);
+                }
             }
         });
     }
