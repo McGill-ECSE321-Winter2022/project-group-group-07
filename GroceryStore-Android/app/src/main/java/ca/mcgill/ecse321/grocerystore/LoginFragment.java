@@ -23,8 +23,10 @@ public class LoginFragment extends Fragment {
 
     private View loginView;
     private String error = null;
-    private String userRole = "Customer"; // TODO: Get Login to work
-    private int userType = 1;
+    private String userRole = "";
+
+    private EditText username;
+    private EditText password;
 
     @Override
     public View onCreateView(
@@ -48,24 +50,28 @@ public class LoginFragment extends Fragment {
         loginView.findViewById(R.id.LogInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                error = "";
-                EditText username = (EditText) loginView.findViewById(R.id.myUsername_LogIn);
-                EditText password = (EditText) loginView.findViewById(R.id.myPassword_LogIn);
+
+                username = (EditText) loginView.findViewById(R.id.myUsername_LogIn);
+                password = (EditText) loginView.findViewById(R.id.myPassword_LogIn);
 
                 login(username, password);
 
             }
         });
+        refreshErrorMessage();
     }
 
     private void login(EditText username, EditText password) {
-
+        error = "";
         HttpUtils.post("api/account/login/?" + "username=" + username.getText().toString() + "&password=" +
                 password.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            userRole += response.get("role").toString();
+                            setCurrUser(response.get("username").toString());
+                            setCurrRole(response.get("role").toString());
+                            userRole = response.get("role").toString();
+                            navigateFromLogin(userRole);
                         } catch (JSONException e) {
                             error += e.getMessage();
                         }
@@ -82,11 +88,22 @@ public class LoginFragment extends Fragment {
                         refreshErrorMessage();
                     }
                 });
-        if (userRole.contains("Customer")) {
+    }
+
+    private void setCurrUser(String userN){
+        ((MainActivity) this.getActivity()).setUsername(userN);
+    }
+
+    private void setCurrRole(String userR){
+        ((MainActivity) this.getActivity()).setRole(userR);
+    }
+
+    private void navigateFromLogin(String role){
+        if (role.contains("Customer")) {
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_CustomerProfileFragment);
         }
-        else if (userRole.contains("Employee")){
+        else if (role.contains("Employee")){
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_EmployeeProfileFragment);
         } else {
