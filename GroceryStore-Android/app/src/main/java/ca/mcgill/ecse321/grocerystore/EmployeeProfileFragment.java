@@ -54,6 +54,7 @@ public class EmployeeProfileFragment extends Fragment {
                 }
             }
         });
+    }
 
     private boolean isDelivery() {
         String role= ((MainActivity) this.getActivity()).getRole();
@@ -67,15 +68,6 @@ public class EmployeeProfileFragment extends Fragment {
     private void resetUser() {
         ((MainActivity) this.getActivity()).setUsername("");
         ((MainActivity) this.getActivity()).setRole("");
-    }
-    
-    private boolean isDelivery() {
-                String role= ((MainActivity) this.getActivity()).getRole();
-                if (role.contains("Delivery")){
-                    return true;
-                }else {
-                    return false;
-                }
     }
 
     @Override
