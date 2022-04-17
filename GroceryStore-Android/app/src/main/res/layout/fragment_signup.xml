@@ -11,8 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".EditInfoFragment">
-
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,11 +19,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/PageTitle_EditInfo"
+            android:id="@+id/PageTitle_SignUpPage"
             android:layout_width="match_parent"
             android:layout_height="37dp"
             android:gravity="center"
-            android:text="@string/EditAccountInfo_label"
+            android:text="@string/SignUp_label"
             android:textSize="18dp"
             android:textStyle="bold" />
 
@@ -33,7 +32,7 @@
             android:layout_height="2dp"
             android:background="#E6E6FA" />
 
-        <!--Update Name Layout-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -50,7 +49,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myUsername_nameEditInfo"
+                android:id="@+id/myUsername_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:hint="Enter your username"
@@ -74,7 +73,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myNewName_nameEditInfo"
+                android:id="@+id/myName_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter your new name"
@@ -83,40 +82,7 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/UpdateNameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="41dp"
-            android:layout_gravity="end"
-            android:onClick="updateName"
-            android:text="@string/updateName_button"
-            android:textSize="12dp" />
 
-        <!--Update Password Layout-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:text="@string/username_label"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/myUsername_passwordEditInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="Enter your username"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:textSize="14dp" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -133,7 +99,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myCurrentPassword_passwordEditInfo"
+                android:id="@+id/myPassword_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter your current password"
@@ -142,64 +108,15 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="41dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:text="@string/newPassword_EditInfo_label"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/myNewPassword_passwordEditInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Enter your new password"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:textSize="14dp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/UpdatePasswordButton"
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="41dp"
-            android:layout_gravity="end"
-            android:onClick="updatePassword"
-            android:text="@string/updatePassword_button"
-            android:textSize="12dp" />
-
-        <!--Update Address Layout-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:text="@string/username_label"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/myUsername_addressEditInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="Enter your username"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:textSize="14dp" />
-        </LinearLayout>
+            android:layout_height="50dp"
+            android:gravity="bottom"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:text="@string/SignUp_Address_label"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -216,7 +133,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myBuildingNo_addressEditInfo"
+                android:id="@+id/myBuildingNo_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter your building number"
@@ -242,7 +159,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myStreet_addressEditInfo"
+                android:id="@+id/myStreet_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter your street name"
@@ -267,7 +184,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/myTown_addressEditInfo"
+                android:id="@+id/myTown_SignUpPage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Enter your town name"
@@ -277,29 +194,14 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/AccountInfoToEditInfoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_gravity="bottom"
-                android:layout_marginRight="143dp"
-                android:text="@string/return_button"
-                android:textSize="12dp" />
-
-            <Button
-                android:id="@+id/UpdateAddressButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:onClick="updatePassword"
-                android:text="@string/updateAddress_button"
-                android:textSize="12dp" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/SignUpButtonInSignUpPage"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/SignupPage_button"
+            android:textSize="12dp" />
     </LinearLayout>
 
 </RelativeLayout>

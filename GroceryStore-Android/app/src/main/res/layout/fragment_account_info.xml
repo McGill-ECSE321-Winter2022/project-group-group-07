@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ca.mcgill.ecse321.grocerystore.MainActivity">
+    tools:context=".AccountInfoFragment">
 
 
     <LinearLayout
@@ -40,12 +40,12 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:text="@string/username_AccountInfo_label"
+                android:text="@string/username_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
-                android:text="@string/name_AccountInfo_label"
+                android:text="@string/name_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -131,10 +131,10 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/EditInfoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:onClick="editAccountInfo"
             android:text="@string/editAccountInfo_button" />
 
     </LinearLayout>

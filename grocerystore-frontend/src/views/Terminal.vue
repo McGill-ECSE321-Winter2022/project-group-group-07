@@ -60,8 +60,10 @@ import { ListGroupPlugin } from 'bootstrap-vue'
 import Button from '../components/Button.vue'
 var config = require('../../config')
 
-var frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-var backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
+
+var frontendUrl = "https://" + config.build.host + ":" + config.build.port;
+var backendUrl =
+  "https://" + config.build.backendHost + ":" + config.build.backendPort;
 
 var AXIOS = axios.create({
   baseURL: backendUrl,
