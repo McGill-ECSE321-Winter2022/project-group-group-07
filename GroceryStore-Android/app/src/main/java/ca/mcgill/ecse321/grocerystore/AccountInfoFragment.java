@@ -22,6 +22,8 @@ public class AccountInfoFragment extends Fragment {
 
     private View accountInfoView;
     private String error = null;
+
+    /**currently still need a way to get username**/
     private String username = "Testing";
 
     //fragment_account_info variables
