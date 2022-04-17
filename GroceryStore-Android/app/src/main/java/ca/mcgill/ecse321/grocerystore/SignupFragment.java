@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,9 +24,13 @@ public class SignupFragment extends Fragment {
     private View signupView;
     private String error;
     private String currUser;
+    private String currAddress;
     private EditText username;
     private EditText name;
     private EditText password;
+    private EditText buildingNo;
+    private EditText street;
+    private EditText town;
 
     @Override
     public View onCreateView(
@@ -44,14 +49,17 @@ public class SignupFragment extends Fragment {
                 username = (EditText) signupView.findViewById(R.id.myUsername_SignUpPage);
                 name = (EditText) signupView.findViewById(R.id.myName_SignUpPage);
                 password = (EditText) signupView.findViewById(R.id.myPassword_SignUpPage);
+                buildingNo = (EditText) signupView.findViewById(R.id.myBuildingNo_SignUpPage);
+                street = (EditText) signupView.findViewById(R.id.myStreet_SignUpPage);
+                town = (EditText) signupView.findViewById(R.id.myTown_SignUpPage);
                 signup();
-                NavHostFragment.findNavController(SignupFragment.this)
-                        .navigate(R.id.action_SignupFragment_to_LoginFragment);
             }
         });
+        refreshErrorMessage();
     }
 
     private void signup(){
+        error = "";
         HttpUtils.post("api/account/customerAccount/" +
                 username.getText().toString() +
                 "?name=" +
@@ -61,12 +69,11 @@ public class SignupFragment extends Fragment {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    currUser += response.get("username").toString();
-                    error += "oh hey it worked?";
+                    setAddress(response.get("username").toString());
                 } catch (JSONException e) {
                     error += e.getMessage();
                 }
-
+                refreshErrorMessage();
             }
 
             public void onFailure(int statusCode, Header[] headers,
@@ -76,8 +83,59 @@ public class SignupFragment extends Fragment {
                 } catch (JSONException e) {
                     error += e.getMessage();
                 }
+                refreshErrorMessage();
             }
         });
+    }
+
+    private void setAddress(String userN){
+        HttpUtils.post(
+                "api/address/address/" +
+                        username.getText().toString() +
+                        "?buildingNo=" +
+                        buildingNo.getText().toString() +
+                        "&street=" +
+                        street.getText().toString() +
+                        "&town=" +
+                        town.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            response.get("street");
+                            navigateFromSignup();
+                        } catch (JSONException e) {
+                            error += e.getMessage();
+                        }
+                        refreshErrorMessage();
+                    }
+
+                    public void onFailure(int statusCode, Header[] headers,
+                                          Throwable throwable, JSONObject errorResponse) {
+                        try {
+                            error += errorResponse.get("message").toString();
+                        } catch (JSONException e) {
+                            error += e.getMessage();
+                        }
+                        refreshErrorMessage();
+                    }
+                });
+    }
+
+    private void refreshErrorMessage() {
+        // set the error message
+        TextView console = (TextView) signupView.findViewById(R.id.signup_error);
+        console.setText(error);
+
+        if (error == null || error.length() == 0) {
+            console.setVisibility(View.GONE);
+        } else {
+            console.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void navigateFromSignup(){
+        NavHostFragment.findNavController(SignupFragment.this)
+                .navigate(R.id.action_SignupFragment_to_LoginFragment);
     }
 
     @Override

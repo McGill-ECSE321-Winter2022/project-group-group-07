@@ -23,7 +23,7 @@ public class LoginFragment extends Fragment {
 
     private View loginView;
     private String error = null;
-    private String userRole = "Customer"; // TODO: Get Login to work
+    private String userRole = "";
     private int userType = 1;
 
     @Override
@@ -56,6 +56,7 @@ public class LoginFragment extends Fragment {
 
             }
         });
+        refreshErrorMessage();
     }
 
     private void login(EditText username, EditText password) {
@@ -65,7 +66,8 @@ public class LoginFragment extends Fragment {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            userRole += response.get("role").toString();
+                            userRole = response.get("role").toString();
+                            navigateFromLogin(userRole);
                         } catch (JSONException e) {
                             error += e.getMessage();
                         }
@@ -82,11 +84,14 @@ public class LoginFragment extends Fragment {
                         refreshErrorMessage();
                     }
                 });
-        if (userRole.contains("Customer")) {
+    }
+
+    private void navigateFromLogin(String role){
+        if (role.contains("Customer")) {
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_CustomerProfileFragment);
         }
-        else if (userRole.contains("Employee")){
+        else if (role.contains("Employee")){
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_EmployeeProfileFragment);
         } else {
