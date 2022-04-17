@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -41,11 +42,8 @@ public class PickUpFragment extends Fragment {
         PickUpView = inflater.inflate(R.layout.fragment_pickup_orders, container, false);
         recyclerView = PickUpView.findViewById(R.id.pickUpOrdersList);
         orders = new ArrayList<>();
-
+        
         updateOrders();
-        recyclerView.setLayoutManager(new LinearLayoutManager(PickUpView.getContext()));
-         adapter = new Adapter(PickUpView.getContext(), orders);
-        recyclerView.setAdapter(adapter);
 
         return PickUpView;
     }
@@ -60,15 +58,19 @@ public class PickUpFragment extends Fragment {
                                 try {
                                     JSONObject orderObject = response.getJSONObject(i);
                                     Order order = new Order();
-                                    order.setOrderID(orderObject.getString("orderID").toString());
-                                    order.setStatus(orderObject.getString("status").toString());
+                                    order.setOrderID(orderObject.getString("orderID"));
+                                    order.setStatus(orderObject.getString("status"));
+                                    orders.add(order);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        recyclerView.setLayoutManager(new LinearLayoutManager(PickUpView.getContext().getApplicationContext()));
-                        adapter = new Adapter(PickUpView.getContext().getApplicationContext(), orders);
+
+                        adapter = new Adapter(PickUpView.getContext(), orders);
                         recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(PickUpView.getContext()));
+
+
                     }
 
                     public void onFailure(int statusCode, Header[] headers,
@@ -81,7 +83,17 @@ public class PickUpFragment extends Fragment {
                     }
                 });
     }
+    private void refreshErrorMessage() {
+        // set the error message
+        TextView console = (TextView) PickUpView.findViewById(R.id.pickup_error);
+        console.setText(error);
 
+        if (error == null || error.length() == 0) {
+            console.setVisibility(View.GONE);
+        } else {
+            console.setVisibility(View.VISIBLE);
+        }
+    }
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PickUpView.findViewById(R.id.updateButtonInPickUpPage).setOnClickListener(new View.OnClickListener() {

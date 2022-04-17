@@ -4,10 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.util.List;
 
@@ -32,6 +38,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.orderID.setText(orders.get(position).getOrderID());
         holder.status.setText(orders.get(position).getStatus());
+        holder.complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                HttpUtils.put("/api/order/PickUpUpdate/"+orders.get(holder.getAdapterPosition()).getOrderID()+"?status=Ready",new RequestParams(), new JsonHttpResponseHandler() {});
+
+            }
+        });
     }
 
     @Override
@@ -41,13 +55,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView orderID,status;
-
+        Button complete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             orderID = itemView.findViewById(R.id.OrderID);
             status = itemView.findViewById(R.id.status);
-
+             complete= itemView.findViewById(R.id.markAsComplete);
         }
     }
 }
