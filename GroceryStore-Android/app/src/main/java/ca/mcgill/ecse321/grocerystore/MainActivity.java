@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         //function needed on page creation for AccountInfo
         error = "";
-        HttpUtils.get("/api/account/"+ username, null, new JsonHttpResponseHandler() {
+        HttpUtils.get("api/account/"+ username, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         error = "";
-        HttpUtils.get("/api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
