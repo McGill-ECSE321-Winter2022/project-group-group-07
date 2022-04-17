@@ -37,10 +37,25 @@ public class EmployeeProfileFragment extends Fragment {
         binding.EmployeeViewCustomerOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(EmployeeProfileFragment.this)
-                        .navigate(R.id.action_EmployeeProfileFragment_to_PickUpFragment);
+                if (isDelivery()){
+                    NavHostFragment.findNavController(EmployeeProfileFragment.this)
+                            .navigate(R.id.action_EmployeeProfileFragment_to_DeliveryFragment);
+                } else {
+                    NavHostFragment.findNavController(EmployeeProfileFragment.this)
+                            .navigate(R.id.action_EmployeeProfileFragment_to_PickUpFragment);
+                }
+
             }
         });
+    }
+
+    private boolean isDelivery() {
+        String role= ((MainActivity) this.getActivity()).getRole();
+        if (role.contains("Delivery")){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override
