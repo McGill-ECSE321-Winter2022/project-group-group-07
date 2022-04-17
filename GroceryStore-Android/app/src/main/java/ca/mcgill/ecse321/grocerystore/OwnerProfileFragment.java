@@ -31,6 +31,20 @@ public class OwnerProfileFragment extends Fragment {
                         .navigate(R.id.action_OwnerProfileFragment_to_NonCustomerInfoFragment);
             }
         });
+
+        ownerProfileView.findViewById(R.id.OwnerLogoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetUser();
+                NavHostFragment.findNavController(OwnerProfileFragment.this)
+                        .navigate(R.id.action_OwnerProfileFragment_to_LoginFragment);
+            }
+        });
+    }
+
+    private void resetUser() {
+        ((MainActivity) this.getActivity()).setUsername("");
+        ((MainActivity) this.getActivity()).setRole("");
     }
 
     @Override

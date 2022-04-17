@@ -9,35 +9,47 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 
-import ca.mcgill.ecse321.grocerystore.databinding.EmployeeProfileBinding;
-
 public class EmployeeProfileFragment extends Fragment {
 
-    private EmployeeProfileBinding binding;
+    private View employeeProfileView;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = EmployeeProfileBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        employeeProfileView = inflater.inflate(R.layout.employee_profile, container, false);
+        return employeeProfileView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.EmployeeViewAccountInfo.setOnClickListener(new View.OnClickListener() {
+        employeeProfileView.findViewById(R.id.EmployeeViewAccountInfo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(EmployeeProfileFragment.this)
                         .navigate(R.id.action_EmployeeProfileFragment_to_NonCustomerInfoFragment);
             }
         });
+
+        employeeProfileView.findViewById(R.id.EmployeeLogoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetUser();
+                NavHostFragment.findNavController(EmployeeProfileFragment.this)
+                        .navigate(R.id.action_EmployeeProfileFragment_to_LoginFragment);
+            }
+        });
+    }
+
+    private void resetUser() {
+        ((MainActivity) this.getActivity()).setUsername("");
+        ((MainActivity) this.getActivity()).setRole("");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        employeeProfileView = null;
     }
 }
