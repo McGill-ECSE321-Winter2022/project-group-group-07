@@ -24,7 +24,9 @@ public class LoginFragment extends Fragment {
     private View loginView;
     private String error = null;
     private String userRole = "";
-    private int userType = 1;
+
+    private EditText username;
+    private EditText password;
 
     @Override
     public View onCreateView(
@@ -48,9 +50,9 @@ public class LoginFragment extends Fragment {
         loginView.findViewById(R.id.LogInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                error = "";
-                EditText username = (EditText) loginView.findViewById(R.id.myUsername_LogIn);
-                EditText password = (EditText) loginView.findViewById(R.id.myPassword_LogIn);
+
+                username = (EditText) loginView.findViewById(R.id.myUsername_LogIn);
+                password = (EditText) loginView.findViewById(R.id.myPassword_LogIn);
 
                 login(username, password);
 
@@ -60,12 +62,14 @@ public class LoginFragment extends Fragment {
     }
 
     private void login(EditText username, EditText password) {
-
+        error = "";
         HttpUtils.post("api/account/login/?" + "username=" + username.getText().toString() + "&password=" +
                 password.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
+                            setCurrUser(response.get("username").toString());
+                            setCurrRole(response.get("role").toString());
                             userRole = response.get("role").toString();
                             navigateFromLogin(userRole);
                         } catch (JSONException e) {
@@ -84,6 +88,14 @@ public class LoginFragment extends Fragment {
                         refreshErrorMessage();
                     }
                 });
+    }
+
+    private void setCurrUser(String userN){
+        ((MainActivity) this.getActivity()).setUsername(userN);
+    }
+
+    private void setCurrRole(String userR){
+        ((MainActivity) this.getActivity()).setRole(userR);
     }
 
     private void navigateFromLogin(String role){

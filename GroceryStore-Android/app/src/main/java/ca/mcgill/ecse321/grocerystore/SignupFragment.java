@@ -23,11 +23,11 @@ public class SignupFragment extends Fragment {
 
     private View signupView;
     private String error;
-    private String currUser;
-    private String currAddress;
+
     private EditText username;
     private EditText name;
     private EditText password;
+
     private EditText buildingNo;
     private EditText street;
     private EditText town;
@@ -43,15 +43,18 @@ public class SignupFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        signupView.findViewById(R.id.SignUpButtonInSignUpPage).setOnClickListener(new View.OnClickListener() {
+        signupView.findViewById(R.id.SignUpButtonInSignUpPage).setOnClickListener(
+                new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 username = (EditText) signupView.findViewById(R.id.myUsername_SignUpPage);
                 name = (EditText) signupView.findViewById(R.id.myName_SignUpPage);
                 password = (EditText) signupView.findViewById(R.id.myPassword_SignUpPage);
+
                 buildingNo = (EditText) signupView.findViewById(R.id.myBuildingNo_SignUpPage);
                 street = (EditText) signupView.findViewById(R.id.myStreet_SignUpPage);
                 town = (EditText) signupView.findViewById(R.id.myTown_SignUpPage);
+
                 signup();
             }
         });
@@ -91,7 +94,7 @@ public class SignupFragment extends Fragment {
     private void setAddress(String userN){
         HttpUtils.post(
                 "api/address/address/" +
-                        username.getText().toString() +
+                        userN +
                         "?buildingNo=" +
                         buildingNo.getText().toString() +
                         "&street=" +

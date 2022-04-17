@@ -22,7 +22,8 @@ public class AccountInfoFragment extends Fragment {
 
     private View accountInfoView;
     private String error = null;
-    private String username = "Testing";
+    private String username;
+    private String role;
 
     //fragment_account_info variables
     private TextView myUsername;
@@ -41,6 +42,9 @@ public class AccountInfoFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        username = ((MainActivity) this.getActivity()).getUsername();
+        role = ((MainActivity) this.getActivity()).getRole();
 
         //fragment_account_info variables
         myUsername= accountInfoView.findViewById(R.id.myUsername_AccountInfo);
