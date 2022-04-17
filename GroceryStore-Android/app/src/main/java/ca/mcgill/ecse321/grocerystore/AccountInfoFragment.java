@@ -103,7 +103,6 @@ public class AccountInfoFragment extends Fragment {
                         .navigate(R.id.action_AccountInfoFragment_to_EditInfoFragment);
             }
         });
-
     }
 
     @Override
