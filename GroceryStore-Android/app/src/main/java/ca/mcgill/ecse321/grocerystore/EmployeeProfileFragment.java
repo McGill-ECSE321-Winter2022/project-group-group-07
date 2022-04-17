@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.grocerystore;
 
+
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +34,13 @@ public class EmployeeProfileFragment extends Fragment {
                         .navigate(R.id.action_EmployeeProfileFragment_to_NonCustomerInfoFragment);
             }
         });
+        binding.EmployeeViewCustomerOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(EmployeeProfileFragment.this)
+                        .navigate(R.id.action_EmployeeProfileFragment_to_PickUpFragment);
+            }
+        });
     }
 
     @Override
@@ -41,3 +49,4 @@ public class EmployeeProfileFragment extends Fragment {
         binding = null;
     }
 }
+
