@@ -38,7 +38,7 @@
 
 
         <Button
-            android:id="@+id/ViewAccountInfo"
+            android:id="@+id/OwnerViewAccountInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -51,7 +51,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/ViewCustomerOrders"
+            android:id="@+id/OwnerViewCustomerOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
