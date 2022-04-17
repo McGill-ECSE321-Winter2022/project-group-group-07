@@ -23,8 +23,7 @@ public class LoginFragment extends Fragment {
 
     private View loginView;
     private String error = null;
-    private String currUsername = null;
-    private int currUserType = 0;
+    private String userRole = "Customer"; // TODO: Get Login to work
     private int userType = 1;
 
     @Override
@@ -32,8 +31,6 @@ public class LoginFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        /*binding = FragmentLoginBinding.inflate(inflater, container, false);
-        return binding.getRoot();*/
         loginView = inflater.inflate(R.layout.fragment_login, container, false);
         return loginView;
     }
@@ -68,8 +65,7 @@ public class LoginFragment extends Fragment {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            currUsername += response.get("username").toString();
-                            error += "oh hey it worked?";
+                            userRole += response.get("role").toString();
                         } catch (JSONException e) {
                             error += e.getMessage();
                         }
@@ -86,12 +82,11 @@ public class LoginFragment extends Fragment {
                         refreshErrorMessage();
                     }
                 });
-        if (userType == 1) {
-            /*NavHostFragment.findNavController(LoginFragment.this)
-                    .navigate(R.id.action_LoginFragment_to_CustomerProfileFragment);*/
-            refreshErrorMessage();
+        if (userRole.contains("Customer")) {
+            NavHostFragment.findNavController(LoginFragment.this)
+                    .navigate(R.id.action_LoginFragment_to_CustomerProfileFragment);
         }
-        else if (userType == 2 ){
+        else if (userRole.contains("Employee")){
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_EmployeeProfileFragment);
         } else {

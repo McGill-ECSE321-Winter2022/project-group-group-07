@@ -22,10 +22,10 @@ public class SignupFragment extends Fragment {
 
     private View signupView;
     private String error;
+    private String currUser;
     private EditText username;
     private EditText name;
     private EditText password;
-    private String currUsername;
 
     @Override
     public View onCreateView(
@@ -61,7 +61,7 @@ public class SignupFragment extends Fragment {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    currUsername += response.get("username").toString();
+                    currUser += response.get("username").toString();
                     error += "oh hey it worked?";
                 } catch (JSONException e) {
                     error += e.getMessage();
