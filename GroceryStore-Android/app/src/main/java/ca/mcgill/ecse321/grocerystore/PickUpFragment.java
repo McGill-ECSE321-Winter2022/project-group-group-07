@@ -42,7 +42,7 @@ public class PickUpFragment extends Fragment {
         PickUpView = inflater.inflate(R.layout.fragment_pickup_orders, container, false);
         recyclerView = PickUpView.findViewById(R.id.pickUpOrdersList);
         orders = new ArrayList<>();
-        
+
         updateOrders();
 
         return PickUpView;
@@ -99,39 +99,14 @@ public class PickUpFragment extends Fragment {
         PickUpView.findViewById(R.id.updateButtonInPickUpPage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = (EditText) PickUpView.findViewById(R.id.myUsername_SignUpPage); //0408
+                orders = new ArrayList<>();
 
-                signup();
-                NavHostFragment.findNavController(PickUpFragment.this)
-                        .navigate(R.id.action_SignupFragment_to_LoginFragment);//0408
+                updateOrders();
             }
         });
     }
 
-    private void signup(){
-        HttpUtils.get("api/order/pendingPickUpOrders"
-                , new RequestParams(), new JsonHttpResponseHandler() {
 
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {//0408
-                        try {
-                            currUser += response.get("username").toString();
-                            error += "oh hey it worked?";
-                        } catch (JSONException e) {
-                            error += e.getMessage();
-                        }
-
-                    }
-
-                    public void onFailure(int statusCode, Header[] headers,
-                                          Throwable throwable, JSONObject errorResponse) {
-                        try {
-                            error += errorResponse.get("message").toString();
-                        } catch (JSONException e) {
-                            error += e.getMessage();
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onDestroyView() {

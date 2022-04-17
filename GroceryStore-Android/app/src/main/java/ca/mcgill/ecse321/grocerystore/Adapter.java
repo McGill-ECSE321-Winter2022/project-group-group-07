@@ -10,12 +10,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
     LayoutInflater inflater;
@@ -42,7 +49,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
             @Override
             public void onClick(View view) {
 
-                HttpUtils.put("/api/order/PickUpUpdate/"+orders.get(holder.getAdapterPosition()).getOrderID()+"?status=Ready",new RequestParams(), new JsonHttpResponseHandler() {});
+                HttpUtils.put("/api/order/PickUpUpdate/"+orders.get(holder.getAdapterPosition()).getOrderID()+"?status=Ready",new RequestParams(), new JsonHttpResponseHandler() {
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {//0408
+                        orders.remove(holder.getAdapterPosition());
+                    }
+                });
 
             }
         });

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/PickUpFragment">
+    app:startDestination="@id/LoginFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -79,6 +79,9 @@
         <action
             android:id="@+id/action_EmployeeProfileFragment_to_NonCustomerInfoFragment"
             app:destination="@id/NonCustomerInfoFragment"/>
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_PickUpFragment"
+            app:destination="@id/PickUpFragment" />
     </fragment>
 
     <fragment
@@ -130,11 +133,6 @@
     <fragment
         android:id="@+id/PickUpFragment"
         android:name="ca.mcgill.ecse321.grocerystore.PickUpFragment"
-        tools:layout="@layout/fragment_pickup_orders">
-
-        <action
-            android:id="@+id/action_EmployeeProfFragment_to_PickUpFragment"
-            app:destination="@id/PickUpFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_pickup_orders"/>
 
 </navigation>
