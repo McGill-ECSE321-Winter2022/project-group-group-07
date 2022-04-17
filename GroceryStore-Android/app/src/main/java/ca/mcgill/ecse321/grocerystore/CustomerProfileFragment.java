@@ -31,6 +31,28 @@ public class CustomerProfileFragment extends Fragment {
                         .navigate(R.id.action_CustomerProfileFragment_to_AccountInfoFragment);
             }
         });
+
+        customerProfileView.findViewById(R.id.ViewCart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CustomerProfileFragment.this)
+                        .navigate(R.id.action_CustomerProfileFragment_to_checkoutFragment);
+            }
+        });
+
+        customerProfileView.findViewById(R.id.CustomerLogoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetUser();
+                NavHostFragment.findNavController(CustomerProfileFragment.this)
+                        .navigate(R.id.action_CustomerProfileFragment_to_LoginFragment);
+            }
+        });
+    }
+
+    private void resetUser() {
+        ((MainActivity) this.getActivity()).setUsername("");
+        ((MainActivity) this.getActivity()).setRole("");
     }
 
     @Override

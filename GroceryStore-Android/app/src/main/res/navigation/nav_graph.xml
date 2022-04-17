@@ -70,6 +70,9 @@
         <action
             android:id="@+id/action_CustomerProfileFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
     </fragment>
 
     <fragment
@@ -79,6 +82,10 @@
         <action
             android:id="@+id/action_EmployeeProfileFragment_to_NonCustomerInfoFragment"
             app:destination="@id/NonCustomerInfoFragment"/>
+        <action
+
+            android:id="@+id/action_EmployeeProfileFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
         <action
             android:id="@+id/action_EmployeeProfileFragment_to_PickUpFragment"
             app:destination="@id/PickUpFragment" />
@@ -109,6 +116,9 @@
         <action
             android:id="@+id/action_OwnerProfileFragment_to_NonCustomerInfoFragment"
             app:destination="@id/NonCustomerInfoFragment"/>
+        <action
+            android:id="@+id/action_OwnerProfileFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
     </fragment>
 
     <fragment
@@ -140,7 +150,11 @@
         android:id="@+id/checkoutFragment"
         android:name="ca.mcgill.ecse321.grocerystore.CheckoutFragment"
         android:label="activity_checkout"
-        tools:layout="@layout/activity_checkout" />
+        tools:layout="@layout/activity_checkout" >
+        <action
+            android:id="@+id/action_checkoutFragment_to_CustomerProfileFragment"
+            app:destination="@id/CustomerProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/PickUpFragment"
