@@ -16,12 +16,10 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ca.mcgill.ecse321.grocerystore.databinding.FragmentSignupBinding;
 import cz.msebera.android.httpclient.Header;
 
 public class SignupFragment extends Fragment {
 
-    //private FragmentSignupBinding binding;
     private View signupView;
     private String error;
     private EditText username;
@@ -34,8 +32,6 @@ public class SignupFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        /*binding = FragmentSignupBinding.inflate(inflater, container, false);
-        return binding.getRoot();*/
         signupView = inflater.inflate(R.layout.fragment_signup, container, false);
         return signupView;
     }
@@ -49,8 +45,8 @@ public class SignupFragment extends Fragment {
                 name = (EditText) signupView.findViewById(R.id.myName_SignUpPage);
                 password = (EditText) signupView.findViewById(R.id.myPassword_SignUpPage);
                 signup();
-                /*NavHostFragment.findNavController(SignupFragment.this)
-                        .navigate(R.id.action_SignupFragment_to_LoginFragment);*/
+                NavHostFragment.findNavController(SignupFragment.this)
+                        .navigate(R.id.action_SignupFragment_to_LoginFragment);
             }
         });
     }

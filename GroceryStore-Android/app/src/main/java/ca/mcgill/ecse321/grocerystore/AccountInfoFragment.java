@@ -16,15 +16,13 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ca.mcgill.ecse321.grocerystore.databinding.FragmentAccountInfoBinding;
 import cz.msebera.android.httpclient.entity.mime.Header;
 
 public class AccountInfoFragment extends Fragment {
 
-    private FragmentAccountInfoBinding binding;
+    private View accountInfoView;
     private String error = null;
     private String username = "Test";
-    private View accountInfoView;
 
     //fragment_account_info variables
     private TextView myUsername;
@@ -37,7 +35,7 @@ public class AccountInfoFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = FragmentAccountInfoBinding.inflate(inflater, container, false);
+        accountInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
         /*accountInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
 
         //fragment_account_info variables
@@ -91,12 +89,12 @@ public class AccountInfoFragment extends Fragment {
                 }
             }
         });*/
-        return binding.getRoot();
+        return accountInfoView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.EditInfoButton.setOnClickListener(new View.OnClickListener() {
+        accountInfoView.findViewById(R.id.EditInfoButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(AccountInfoFragment.this)
@@ -109,7 +107,7 @@ public class AccountInfoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        accountInfoView = null;
     }
 
 }

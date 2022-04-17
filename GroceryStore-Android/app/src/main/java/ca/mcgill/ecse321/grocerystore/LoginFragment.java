@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.grocerystore;
 
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,10 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//import ca.mcgill.ecse321.grocerystore.databinding.FragmentLoginBinding;
 import cz.msebera.android.httpclient.Header;
 
 public class LoginFragment extends Fragment {
 
-    //private FragmentLoginBinding binding;
     private View loginView;
     private String error = null;
     private String currUsername = null;
