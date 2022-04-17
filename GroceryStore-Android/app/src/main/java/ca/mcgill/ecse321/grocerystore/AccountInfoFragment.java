@@ -16,13 +16,13 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.entity.mime.Header;
+import cz.msebera.android.httpclient.Header;
 
 public class AccountInfoFragment extends Fragment {
 
     private View accountInfoView;
     private String error = null;
-    private String username = "Test";
+    private String username = "Testing";
 
     //fragment_account_info variables
     private TextView myUsername;
@@ -36,7 +36,11 @@ public class AccountInfoFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         accountInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
-        /*accountInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
+        return accountInfoView;
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         //fragment_account_info variables
         myUsername= accountInfoView.findViewById(R.id.myUsername_AccountInfo);
@@ -44,10 +48,22 @@ public class AccountInfoFragment extends Fragment {
         myAddress = accountInfoView.findViewById(R.id.myAddress_AccountInfo);
         myCurrentPoints = accountInfoView.findViewById(R.id.myPoints_AccountInfo);
 
-        //function needed on page creation/redirection for AccountInfo
-        error = "";
-        HttpUtils.get("/api/account/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
+        getAccountInfo();
+
+        accountInfoView.findViewById(R.id.EditInfoButton).setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(AccountInfoFragment.this)
+                        .navigate(R.id.action_AccountInfoFragment_to_EditInfoFragment);
+            }
+        });
+
+
+    }
+
+    private void getAccountInfo() {
+        error = "";
+        HttpUtils.get("api/account/"+username, new RequestParams(), new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     myUsername.setText(response.getString("username"));
@@ -57,7 +73,6 @@ public class AccountInfoFragment extends Fragment {
                     error += e.getMessage();
                 }
             }
-            @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 try {
                     error += errorResponse.get("message").toString();
@@ -67,20 +82,20 @@ public class AccountInfoFragment extends Fragment {
             }
         });
         error = "";
-        HttpUtils.get("/api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
-            @Override
+        HttpUtils.get("api/address/address/"+username, new RequestParams(), new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     String tempString = "";
                     tempString += response.getString("buildingNo");
+                    tempString += " ";
                     tempString += response.getString("street");
+                    tempString += " ";
                     tempString += response.getString("town");
                     myAddress.setText(tempString);
                 } catch (Exception e) {
                     error += e.getMessage();
                 }
             }
-            @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 try {
                     error += errorResponse.get("message").toString();
@@ -88,19 +103,8 @@ public class AccountInfoFragment extends Fragment {
                     error += e.getMessage();
                 }
             }
-        });*/
-        return accountInfoView;
-    }
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        accountInfoView.findViewById(R.id.EditInfoButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(AccountInfoFragment.this)
-                        .navigate(R.id.action_AccountInfoFragment_to_EditInfoFragment);
-            }
         });
+
     }
 
     @Override

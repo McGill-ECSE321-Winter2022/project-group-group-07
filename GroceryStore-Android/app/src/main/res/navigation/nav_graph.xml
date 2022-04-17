@@ -15,6 +15,7 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="ca.mcgill.ecse321.grocerystore.SecondFragment"
@@ -75,20 +76,27 @@
         android:id="@+id/EmployeeProfileFragment"
         android:name="ca.mcgill.ecse321.grocerystore.EmployeeProfileFragment"
         tools:layout="@layout/employee_profile">
-
         <action
-            android:id="@+id/action_EmployeeProfileFragment_to_AccountInfoFragment"
-            app:destination="@id/AccountInfoFragment" />
+            android:id="@+id/action_EmployeeProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/NonCustomerInfoFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.NonCustomerAccInfoFragment"
+        tools:layout="@layout/fragment_non_customer_acc_info">
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EditInfoFragment"
+            app:destination="@id/EditInfoFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/OwnerProfileFragment"
         android:name="ca.mcgill.ecse321.grocerystore.OwnerProfileFragment"
         tools:layout="@layout/owner_profile">
-
         <action
-            android:id="@+id/action_OwnerProfileFragment_to_AccountInfoFragment"
-            app:destination="@id/AccountInfoFragment" />
+            android:id="@+id/action_OwnerProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
     </fragment>
 
     <fragment
@@ -109,6 +117,9 @@
         <action
             android:id="@+id/action_EditInfoFragment_to_AccountInfoFragment"
             app:destination="@id/AccountInfoFragment" />
+        <action
+            android:id="@+id/action_EditInfoFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/checkoutFragment"

@@ -9,17 +9,14 @@ import com.loopj.android.http.RequestParams;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import ca.mcgill.ecse321.grocerystore.databinding.ActivityMainBinding;
 import cz.msebera.android.httpclient.Header;
 
 import android.view.Menu;
@@ -30,9 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
 
     private String error = null;
     private String username = "testing1";
@@ -67,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         //function needed on page creation for AccountInfo
         error = "";
-        HttpUtils.get("/api/account/"+ username, null, new JsonHttpResponseHandler() {
+        HttpUtils.get("api/account/"+ username, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -89,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         error = "";
-        HttpUtils.get("/api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -133,13 +127,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 
     public void updateName(View view) {
