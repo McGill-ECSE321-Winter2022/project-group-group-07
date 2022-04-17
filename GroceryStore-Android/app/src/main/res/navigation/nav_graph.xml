@@ -91,6 +91,12 @@
         <action
             android:id="@+id/action_NonCustomerInfoFragment_to_EditInfoFragment"
             app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EmployeeProfileFragment"
+            app:destination="@id/EmployeeProfileFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_OwnerProfileFragment"
+            app:destination="@id/OwnerProfileFragment" />
     </fragment>
 
     <fragment
@@ -110,6 +116,9 @@
         <action
             android:id="@+id/action_AccountInfoFragment_to_EditInfoFragment"
             app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_AccountInfoFragment_to_CustomerProfileFragment"
+            app:destination="@id/CustomerProfileFragment" />
     </fragment>
 
     <fragment
