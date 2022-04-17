@@ -103,7 +103,7 @@ public class LoginFragment extends Fragment {
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_CustomerProfileFragment);
         }
-        else if (role.contains("Employee")){
+        else if (role.contains("Employment")){
             NavHostFragment.findNavController(LoginFragment.this)
                     .navigate(R.id.action_LoginFragment_to_EmployeeProfileFragment);
         } else {

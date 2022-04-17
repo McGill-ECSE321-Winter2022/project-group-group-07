@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,49 +23,49 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class PickUpFragment extends Fragment {
-    private View PickUpView;
+public class DeliveryFragment extends Fragment {
+    private View DeliveryView;
     private String error;
     private String currUser;
     private EditText username;
     RecyclerView recyclerView;
     List<Order> orders;
-    Adapter adapter;
+    DeliveryAdapter adapter;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        PickUpView = inflater.inflate(R.layout.fragment_pickup_orders, container, false);
-        recyclerView = PickUpView.findViewById(R.id.pickUpOrdersList);
+        DeliveryView = inflater.inflate(R.layout.fragment_delivery_orders, container, false);
+        recyclerView = DeliveryView.findViewById(R.id.deliveryOrdersList);
         orders = new ArrayList<>();
 
         updateOrders();
 
-        return PickUpView;
+        return DeliveryView;
     }
 
     private void updateOrders() {
-        HttpUtils.get("api/order/pendingPickUpOrders"
+        HttpUtils.get("api/order/pendingDeliveryOrders"
                 , new RequestParams(), new JsonHttpResponseHandler() {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {//0408
 
-                            for (int i=0; i< response.length();i++) {
-                                try {
-                                    JSONObject orderObject = response.getJSONObject(i);
-                                    Order order = new Order();
-                                    order.setOrderID(orderObject.getString("orderID"));
-                                    order.setStatus(orderObject.getString("status"));
-                                    orders.add(order);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                        for (int i=0; i< response.length();i++) {
+                            try {
+                                JSONObject orderObject = response.getJSONObject(i);
+                                Order order = new Order();
+                                order.setOrderID(orderObject.getString("orderID"));
+                                order.setStatus(orderObject.getString("status"));
+                                orders.add(order);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                        }
 
-                        adapter = new Adapter(PickUpView.getContext(), orders);
+                        adapter = new DeliveryAdapter(DeliveryView.getContext(), orders);
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(PickUpView.getContext()));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DeliveryView.getContext()));
 
 
                     }
@@ -86,7 +83,7 @@ public class PickUpFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        PickUpView.findViewById(R.id.updateButtonInPickUpPage).setOnClickListener(new View.OnClickListener() {
+        DeliveryView.findViewById(R.id.updateButtonInDeliveryOrderPage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 orders = new ArrayList<>();
@@ -101,6 +98,6 @@ public class PickUpFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        PickUpView = null;
+        DeliveryView = null;
     }
 }
