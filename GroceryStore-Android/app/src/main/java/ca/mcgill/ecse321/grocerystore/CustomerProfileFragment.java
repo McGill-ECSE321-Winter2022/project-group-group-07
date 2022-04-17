@@ -33,6 +33,14 @@ public class CustomerProfileFragment extends Fragment {
                         .navigate(R.id.action_CustomerProfileFragment_to_AccountInfoFragment);
             }
         });
+
+        binding.ViewCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CustomerProfileFragment.this)
+                        .navigate(R.id.action_CustomerProfileFragment_to_checkoutFragment);
+            }
+        });
     }
 
     @Override

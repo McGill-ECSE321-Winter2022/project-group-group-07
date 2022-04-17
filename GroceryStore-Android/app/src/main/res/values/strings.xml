@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">GroceryStore-Android</string>
     <string name="action_settings">Settings</string>
-
+    <!-- Strings used for fragments for checkout -->
+    <string name="credit_card">Credit Information</string>
+    <string name="card_holder">Card Holder Name</string>
+    <string name="credit_number">Card number</string>
+    <string name="CVV">CVV</string>
+    <string name="points_available">Point available</string>
+    <string name="apply_points">apply points</string>
+    <string name="pickUp_option">PickUp</string>
+    <string name="delivery_option">Delivery</string>
+    <string name="pick_pickUp_date">Choose pickUp Date</string>
+    <string name="pick_delivery_time">Choose delivery Date</string>
+    <string name="sub_total">Subtotal</string>
+    <string name="total_amount">Total</string>
+    <string name="place_order">Place Order</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

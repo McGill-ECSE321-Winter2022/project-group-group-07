@@ -79,8 +79,8 @@ public class CheckoutFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO: submit data from the fields
-                NavHostFragment.findNavController(CheckoutFragment.this)
-                        .navigate(R.id.action_third_to_SecondFragment);
+//                NavHostFragment.findNavController(CheckoutFragment.this)
+//                        .navigate(R.id.action_third_to_SecondFragment);
             }
         });
 
