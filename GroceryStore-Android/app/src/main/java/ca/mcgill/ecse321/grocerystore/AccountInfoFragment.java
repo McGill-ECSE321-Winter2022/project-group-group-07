@@ -16,13 +16,13 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.entity.mime.Header;
+import cz.msebera.android.httpclient.Header;
 
 public class AccountInfoFragment extends Fragment {
 
     private View accountInfoView;
     private String error = null;
-    private String username = "Test";
+    private String username = "Testing";
 
     //fragment_account_info variables
     private TextView myUsername;
