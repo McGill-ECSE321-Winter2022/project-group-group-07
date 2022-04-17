@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import ca.mcgill.ecse321.grocerystore.databinding.FragmentEditInfoBinding;
-
 public class EditInfoFragment extends Fragment {
 
-    private FragmentEditInfoBinding binding;
+    private View editInfoView;
 
     @Override
     public View onCreateView(
@@ -21,13 +19,13 @@ public class EditInfoFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentEditInfoBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        editInfoView = inflater.inflate(R.layout.fragment_edit_info, container, false);
+        return editInfoView;
     }
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.AccountInfoToEditInfoButton.setOnClickListener(new View.OnClickListener() {
+        editInfoView.findViewById(R.id.AccountInfoToEditInfoButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(EditInfoFragment.this)
@@ -38,6 +36,6 @@ public class EditInfoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        editInfoView = null;
     }
 }
