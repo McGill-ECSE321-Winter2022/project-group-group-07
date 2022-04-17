@@ -87,7 +87,9 @@ public class AccountInfoFragment extends Fragment {
                 try {
                     String tempString = "";
                     tempString += response.getString("buildingNo");
+                    tempString += " ";
                     tempString += response.getString("street");
+                    tempString += " ";
                     tempString += response.getString("town");
                     myAddress.setText(tempString);
                 } catch (Exception e) {
