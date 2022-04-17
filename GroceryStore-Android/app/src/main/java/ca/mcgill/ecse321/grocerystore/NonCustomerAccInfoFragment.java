@@ -21,21 +21,36 @@ import cz.msebera.android.httpclient.entity.mime.Header;
 
 public class NonCustomerAccInfoFragment extends Fragment {
 
-    private FragmentNonCustomerAccInfoBinding binding;
+    private View nonCustomerAccInfoView;
     private String error = null;
+    private String role;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding =FragmentNonCustomerAccInfoBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        nonCustomerAccInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
+        return  nonCustomerAccInfoView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.EditInfoButtonForNonCustomers.setOnClickListener(new View.OnClickListener() {
+        role = ((MainActivity) this.getActivity()).getRole();
+        nonCustomerAccInfoView.findViewById(R.id.NonCustomerAccountInfoToProfile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(role.contains("Owner")) {
+                    NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
+                            .navigate(R.id.action_NonCustomerInfoFragment_to_OwnerProfileFragment);
+                } else {
+                    NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
+                            .navigate(R.id.action_NonCustomerInfoFragment_to_EmployeeProfileFragment);
+                }
+            }
+        });
+
+        nonCustomerAccInfoView.findViewById(R.id.EditInfoButtonForNonCustomers).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
@@ -48,7 +63,7 @@ public class NonCustomerAccInfoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        nonCustomerAccInfoView = null;
     }
 
 }
