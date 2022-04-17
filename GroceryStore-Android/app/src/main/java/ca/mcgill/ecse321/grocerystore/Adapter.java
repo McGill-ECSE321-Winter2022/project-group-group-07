@@ -36,7 +36,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return 0;
+        return orders.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

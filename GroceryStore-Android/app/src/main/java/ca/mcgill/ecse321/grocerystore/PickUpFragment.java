@@ -66,7 +66,9 @@ public class PickUpFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-
+                        recyclerView.setLayoutManager(new LinearLayoutManager(PickUpView.getContext().getApplicationContext()));
+                        adapter = new Adapter(PickUpView.getContext().getApplicationContext(), orders);
+                        recyclerView.setAdapter(adapter);
                     }
 
                     public void onFailure(int statusCode, Header[] headers,
