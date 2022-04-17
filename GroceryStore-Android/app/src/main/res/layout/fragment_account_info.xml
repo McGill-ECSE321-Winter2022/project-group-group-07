@@ -17,6 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <TextView
@@ -136,6 +138,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/editAccountInfo_button" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/AccountInfoToProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="143dp"
+            android:text="@string/return_button"
+            android:textSize="12dp" />
 
     </LinearLayout>
 
