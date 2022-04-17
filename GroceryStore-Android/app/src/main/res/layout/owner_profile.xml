@@ -13,7 +13,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".AccountInfoFragment">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,64 +34,28 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:gravity="center"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:text="This seems semi-permanent now!"
-            android:textStyle="bold" />
+            android:layout_height="35dp"/>
+
 
         <Button
-            android:id="@+id/BrowseProducts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Browse Products" />
-
-        <Button
-            android:id="@+id/ViewAccountInfo"
+            android:id="@+id/OwnerViewAccountInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="View your Account Information" />
 
-        <Button
-            android:id="@+id/ViewOrderStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="View your Orders' Status" />
-        <Button
-            android:id="@+id/ViewCart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="View Your Cart" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="Tell me if an option is missing or one too many has been added!"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/ViewCustomerOrders"
+            android:id="@+id/OwnerViewCustomerOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="View/Manage Customers' orders" />
-
-
 
         <LinearLayout
             android:layout_width="match_parent"

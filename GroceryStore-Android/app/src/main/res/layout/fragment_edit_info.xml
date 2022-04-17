@@ -283,7 +283,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/AccountInfoToEditInfoButton"
+                android:id="@+id/EditInfoButtonToAccountInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_gravity="bottom"

@@ -33,19 +33,14 @@
             android:layout_height="2dp"
             android:background="#E6E6FA" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:gravity="center"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:text="This is only a temporary idea!"
-            android:textStyle="bold" />
+            android:layout_height="35dp"
+            android:orientation="horizontal">
+        </LinearLayout>
 
         <Button
-            android:id="@+id/ViewAccountInfo"
+            android:id="@+id/EmployeeViewAccountInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,27 +48,19 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="Tell me if an option is missing or one too many has been added!"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/ViewCustomerOrders"
+            android:id="@+id/EmployeeViewCustomerOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="View/Manage Customers' orders" />
 
         <Button
-            android:id="@+id/ViewSchedule"
+            android:id="@+id/EmployeeViewSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -81,16 +68,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="Or if I should make one for all employee type"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <Button

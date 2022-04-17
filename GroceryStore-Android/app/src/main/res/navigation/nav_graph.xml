@@ -6,6 +6,28 @@
     app:startDestination="@id/LoginFragment">
 
     <fragment
+
+        android:id="@+id/FirstFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/LoginFragment"
         android:name="ca.mcgill.ecse321.grocerystore.LoginFragment"
         tools:layout="@layout/fragment_login">
@@ -55,20 +77,39 @@
         android:id="@+id/EmployeeProfileFragment"
         android:name="ca.mcgill.ecse321.grocerystore.EmployeeProfileFragment"
         tools:layout="@layout/employee_profile">
-
         <action
-            android:id="@+id/action_EmployeeProfileFragment_to_AccountInfoFragment"
-            app:destination="@id/AccountInfoFragment" />
+            android:id="@+id/action_EmployeeProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_PickUpFragment"
+            app:destination="@id/PickUpFragment" />
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_DeliveryFragment"
+            app:destination="@id/DeliveryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/NonCustomerInfoFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.NonCustomerAccInfoFragment"
+        tools:layout="@layout/fragment_non_customer_acc_info">
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EditInfoFragment"
+            app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EmployeeProfileFragment"
+            app:destination="@id/EmployeeProfileFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_OwnerProfileFragment"
+            app:destination="@id/OwnerProfileFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/OwnerProfileFragment"
         android:name="ca.mcgill.ecse321.grocerystore.OwnerProfileFragment"
         tools:layout="@layout/owner_profile">
-
         <action
-            android:id="@+id/action_OwnerProfileFragment_to_AccountInfoFragment"
-            app:destination="@id/AccountInfoFragment" />
+            android:id="@+id/action_OwnerProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
     </fragment>
 
     <fragment
@@ -79,6 +120,9 @@
         <action
             android:id="@+id/action_AccountInfoFragment_to_EditInfoFragment"
             app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_AccountInfoFragment_to_CustomerProfileFragment"
+            app:destination="@id/CustomerProfileFragment" />
     </fragment>
 
     <fragment
@@ -89,11 +133,24 @@
         <action
             android:id="@+id/action_EditInfoFragment_to_AccountInfoFragment"
             app:destination="@id/AccountInfoFragment" />
+        <action
+            android:id="@+id/action_EditInfoFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/checkoutFragment"
         android:name="ca.mcgill.ecse321.grocerystore.CheckoutFragment"
         android:label="activity_checkout"
         tools:layout="@layout/activity_checkout" />
+
+    <fragment
+        android:id="@+id/PickUpFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.PickUpFragment"
+        tools:layout="@layout/fragment_pickup_orders"/>
+
+    <fragment
+        android:id="@+id/DeliveryFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.DeliveryFragment"
+        tools:layout="@layout/fragment_delivery_orders"/>
 
 </navigation>

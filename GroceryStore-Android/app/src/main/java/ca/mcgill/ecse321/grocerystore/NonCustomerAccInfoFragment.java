@@ -18,59 +18,61 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class AccountInfoFragment extends Fragment {
+public class NonCustomerAccInfoFragment extends Fragment {
 
-    private View accountInfoView;
+    private View nonCustomerAccInfoView;
     private String error = null;
+    private String role;
 
     private String username;
-    private String role;
 
     //fragment_account_info variables
     private TextView myUsername;
     private TextView myName;
     private TextView myAddress;
-    private TextView myCurrentPoints;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        accountInfoView = inflater.inflate(R.layout.fragment_account_info, container, false);
-        return accountInfoView;
+        nonCustomerAccInfoView = inflater.inflate(R.layout.fragment_non_customer_acc_info, container, false);
+        return  nonCustomerAccInfoView;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        username = ((MainActivity) this.getActivity()).getUsername();
         role = ((MainActivity) this.getActivity()).getRole();
+        username = ((MainActivity) this.getActivity()).getUsername();
 
         //fragment_account_info variables
-        myUsername= accountInfoView.findViewById(R.id.myUsername_AccountInfo);
-        myName= accountInfoView.findViewById(R.id.myName_AccountInfo);
-        myAddress = accountInfoView.findViewById(R.id.myAddress_AccountInfo);
-        myCurrentPoints = accountInfoView.findViewById(R.id.myPoints_AccountInfo);
+        myUsername= nonCustomerAccInfoView.findViewById(R.id.nonCust_myUsername_AccountInfo);
+        myName= nonCustomerAccInfoView.findViewById(R.id.nonCust_myName_AccountInfo);
+        myAddress = nonCustomerAccInfoView.findViewById(R.id.nonCust_myAddress_AccountInfo);
 
         getAccountInfo();
 
-        accountInfoView.findViewById(R.id.EditInfoButton).setOnClickListener(new View.OnClickListener() {
+        nonCustomerAccInfoView.findViewById(R.id.NonCustomerAccountInfoToProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(AccountInfoFragment.this)
-                        .navigate(R.id.action_AccountInfoFragment_to_EditInfoFragment);
+                if(role.contains("Owner")) {
+                    NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
+                            .navigate(R.id.action_NonCustomerInfoFragment_to_OwnerProfileFragment);
+                } else {
+                    NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
+                            .navigate(R.id.action_NonCustomerInfoFragment_to_EmployeeProfileFragment);
+                }
             }
         });
 
-        accountInfoView.findViewById(R.id.AccountInfoToProfile).setOnClickListener(new View.OnClickListener() {
+        nonCustomerAccInfoView.findViewById(R.id.EditInfoButtonForNonCustomers).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(AccountInfoFragment.this)
-                        .navigate(R.id.action_AccountInfoFragment_to_CustomerProfileFragment);
+                NavHostFragment.findNavController(NonCustomerAccInfoFragment.this)
+                        .navigate(R.id.action_NonCustomerInfoFragment_to_EditInfoFragment);
             }
         });
-
 
     }
 
@@ -81,7 +83,6 @@ public class AccountInfoFragment extends Fragment {
                 try {
                     myUsername.setText(response.getString("username"));
                     myName.setText(response.getString("name"));
-                    myCurrentPoints.setText(response.getString("pointBalance"));
                 } catch (Exception e) {
                     error += e.getMessage();
                 }
@@ -123,7 +124,7 @@ public class AccountInfoFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        accountInfoView = null;
+        nonCustomerAccInfoView = null;
     }
 
 }

@@ -1,40 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:padding="8dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-  <ImageView
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      tools:src="@tools:sample/avatars"/>
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:padding="5dp"
-      android:orientation="vertical">
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="@tools:sample/lorem[3]" />
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="@tools:sample/lorem[4]" />
-  </LinearLayout>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/LoginFragment">
 
-  <Button
-      android:id="@+id/addToCartButton"
-      android:layout_width="92dp"
-      android:layout_height="33dp"
-      android:layout_gravity="center"
-      android:layout_marginTop="10dp"
-      android:text="Add To Cart"
-      android:textSize="8dp"
-      android:translationX="100px"
-      android:translationY="-25px" />
-</LinearLayout>
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginFragment_to_CustomerProfileFragment"
+            app:destination="@id/CustomerProfileFragment" />
+
+        <action
+            android:id="@+id/action_LoginFragment_to_EmployeeProfileFragment"
+            app:destination="@id/EmployeeProfileFragment" />
+
+        <action
+            android:id="@+id/action_LoginFragment_to_OwnerProfileFragment"
+            app:destination="@id/OwnerProfileFragment" />
+
+        <action
+            android:id="@+id/action_LoginFragment_to_SignupFragment"
+            app:destination="@id/SignupFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/SignupFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.SignupFragment"
+        tools:layout="@layout/fragment_signup">
+
+        <action
+            android:id="@+id/action_SignupFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CustomerProfileFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.CustomerProfileFragment"
+        tools:layout="@layout/customer_profile">
+
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_AccountInfoFragment"
+            app:destination="@id/AccountInfoFragment" />
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EmployeeProfileFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.EmployeeProfileFragment"
+        tools:layout="@layout/employee_profile">
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_PickUpFragment"
+            app:destination="@id/PickUpFragment" />
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_DeliveryFragment"
+            app:destination="@id/DeliveryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/NonCustomerInfoFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.NonCustomerAccInfoFragment"
+        tools:layout="@layout/fragment_non_customer_acc_info">
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EditInfoFragment"
+            app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_EmployeeProfileFragment"
+            app:destination="@id/EmployeeProfileFragment" />
+        <action
+            android:id="@+id/action_NonCustomerInfoFragment_to_OwnerProfileFragment"
+            app:destination="@id/OwnerProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/OwnerProfileFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.OwnerProfileFragment"
+        tools:layout="@layout/owner_profile">
+        <action
+            android:id="@+id/action_OwnerProfileFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/AccountInfoFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.AccountInfoFragment"
+        tools:layout="@layout/fragment_account_info">
+
+        <action
+            android:id="@+id/action_AccountInfoFragment_to_EditInfoFragment"
+            app:destination="@id/EditInfoFragment" />
+        <action
+            android:id="@+id/action_AccountInfoFragment_to_CustomerProfileFragment"
+            app:destination="@id/CustomerProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EditInfoFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.EditInfoFragment"
+        tools:layout="@layout/fragment_edit_info">
+
+        <action
+            android:id="@+id/action_EditInfoFragment_to_AccountInfoFragment"
+            app:destination="@id/AccountInfoFragment" />
+        <action
+            android:id="@+id/action_EditInfoFragment_to_NonCustomerInfoFragment"
+            app:destination="@id/NonCustomerInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.CheckoutFragment"
+        android:label="activity_checkout"
+        tools:layout="@layout/activity_checkout" />
+
+    <fragment
+        android:id="@+id/PickUpFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.PickUpFragment"
+        tools:layout="@layout/fragment_pickup_orders"/>
+
+    <fragment
+        android:id="@+id/DeliveryFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.DeliveryFragment"
+        tools:layout="@layout/fragment_delivery_orders"/>
+
+</navigation>

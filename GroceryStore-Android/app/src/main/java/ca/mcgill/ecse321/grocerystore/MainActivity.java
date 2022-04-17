@@ -9,17 +9,14 @@ import com.loopj.android.http.RequestParams;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import ca.mcgill.ecse321.grocerystore.databinding.ActivityMainBinding;
 import cz.msebera.android.httpclient.Header;
 
 import android.view.Menu;
@@ -31,17 +28,27 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
-
     private String error = null;
-    private String username = "testing1";
 
-    //fragment_account_info variables
-    private TextView myUsername;
-    private TextView myName;
-    private TextView myAddress;
-    private TextView myCurrentPoints;
+    private String username;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,58 +66,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //fragment_account_info variables
-        myUsername= (TextView)findViewById(R.id.myUsername_AccountInfo);
-        myName= (TextView)findViewById(R.id.myName_AccountInfo);
-        myAddress = (TextView)findViewById(R.id.myAddress_AccountInfo);
-        myCurrentPoints = (TextView)findViewById(R.id.myPoints_AccountInfo);
-
-        //function needed on page creation for AccountInfo
-        error = "";
-        HttpUtils.get("/api/account/"+ username, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    myUsername.setText(response.getString("username"));
-                    myName.setText(response.getString("name"));
-                    myCurrentPoints.setText(response.getString("pointBalance"));
-                } catch (Exception e) {
-                    error += e.getMessage();
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                try {
-                    error += errorResponse.get("message").toString();
-                } catch (JSONException e) {
-                    error += e.getMessage();
-                }
-            }
-        });
-
-        error = "";
-        HttpUtils.get("/api/address/address/".concat(username), new RequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    String tempString = "";
-                    tempString += response.getString("buildingNo");
-                    tempString += response.getString("street");
-                    tempString += response.getString("town");
-                    myAddress.setText(tempString);
-                } catch (Exception e) {
-                    error += e.getMessage();
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                try {
-                    error += errorResponse.get("message").toString();
-                } catch (JSONException e) {
-                    error += e.getMessage();
-                }
-            }
-        });
     }
 
     @Override
@@ -135,18 +90,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
-    public void updateName(View view) {
-        //yet to be written
-    }
-
-    public void updatePassword(View view) {
-        //yet to be written
-    }
 }
