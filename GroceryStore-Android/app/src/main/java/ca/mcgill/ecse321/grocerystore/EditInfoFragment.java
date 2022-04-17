@@ -20,11 +20,27 @@ import cz.msebera.android.httpclient.Header;
 
 public class EditInfoFragment extends Fragment {
 
+    /**currently still need a way to get userType**/
+
     private int userType =1;
+
     private View editInfoView;
-    private EditText username;
-    private EditText name;
     private String error;
+
+    //EditText for update Name
+    private EditText usernameForUpdateName;
+    private EditText name;
+
+    //EditText for update Password
+    private EditText usernameForUpdatePassword;
+    private EditText currPassword;
+    private EditText newPassword;
+
+    //EditText for update Address
+    private EditText usernameForUpdateAddress;
+    private EditText buildingNo;
+    private EditText street;
+    private EditText town;
 
     @Override
     public View onCreateView(
@@ -54,26 +70,84 @@ public class EditInfoFragment extends Fragment {
         editInfoView.findViewById(R.id.UpdateNameButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = (EditText) editInfoView.findViewById(R.id.myUsername_nameEditInfo);
+                usernameForUpdateName = (EditText) editInfoView.findViewById(R.id.myUsername_nameEditInfo);
                 name = (EditText) editInfoView.findViewById(R.id.myNewName_nameEditInfo);
                 updateName();
+            }
+        });
+
+        editInfoView.findViewById(R.id.UpdatePasswordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usernameForUpdatePassword = (EditText) editInfoView.findViewById(R.id.myUsername_passwordEditInfo);
+                currPassword = (EditText) editInfoView.findViewById(R.id.myCurrentPassword_passwordEditInfo );
+                newPassword = (EditText) editInfoView.findViewById(R.id.myNewPassword_passwordEditInfo );
+                updatePassword();
+            }
+        });
+
+        editInfoView.findViewById(R.id.UpdateAddressButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usernameForUpdateAddress = (EditText) editInfoView.findViewById(R.id.myUsername_addressEditInfo);
+                buildingNo = (EditText) editInfoView.findViewById(R.id.myBuildingNo_addressEditInfo);
+                street = (EditText) editInfoView.findViewById(R.id.myStreet_addressEditInfo);
+                town = (EditText) editInfoView.findViewById(R.id.myTown_addressEditInfo);
+                updateAddress();
             }
         });
     }
 
     private void updateName() {
-        HttpUtils.put("api/account/updateName/" + username.getText().toString() +
+        HttpUtils.put("api/account/updateName/" + usernameForUpdateName.getText().toString() +
                 "?newName=" + name.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
 
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                usernameForUpdateName.setText("");
+                name.setText("");
+            }
+            public void onFailure(int statusCode, Header[] headers,
+                                  Throwable throwable, JSONObject errorResponse) {
                 try {
-                    String success = response.get("username").toString();
-                    username.setText("");
-                    name.setText("");
+                    error += errorResponse.get("message").toString();
                 } catch (JSONException e) {
                     error += e.getMessage();
                 }
+            }
+        });
+    }
 
+    private void updatePassword() {
+        HttpUtils.put("api/account/updatePassword/" + usernameForUpdatePassword.getText().toString() +
+                "?oldPassword=" + currPassword.getText().toString() + "&newPassword=" + newPassword.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                usernameForUpdatePassword.setText("");
+                currPassword.setText("");
+                newPassword.setText("");
+            }
+            public void onFailure(int statusCode, Header[] headers,
+                                  Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+            }
+        });
+    }
+
+    private void updateAddress() {
+        HttpUtils.put("api/address/updateAddress/" + usernameForUpdateAddress.getText().toString() +
+                "?buildingNo=" + buildingNo.getText().toString() +
+                "&street=" + street.getText().toString() +
+                "&town=" + town.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                usernameForUpdateAddress.setText("");
+                buildingNo.setText("");
+                street.setText("");
+                town.setText("");
             }
             public void onFailure(int statusCode, Header[] headers,
                                   Throwable throwable, JSONObject errorResponse) {
