@@ -85,6 +85,12 @@
         <action
             android:id="@+id/action_EmployeeProfileFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_PickUpFragment"
+            app:destination="@id/PickUpFragment" />
+        <action
+            android:id="@+id/action_EmployeeProfileFragment_to_DeliveryFragment"
+            app:destination="@id/DeliveryFragment" />
     </fragment>
 
     <fragment
