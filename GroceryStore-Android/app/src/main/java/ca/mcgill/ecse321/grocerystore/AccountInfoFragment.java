@@ -26,7 +26,6 @@ public class AccountInfoFragment extends Fragment {
     private String username;
     private String role;
 
-
     //fragment_account_info variables
     private TextView myUsername;
     private TextView myName;

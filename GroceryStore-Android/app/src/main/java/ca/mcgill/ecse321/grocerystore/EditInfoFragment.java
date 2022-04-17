@@ -20,9 +20,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class EditInfoFragment extends Fragment {
 
-    /**currently still need a way to get userType**/
-
-    private int userType =1;
+    private String userType;
 
     private View editInfoView;
     private String error;
@@ -53,11 +51,11 @@ public class EditInfoFragment extends Fragment {
     }
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        userType = ((MainActivity) this.getActivity()).getRole();
         editInfoView.findViewById(R.id.EditInfoButtonToAccountInfo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userType == 1 ) {
+                if (userType.contains("Customer") ) {
                     NavHostFragment.findNavController(EditInfoFragment.this)
                             .navigate(R.id.action_EditInfoFragment_to_AccountInfoFragment);
                 } else {
