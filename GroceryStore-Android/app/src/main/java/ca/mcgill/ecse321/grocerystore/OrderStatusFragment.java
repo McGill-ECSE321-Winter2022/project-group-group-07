@@ -30,7 +30,7 @@ public class OrderStatusFragment extends Fragment {
     private EditText username;
     RecyclerView recyclerView;
     List<Order> orders;
-    DeliveryAdapter adapter;
+    OrderStatusAdapter adapter;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -63,7 +63,7 @@ public class OrderStatusFragment extends Fragment {
                             }
                         }
 
-                        adapter = new DeliveryAdapter(OrderStatusView.getContext(), orders);
+                        adapter = new OrderStatusAdapter(OrderStatusView.getContext(), orders);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(OrderStatusView.getContext()));
 
@@ -83,8 +83,8 @@ public class OrderStatusFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        orders = new ArrayList<>();
-        updateOrders();
+//        orders = new ArrayList<>();
+//        updateOrders();
     }
 
 

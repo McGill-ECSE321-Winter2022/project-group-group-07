@@ -78,6 +78,9 @@
         <action
             android:id="@+id/action_CustomerProfileFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_OrderStatusFragment"
+            app:destination="@id/OrderStatusFragment" />
 
     </fragment>
 
@@ -188,5 +191,9 @@
             android:id="@+id/action_CartFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/OrderStatusFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.OrderStatusFragment"
+        tools:layout="@layout/fragment_orderstatus"/>
 
 </navigation>

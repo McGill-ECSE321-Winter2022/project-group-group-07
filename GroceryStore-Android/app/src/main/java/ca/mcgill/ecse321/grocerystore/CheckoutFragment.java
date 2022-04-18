@@ -79,11 +79,11 @@ public class CheckoutFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                HttpUtils.put("/api/cart/chooseOrderType/" + username + "?orderType=" + orderType,new RequestParams(), new JsonHttpResponseHandler() {
+                HttpUtils.put("api/cart/chooseOrderType/" + username + "?orderType=" + orderType,new RequestParams(), new JsonHttpResponseHandler() {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                     }   });
-                HttpUtils.post("/api/order/checkout/"+username+"?points=0",new RequestParams(), new JsonHttpResponseHandler() {
+                HttpUtils.post("api/order/checkout/"+username+"?points=0",new RequestParams(), new JsonHttpResponseHandler() {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         navigate();
                     }
