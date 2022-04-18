@@ -78,6 +78,11 @@ public class CheckoutFragment extends Fragment {
         checkoutView.findViewById(R.id.placeOrder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                HttpUtils.put("/api/cart/chooseOrderType/" + username + "?orderType=" + orderType,new RequestParams(), new JsonHttpResponseHandler() {
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                    }   });
                 HttpUtils.post("/api/order/checkout/"+username+"?points=0",new RequestParams(), new JsonHttpResponseHandler() {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         navigate();
@@ -89,55 +94,20 @@ public class CheckoutFragment extends Fragment {
         });
 
 
-        /*checkoutView.findViewById(R.id.applyPoints).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (discountPoints != null) {
-                    Integer currentPointInt = Integer.parseInt(currentPoints.getText().toString());
-                    Integer pointsToApply = Integer.parseInt(discountPoints.getText().toString());
-                    Integer currentSubtotal = Integer.parseInt(subtotal.getText().toString());
-                    getPointToCashRatio();
-                    Integer cashDiscount = pointsToApply/pointToCashRatio;
 
-                    if (pointsToApply <= currentPointInt && cashDiscount <= currentSubtotal) {
-                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.GONE);
-                        currentSubtotal -= cashDiscount;
-                        currentPointInt -= pointsToApply;
-                        String total = String.valueOf(currentSubtotal);
-
-                        currentPoints.setText(String.valueOf(currentPointInt));
-                        discountPoints.setText("");
-                        totalComp.setText(total);
-                    } else {
-                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.VISIBLE);
-                        discountPoints.setText("");
-                    }
-                }
-            }
-        });
-        binding.placeOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: submit data from the fields
-//                NavHostFragment.findNavController(CheckoutFragment.this)
-//                        .navigate(R.id.action_third_to_SecondFragment);
-            }
-        });
-
-*/
-
-
-                ((RadioGroup) checkoutView.findViewById(R.id.order_option)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        ((RadioGroup) checkoutView.findViewById(R.id.order_option)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(((RadioButton)checkoutView.findViewById(R.id.deliveryLabel)).isChecked()){
                     checkoutView.findViewById(R.id.delivery_window).setVisibility(View.VISIBLE);
+                    orderType = "Delivery";
                 } else {
                     checkoutView.findViewById(R.id.delivery_window).setVisibility(View.GONE);
                 }
 
                 if(((RadioButton)checkoutView.findViewById(R.id.pickUpLabel)).isChecked()){
                     checkoutView.findViewById(R.id.pickup_window).setVisibility(View.VISIBLE);
+                    orderType= "PickUp";
                 } else {
                     checkoutView.findViewById(R.id.pickup_window).setVisibility(View.GONE);
                 }
@@ -175,27 +145,7 @@ public class CheckoutFragment extends Fragment {
             }
         });
     }
-    /*
-    private void getPointToCashRatio(){
-        HttpUtils.get("api/store/store", new RequestParams(), new JsonHttpResponseHandler() {
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
 
-                    pointToCashRatio = Integer.parseInt(response.get("pointToCashRatio").toString());
-                } catch (Exception e) {
-                    error += e.getMessage();
-                }
-            }
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                try {
-                    error += errorResponse.get("message").toString();
-                } catch (JSONException e) {
-                    error += e.getMessage();
-                }
-            }
-        });
-    }
-*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
