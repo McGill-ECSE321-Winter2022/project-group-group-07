@@ -59,4 +59,4 @@ Sprint Report 4 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 | Adam Kazma | | |
 | Jasmine Cheung | Page Design, Function Implementation, Wiki Documentation | 48 |
 | Ojetta Ye | Initial Page Design, Function Implementation, Wiki Documentation| 32 |
-| Tran Tuan Khai Phan | Page Design | 10 |
+| Tran Tuan Khai Phan | Page Design | 8 |
