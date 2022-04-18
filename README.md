@@ -49,3 +49,14 @@ Sprint Report 3 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 | Jasmine Cheung | Customer Page Frontend, Backend | 41 |
 | Ojetta Ye | Initial Setup, Login/Signup Pages Frontend, Backend | 38 |
 | Tran Tuan Khai Phan | Cart/Checkout/Payment Pages Frontend, Backend | 38 |
+
+## Deliverable 4
+Sprint Report 4 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-4)
+| Name | Contribution | Hours |
+|------|--------------|-------|
+| Karim Moussa | Initial Setup, Owner Page Frontend, Backend | 45 |
+| Elias Abou Farah | Database management, Employee Page Frontend, Backend | 43 |
+| Adam Kazma | Frontend example, Terminal Page Frontend, Backend  | 43 |
+| Jasmine Cheung | Customer Page Frontend, Backend | 41 |
+| Ojetta Ye | Initial Setup, Login/Signup Pages Frontend, Backend | 38 |
+| Tran Tuan Khai Phan | Cart/Checkout/Payment Pages Frontend, Backend | 38 |
