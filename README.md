@@ -10,12 +10,12 @@ We are a team of six Software Engineering Students in U2 at McGill. We are group
 ## Overview Table
 | Name | Role | Sprint 1 | Sprint 2 | Sprint 3 | Sprint 4 |
 |------|--------------|------|------|-------|-------|
-| Karim Moussa | Project Manager | 24.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Elias Abou Farah | Backend Lead | 24.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Adam Kazma | Testing Lead | 20.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Tran Tuan Khai Phan | Software Developer | 17.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Jasmine Cheung | Software Developer | 16.5 | Sprint 2 | Sprint 3 | Sprint 4 |
-| Ojetta Ye | Documentation Lead | 17 | Sprint 2 | Sprint 3 | Sprint 4 |
+| Karim Moussa | Project Manager, Software Lead | 24.5 | 47.5 | 45 | 28 |
+| Elias Abou Farah | Backend Lead, Software Developer | 25.5 | 47.5 | 43 | 36 |
+| Jasmine Cheung | Frontend Lead, Software Developer | 16.5 | 32.5 | 41 | 48 |
+| Ojetta Ye | Documentation Lead, Software Developer | 19.5 | 19.5 | 38 | 32 |
+| Adam Kazma | Testing Lead | 20.5 | 10 | 43 |  |
+| Tran Tuan Khai Phan | Software Developer | 17.5 | 17 | 38 | 10 |
 
 ## Deliverable 1
 Sprint Report 1 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-1)
@@ -56,7 +56,7 @@ Sprint Report 4 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 |------|--------------|-------|
 | Karim Moussa | Page Design, Function Implementation | 28 |
 | Elias Abou Farah | Page Design, Function Implementation, Continuous Integration | 36 |
-| Adam Kazma |  | |
+| Adam Kazma | | |
 | Jasmine Cheung | Page Design, Function Implementation, Wiki Documentation | 48 |
 | Ojetta Ye | Initial Page Design, Function Implementation, Wiki Documentation| 32 |
 | Tran Tuan Khai Phan | Page Design | 10 |
