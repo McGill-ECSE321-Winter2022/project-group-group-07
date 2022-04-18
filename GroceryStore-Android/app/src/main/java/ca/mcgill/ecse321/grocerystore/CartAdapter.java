@@ -15,12 +15,12 @@ import com.loopj.android.http.RequestParams;
 
 import java.util.List;
 
-public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.CatalogueAdapterViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartAdapterViewHolder> {
     LayoutInflater inflater;
     List<Item> items;
     String username;
 
-    public CatalogueAdapter(Context ctx, List<Item> items, String username) {
+    public CartAdapter(Context ctx, List<Item> items, String username) {
         this.inflater = LayoutInflater.from(ctx);
         this.items = items;
         this.username = username;
@@ -28,19 +28,19 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
 
     @NonNull
     @Override
-    public CatalogueAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CartAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view=inflater.inflate(R.layout.recycler_view_item_1,parent,false);
-        return new CatalogueAdapterViewHolder(view);
+        return new CartAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CatalogueAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartAdapterViewHolder holder, int position) {
         holder.price.setText(items.get(position).getPrice());
         holder.productName.setText(items.get(position).getProductName());
-        holder.addToCart.setOnClickListener(new View.OnClickListener() {
+        holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HttpUtils.put("/api/cart/addToCart/" +
+                HttpUtils.put("/api/cart/removeFromCart/" +
                         items.get(holder.getAdapterPosition()).getItemID()+"?username=" + username, new RequestParams(), new JsonHttpResponseHandler() {
                 });
             }
@@ -52,14 +52,14 @@ public class CatalogueAdapter extends RecyclerView.Adapter<CatalogueAdapter.Cata
     public int getItemCount() {
         return items.size();
     }
-    public class CatalogueAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class CartAdapterViewHolder extends RecyclerView.ViewHolder {
         TextView  price, productName;
-        Button addToCart;
-        public CatalogueAdapterViewHolder(@NonNull View itemView) {
+        Button removeButton;
+        public CartAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             price = itemView.findViewById(R.id.price);
             productName = itemView.findViewById(R.id.productName);
-            addToCart= itemView.findViewById(R.id.addToCartButton);
+            removeButton= itemView.findViewById(R.id.removeButton);
         }
     }
 }

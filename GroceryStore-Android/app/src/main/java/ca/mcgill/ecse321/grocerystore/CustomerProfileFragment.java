@@ -38,6 +38,13 @@ public class CustomerProfileFragment extends Fragment {
                         .navigate(R.id.action_CustomerProfileFragment_to_CatalogueFragment);
             }
         });
+        customerProfileView.findViewById(R.id.ViewCart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CustomerProfileFragment.this)
+                        .navigate(R.id.action_CustomerProfileFragment_to_CartFragment);
+            }
+        });
     }
 
     @Override

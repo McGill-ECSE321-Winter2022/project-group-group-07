@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_CustomerProfileFragment_to_CatalogueFragment"
             app:destination="@id/CatalogueFragment" />
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_CartFragment"
+            app:destination="@id/CartFragment" />
     </fragment>
 
     <fragment
@@ -154,10 +157,19 @@
     <fragment
         android:id="@+id/CatalogueFragment"
         android:name="ca.mcgill.ecse321.grocerystore.CatalogueFragment"
-        tools:layout="@layout/fragment_catalogue"/>
+        tools:layout="@layout/fragment_catalogue">
+        <action
+            android:id="@+id/action_CatalogueFragment_to_CartFragment"
+            app:destination="@id/CartFragment" />
+    </fragment>
     <fragment
         android:id="@+id/DeliveryFragment"
         android:name="ca.mcgill.ecse321.grocerystore.DeliveryFragment"
         tools:layout="@layout/fragment_delivery_orders"/>
+
+    <fragment
+        android:id="@+id/CartFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.CartFragment"
+        tools:layout="@layout/fragment_cart"/>
 
 </navigation>

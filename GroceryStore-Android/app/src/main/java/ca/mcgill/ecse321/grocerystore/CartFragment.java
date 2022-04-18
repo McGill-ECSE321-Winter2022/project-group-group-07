@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,29 +22,29 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class CatalogueFragment extends Fragment {
+public class CartFragment extends Fragment {
 
-    private View CatalogueView;
+    private View CartView;
     RecyclerView recyclerView;
     List<Item> items;
     String error;
-    CatalogueAdapter adapter;
+    CartAdapter adapter;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        CatalogueView = inflater.inflate(R.layout.fragment_catalogue, container, false);
-        recyclerView = CatalogueView.findViewById(R.id.catalogueList);
+        CartView = inflater.inflate(R.layout.fragment_cart, container, false);
+        recyclerView = CartView.findViewById(R.id.cartList);
         items = new ArrayList<>();
 
         updateItems();
 
-        return CatalogueView;
+        return CartView;
     }
 
     private void updateItems() {
-        HttpUtils.get("api/item/items"
+        HttpUtils.get("api/cart/cart/" + getUsername()
                 , new RequestParams(), new JsonHttpResponseHandler() {
 
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {//0408
@@ -63,9 +62,9 @@ public class CatalogueFragment extends Fragment {
                             }
                         }
 
-                        adapter = new CatalogueAdapter(CatalogueView.getContext(), items, getUsername());
+                        adapter = new CartAdapter(CartView.getContext(), items, getUsername());
                         recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(CatalogueView.getContext()));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(CartView.getContext()));
 
 
                     }
@@ -84,13 +83,7 @@ public class CatalogueFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        CatalogueView.findViewById(R.id.ViewCartFromCatalogue).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(CatalogueFragment.this)
-                        .navigate(R.id.action_CatalogueFragment_to_CartFragment);
-            }
-        });
+
     }
 
     public String getUsername(){
@@ -100,7 +93,7 @@ public class CatalogueFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        CatalogueView = null;
+        CartView = null;
     }
 }
 

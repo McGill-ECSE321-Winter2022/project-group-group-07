@@ -20,17 +20,17 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/ViewCartFromCatalogue"
+            android:id="@+id/goToCheckout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="View Cart" />
+            android:text="Checkout" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/catalogueList"
+            android:id="@+id/cartList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/recycler_view_item_1" />
+            tools:listitem="@layout/recycler_view_item_2" />
 
 
     </LinearLayout>
