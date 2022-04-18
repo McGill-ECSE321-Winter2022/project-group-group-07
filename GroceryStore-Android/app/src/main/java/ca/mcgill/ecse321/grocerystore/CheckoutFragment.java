@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 import cz.msebera.android.httpclient.Header;
 
 public class CheckoutFragment extends Fragment {
@@ -28,7 +31,7 @@ public class CheckoutFragment extends Fragment {
     String username;
     private TextView currentPoints;
     private TextView discountPoints;
-
+    private String orderType;
     private TextView totalComp;
     private TextView subtotal;
 
@@ -63,6 +66,7 @@ public class CheckoutFragment extends Fragment {
         discountPoints = checkoutView.findViewById(R.id.pointsDiscount);
         totalComp = checkoutView.findViewById(R.id.total_comp);
 
+
         checkoutView.findViewById(R.id.BackToProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,13 +75,6 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        checkoutView.findViewById(R.id.BackToProfile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(CheckoutFragment.this)
-                        .navigate(R.id.action_checkoutFragment_to_CustomerProfileFragment);
-            }
-        });
         checkoutView.findViewById(R.id.placeOrder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,26 +124,28 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
+*/
 
-        checkoutView.findViewById(R.id.order_option).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                ((RadioGroup) checkoutView.findViewById(R.id.order_option)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(binding.deliveryLabel.isChecked()){
-                    binding.deliveryWindow.setVisibility(View.VISIBLE);
+                if(((RadioButton)checkoutView.findViewById(R.id.deliveryLabel)).isChecked()){
+                    checkoutView.findViewById(R.id.delivery_window).setVisibility(View.VISIBLE);
                 } else {
-                    binding.deliveryWindow.setVisibility(View.GONE);
+                    checkoutView.findViewById(R.id.delivery_window).setVisibility(View.GONE);
                 }
 
-                if(binding.pickUpLabel.isChecked()){
-                    binding.pickupWindow.setVisibility(View.VISIBLE);
+                if(((RadioButton)checkoutView.findViewById(R.id.pickUpLabel)).isChecked()){
+                    checkoutView.findViewById(R.id.pickup_window).setVisibility(View.VISIBLE);
                 } else {
-                    binding.pickupWindow.setVisibility(View.GONE);
+                    checkoutView.findViewById(R.id.pickup_window).setVisibility(View.GONE);
                 }
             }
         });
 
-        if(binding.deliveryLabel.isChecked()){
-            binding.deliveryCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        if(((RadioButton)checkoutView.findViewById(R.id.deliveryLabel)).isChecked()){
+            ((CalendarView) checkoutView.findViewById(R.id.deliveryCalendar)).setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                 @Override
                 public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
                     String  curDate = String.valueOf(dayOfMonth);
@@ -155,7 +154,7 @@ public class CheckoutFragment extends Fragment {
                 }
             });
         }
-*/
+
     }
 
     private void getPoints() {
