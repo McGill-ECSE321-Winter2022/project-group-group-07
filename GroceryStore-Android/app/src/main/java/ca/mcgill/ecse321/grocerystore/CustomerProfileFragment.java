@@ -32,13 +32,23 @@ public class CustomerProfileFragment extends Fragment {
             }
         });
 
+        customerProfileView.findViewById(R.id.BrowseProducts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CustomerProfileFragment.this)
+                        .navigate(R.id.action_CustomerProfileFragment_to_CatalogueFragment);
+            }
+        });
+
         customerProfileView.findViewById(R.id.ViewCart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(CustomerProfileFragment.this)
-                        .navigate(R.id.action_CustomerProfileFragment_to_checkoutFragment);
+
+                        .navigate(R.id.action_CustomerProfileFragment_to_CartFragment);
             }
         });
+
 
         customerProfileView.findViewById(R.id.CustomerLogoutButton).setOnClickListener(new View.OnClickListener() {
             @Override
