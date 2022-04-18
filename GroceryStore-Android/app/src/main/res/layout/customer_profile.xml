@@ -73,7 +73,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/EditInfoButton"
+            android:id="@+id/CustomerLogoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
