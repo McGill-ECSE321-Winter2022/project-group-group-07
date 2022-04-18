@@ -54,9 +54,9 @@ Sprint Report 3 can be found [here](https://github.com/McGill-ECSE321-Winter2022
 Sprint Report 4 can be found [here](https://github.com/McGill-ECSE321-Winter2022/project-group-group-07/wiki/Project-Report:-Sprint-4)
 | Name | Contribution | Hours |
 |------|--------------|-------|
-| Karim Moussa | Page Design, Function Implementation | 45 |
-| Elias Abou Farah | Page Design, Function Implementation, Continuous Integration | 43 |
+| Karim Moussa | Page Design, Function Implementation | 28 |
+| Elias Abou Farah | Page Design, Function Implementation, Continuous Integration | 36 |
 | Adam Kazma |  | |
-| Jasmine Cheung | Page Design, Function Implementation, Wiki Documentation | 41 |
-| Ojetta Ye | Initial Page Design, Function Implementation, Wiki Documentation| 38 |
+| Jasmine Cheung | Page Design, Function Implementation, Wiki Documentation | 48 |
+| Ojetta Ye | Initial Page Design, Function Implementation, Wiki Documentation| 32 |
 | Tran Tuan Khai Phan | Page Design | 10 |
