@@ -14,26 +14,33 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import ca.mcgill.ecse321.grocerystore.databinding.ActivityCheckoutBinding;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class CheckoutFragment extends Fragment {
+    String error = "";
+    private View checkoutView;
+    String username;
+    private TextView currentPoints;
+    private TextView discountPoints;
 
-    private ActivityCheckoutBinding binding;
-    String currentPoints = "100";
-    String total = "10000";
-    String subtotal = "10000";
+    private TextView totalComp;
+    private TextView subtotal;
+
+    private Integer pointToCashRatio;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-
-        binding = ActivityCheckoutBinding.inflate(inflater, container, false);
-//        binding.
-
-        return binding.getRoot();
+        checkoutView = inflater.inflate(R.layout.activity_checkout, container, false);
+        return checkoutView;
 
     }
 
@@ -41,40 +48,60 @@ public class CheckoutFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //TODO: query for current amount of points
-        binding.points.setText(currentPoints);
+        username = ((MainActivity) this.getActivity()).getUsername();
 
-        //TODO: query for current subtotal of points
-        binding.totalComp.setText(total);
+        //Checking for amount of points in account
+        currentPoints = checkoutView.findViewById(R.id.points);
+        getPoints();
 
-        //TODO: query for current total of points
-        binding.subtotalComp.setText(subtotal);
+        //checking for current cart subtotal
+        subtotal = checkoutView.findViewById(R.id.subtotal_comp);
 
-        binding.applyPoints.setOnClickListener(new View.OnClickListener() {
+        discountPoints = checkoutView.findViewById(R.id.pointsDiscount);
+        totalComp = checkoutView.findViewById(R.id.total_comp);
+
+        checkoutView.findViewById(R.id.BackToProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isEmpty(binding.pointsDiscount)) {
-                    Integer valueToApply = Integer.parseInt(binding.pointsDiscount.getText().toString());
-                    Integer currentPointInt = Integer.parseInt(binding.points.getText().toString());
-                    Integer currentTotal = Integer.parseInt(total);
-                    if (valueToApply <= currentPointInt && valueToApply <= currentTotal) {
-                        binding.errorMSG.setVisibility(View.GONE);
-                        currentTotal -= valueToApply;
-                        currentPointInt -= valueToApply;
-                        total = String.valueOf(currentTotal);
-                        currentPoints = String.valueOf(currentPointInt);
+                    NavHostFragment.findNavController(CheckoutFragment.this)
+                            .navigate(R.id.action_checkoutFragment_to_CustomerProfileFragment);
+            }
+        });
 
-                        binding.pointsDiscount.getText().clear();
-                        binding.totalComp.setText(total);
-                        binding.points.setText(currentPoints);
+        checkoutView.findViewById(R.id.BackToCatalog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // NavHostFragment.findNavController(CheckoutFragment.this)
+                 //       .navigate(R.id.action_checkoutFragment_to_CatalogueFragment);
+            }
+        });
+
+        /*checkoutView.findViewById(R.id.applyPoints).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (discountPoints != null) {
+                    Integer currentPointInt = Integer.parseInt(currentPoints.getText().toString());
+                    Integer pointsToApply = Integer.parseInt(discountPoints.getText().toString());
+                    Integer currentSubtotal = Integer.parseInt(subtotal.getText().toString());
+                    getPointToCashRatio();
+                    Integer cashDiscount = pointsToApply/pointToCashRatio;
+
+                    if (pointsToApply <= currentPointInt && cashDiscount <= currentSubtotal) {
+                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.GONE);
+                        currentSubtotal -= cashDiscount;
+                        currentPointInt -= pointsToApply;
+                        String total = String.valueOf(currentSubtotal);
+
+                        currentPoints.setText(String.valueOf(currentPointInt));
+                        discountPoints.setText("");
+                        totalComp.setText(total);
                     } else {
-                        binding.errorMSG.setVisibility(View.VISIBLE);
-                        binding.pointsDiscount.getText().clear();
+                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.VISIBLE);
+                        discountPoints.setText("");
                     }
                 }
             }
         });
-
         binding.placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,14 +138,53 @@ public class CheckoutFragment extends Fragment {
                 }
             });
         }
-
+*/
 
     }
 
+    private void getPoints() {
+        HttpUtils.get("api/account/" + username, new RequestParams(), new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    currentPoints.setText(response.getString("pointBalance"));
+                } catch (Exception e) {
+                    error += e.getMessage();
+                }
+            }
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+            }
+        });
+    }
+    /*
+    private void getPointToCashRatio(){
+        HttpUtils.get("api/store/store", new RequestParams(), new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+
+                    pointToCashRatio = Integer.parseInt(response.get("pointToCashRatio").toString());
+                } catch (Exception e) {
+                    error += e.getMessage();
+                }
+            }
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+            }
+        });
+    }
+*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        checkoutView = null;
     }
 
     private boolean isEmpty(EditText etText) {

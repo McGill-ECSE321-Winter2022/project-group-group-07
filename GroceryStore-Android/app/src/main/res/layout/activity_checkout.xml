@@ -155,6 +155,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:gravity="center_horizontal"
+                    android:hint="Input points to use"
                     android:inputType="number" />
 
                 <Button
@@ -370,13 +371,13 @@
                     android:id="@+id/subtotal_comp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="N/A" />
+                    android:text="0" />
 
                 <TextView
                     android:id="@+id/total_comp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="N/A" />
+                    android:text="0" />
             </LinearLayout>
 
             <Button
