@@ -43,7 +43,10 @@ public class CheckoutFragment extends Fragment {
         return checkoutView;
 
     }
-
+    public void navigate(){
+        NavHostFragment.findNavController(CheckoutFragment.this)
+                .navigate(R.id.action_checkoutFragment_to_CustomerProfileFragment);
+    }
     @SuppressLint("SetTextI18n")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -68,13 +71,26 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        checkoutView.findViewById(R.id.BackToCatalog).setOnClickListener(new View.OnClickListener() {
+        checkoutView.findViewById(R.id.BackToProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // NavHostFragment.findNavController(CheckoutFragment.this)
-                 //       .navigate(R.id.action_checkoutFragment_to_CatalogueFragment);
+                NavHostFragment.findNavController(CheckoutFragment.this)
+                        .navigate(R.id.action_checkoutFragment_to_CustomerProfileFragment);
             }
         });
+        checkoutView.findViewById(R.id.placeOrder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HttpUtils.post("/api/order/checkout/"+username+"?points=0",new RequestParams(), new JsonHttpResponseHandler() {
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        navigate();
+                    }
+                });
+
+
+            }
+        });
+
 
         /*checkoutView.findViewById(R.id.applyPoints).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +127,8 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        binding.orderOption.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        checkoutView.findViewById(R.id.order_option).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(binding.deliveryLabel.isChecked()){
@@ -139,7 +156,6 @@ public class CheckoutFragment extends Fragment {
             });
         }
 */
-
     }
 
     private void getPoints() {

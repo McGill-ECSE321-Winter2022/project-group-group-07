@@ -69,9 +69,6 @@
             android:id="@+id/action_CustomerProfileFragment_to_AccountInfoFragment"
             app:destination="@id/AccountInfoFragment" />
         <action
-            android:id="@+id/action_CustomerProfileFragment_to_checkoutFragment"
-            app:destination="@id/checkoutFragment" />
-        <action
 
             android:id="@+id/action_CustomerProfileFragment_to_CatalogueFragment"
             app:destination="@id/CatalogueFragment" />
@@ -186,6 +183,10 @@
     <fragment
         android:id="@+id/CartFragment"
         android:name="ca.mcgill.ecse321.grocerystore.CartFragment"
-        tools:layout="@layout/fragment_cart"/>
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_CartFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+    </fragment>
 
 </navigation>
