@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 import cz.msebera.android.httpclient.Header;
 
 public class CheckoutFragment extends Fragment {
@@ -28,7 +31,7 @@ public class CheckoutFragment extends Fragment {
     String username;
     private TextView currentPoints;
     private TextView discountPoints;
-
+    private String orderType;
     private TextView totalComp;
     private TextView subtotal;
 
@@ -43,7 +46,10 @@ public class CheckoutFragment extends Fragment {
         return checkoutView;
 
     }
-
+    public void navigate(){
+        NavHostFragment.findNavController(CheckoutFragment.this)
+                .navigate(R.id.action_checkoutFragment_to_CustomerProfileFragment);
+    }
     @SuppressLint("SetTextI18n")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -60,6 +66,7 @@ public class CheckoutFragment extends Fragment {
         discountPoints = checkoutView.findViewById(R.id.pointsDiscount);
         totalComp = checkoutView.findViewById(R.id.total_comp);
 
+
         checkoutView.findViewById(R.id.BackToProfile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,68 +75,47 @@ public class CheckoutFragment extends Fragment {
             }
         });
 
-        checkoutView.findViewById(R.id.BackToCatalog).setOnClickListener(new View.OnClickListener() {
+        checkoutView.findViewById(R.id.placeOrder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // NavHostFragment.findNavController(CheckoutFragment.this)
-                 //       .navigate(R.id.action_checkoutFragment_to_CatalogueFragment);
-            }
-        });
 
-        /*checkoutView.findViewById(R.id.applyPoints).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (discountPoints != null) {
-                    Integer currentPointInt = Integer.parseInt(currentPoints.getText().toString());
-                    Integer pointsToApply = Integer.parseInt(discountPoints.getText().toString());
-                    Integer currentSubtotal = Integer.parseInt(subtotal.getText().toString());
-                    getPointToCashRatio();
-                    Integer cashDiscount = pointsToApply/pointToCashRatio;
+                HttpUtils.put("api/cart/chooseOrderType/" + username + "?orderType=" + orderType,new RequestParams(), new JsonHttpResponseHandler() {
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
-                    if (pointsToApply <= currentPointInt && cashDiscount <= currentSubtotal) {
-                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.GONE);
-                        currentSubtotal -= cashDiscount;
-                        currentPointInt -= pointsToApply;
-                        String total = String.valueOf(currentSubtotal);
-
-                        currentPoints.setText(String.valueOf(currentPointInt));
-                        discountPoints.setText("");
-                        totalComp.setText(total);
-                    } else {
-                        checkoutView.findViewById(R.id.errorMSG).setVisibility(View.VISIBLE);
-                        discountPoints.setText("");
+                    }   });
+                HttpUtils.post("api/order/checkout/"+username+"?points=0",new RequestParams(), new JsonHttpResponseHandler() {
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        navigate();
                     }
-                }
-            }
-        });
-        binding.placeOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: submit data from the fields
-//                NavHostFragment.findNavController(CheckoutFragment.this)
-//                        .navigate(R.id.action_third_to_SecondFragment);
+                });
+
+
             }
         });
 
-        binding.orderOption.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+
+        ((RadioGroup) checkoutView.findViewById(R.id.order_option)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(binding.deliveryLabel.isChecked()){
-                    binding.deliveryWindow.setVisibility(View.VISIBLE);
+                if(((RadioButton)checkoutView.findViewById(R.id.deliveryLabel)).isChecked()){
+                    checkoutView.findViewById(R.id.delivery_window).setVisibility(View.VISIBLE);
+                    orderType = "Delivery";
                 } else {
-                    binding.deliveryWindow.setVisibility(View.GONE);
+                    checkoutView.findViewById(R.id.delivery_window).setVisibility(View.GONE);
                 }
 
-                if(binding.pickUpLabel.isChecked()){
-                    binding.pickupWindow.setVisibility(View.VISIBLE);
+                if(((RadioButton)checkoutView.findViewById(R.id.pickUpLabel)).isChecked()){
+                    checkoutView.findViewById(R.id.pickup_window).setVisibility(View.VISIBLE);
+                    orderType= "PickUp";
                 } else {
-                    binding.pickupWindow.setVisibility(View.GONE);
+                    checkoutView.findViewById(R.id.pickup_window).setVisibility(View.GONE);
                 }
             }
         });
 
-        if(binding.deliveryLabel.isChecked()){
-            binding.deliveryCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        if(((RadioButton)checkoutView.findViewById(R.id.deliveryLabel)).isChecked()){
+            ((CalendarView) checkoutView.findViewById(R.id.deliveryCalendar)).setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                 @Override
                 public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
                     String  curDate = String.valueOf(dayOfMonth);
@@ -138,7 +124,6 @@ public class CheckoutFragment extends Fragment {
                 }
             });
         }
-*/
 
     }
 
@@ -160,27 +145,7 @@ public class CheckoutFragment extends Fragment {
             }
         });
     }
-    /*
-    private void getPointToCashRatio(){
-        HttpUtils.get("api/store/store", new RequestParams(), new JsonHttpResponseHandler() {
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
 
-                    pointToCashRatio = Integer.parseInt(response.get("pointToCashRatio").toString());
-                } catch (Exception e) {
-                    error += e.getMessage();
-                }
-            }
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                try {
-                    error += errorResponse.get("message").toString();
-                } catch (JSONException e) {
-                    error += e.getMessage();
-                }
-            }
-        });
-    }
-*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();

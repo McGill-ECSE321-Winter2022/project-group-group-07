@@ -69,9 +69,6 @@
             android:id="@+id/action_CustomerProfileFragment_to_AccountInfoFragment"
             app:destination="@id/AccountInfoFragment" />
         <action
-            android:id="@+id/action_CustomerProfileFragment_to_checkoutFragment"
-            app:destination="@id/checkoutFragment" />
-        <action
 
             android:id="@+id/action_CustomerProfileFragment_to_CatalogueFragment"
             app:destination="@id/CatalogueFragment" />
@@ -81,6 +78,9 @@
         <action
             android:id="@+id/action_CustomerProfileFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_CustomerProfileFragment_to_OrderStatusFragment"
+            app:destination="@id/OrderStatusFragment" />
 
     </fragment>
 
@@ -186,6 +186,14 @@
     <fragment
         android:id="@+id/CartFragment"
         android:name="ca.mcgill.ecse321.grocerystore.CartFragment"
-        tools:layout="@layout/fragment_cart"/>
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_CartFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/OrderStatusFragment"
+        android:name="ca.mcgill.ecse321.grocerystore.OrderStatusFragment"
+        tools:layout="@layout/fragment_orderstatus"/>
 
 </navigation>
