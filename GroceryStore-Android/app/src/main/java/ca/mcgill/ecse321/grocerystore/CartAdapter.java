@@ -29,7 +29,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartAdapterVie
     @NonNull
     @Override
     public CartAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=inflater.inflate(R.layout.recycler_view_item_1,parent,false);
+        View view=inflater.inflate(R.layout.recycler_view_item_2,parent,false);
         return new CartAdapterViewHolder(view);
     }
 
@@ -37,7 +37,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartAdapterVie
     public void onBindViewHolder(@NonNull CartAdapterViewHolder holder, int position) {
         holder.price.setText(items.get(position).getPrice());
         holder.productName.setText(items.get(position).getProductName());
-        holder.removeButton.setOnClickListener(new View.OnClickListener() {
+        holder.remButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HttpUtils.put("/api/cart/removeFromCart/" +
@@ -54,12 +54,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartAdapterVie
     }
     public class CartAdapterViewHolder extends RecyclerView.ViewHolder {
         TextView  price, productName;
-        Button removeButton;
+        Button remButton;
         public CartAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             price = itemView.findViewById(R.id.price);
             productName = itemView.findViewById(R.id.productName);
-            removeButton= itemView.findViewById(R.id.removeButton);
+            remButton= itemView.findViewById(R.id.remButton);
         }
     }
 }

@@ -47,8 +47,14 @@ public class CartFragment extends Fragment {
         HttpUtils.get("api/cart/cart/" + getUsername()
                 , new RequestParams(), new JsonHttpResponseHandler() {
 
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {//0408
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject resp) {//0408
 
+                        JSONArray response= null;
+                        try {
+                            response = resp.getJSONArray("items");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         for (int i=0; i< response.length();i++) {
                             try {
                                 JSONObject itemObject = response.getJSONObject(i);
